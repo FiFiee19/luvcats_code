@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
-import 'package:luvcats_app/config/error.dart';
+import 'package:luvcats_app/config/utils.dart';
+import 'package:luvcats_app/features/admin/screens/home_admin.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
 import 'package:luvcats_app/features/home/home.dart';
-import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,24 +22,34 @@ class AuthService {
     required String description,
   }) async {
     try {
-      User user = User(
-        id: '',
-        username: username,
-        password: password,
-        email: email,
-        token: '',
-      );
-
+      // สร้าง User object จากข้อมูลที่รับมา
+      // User user = User(
+      //   id: '',
+      //   username: username,
+      //   password: password,
+      //   email: email,
+      //   token: '',
+      //   type: '',
+      // );
+      Map<String, dynamic> requestData = {
+        'username': username,
+        'password': password,
+        'email': email,
+        'images': images, // เพิ่ม images ในข้อมูลที่จะส่งไปยัง API
+        'description': description,
+      };
+      // ส่งคำขอ HTTP POST เพื่อสร้างบัญชีผู้ใช้ใหม่
       http.Response res = await http.post(
         Uri.parse('${url}/api/signup'),
-        body: user.toJson(),
+        body: jsonEncode(requestData),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
 
+      // ตรวจสอบสถานะการตอบกลับจากการส่งคำขอ HTTP
       if (res.statusCode == 200) {
-        //succes signup
+        // กรณีลงทะเบียนสำเร็จแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Account has been successfully created'),
@@ -49,7 +60,9 @@ class AuthService {
         );
         Navigator.of(context).pop();
       }
+
       if (res.statusCode == 400) {
+        // กรณีมีบัญชีผู้ใช้ด้วยอีเมลที่ซ้ำกันแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Account with this email already exists'),
@@ -60,6 +73,7 @@ class AuthService {
         );
       }
       if (res.statusCode == 500) {
+        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Please enter a valid email address'),
@@ -72,6 +86,7 @@ class AuthService {
       print(res.statusCode);
       print(res.body);
     } catch (e) {
+      // กรณีเกิดข้อผิดพลาดในการส่งคำขอ HTTP แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
@@ -100,72 +115,73 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      // if (res.statusCode == 200) {
-      //   //succes signin
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: const Text('Account has been successfully login'),
-      //       backgroundColor: Colors.grey,
-      //       behavior: SnackBarBehavior.floating,
-      //       margin: EdgeInsets.all(30),
-      //     ),
-      //   );
-      //   SharedPreferences prefs = await SharedPreferences.getInstance();
-      //   // userProvider.setUser(res.body);
-      //   Provider.of<UserProvider>(context, listen: false).setUser(res.body);
-      //   await prefs.setString('authtoken', jsonDecode(res.body)['token']);
-      //   navigator.pushAndRemoveUntil(
-      //     CupertinoPageRoute(
-      //       builder: (context) => const Home(),
-      //     ),
-      //     (route) => false,
-      //   );
-      // }
-      // if (res.statusCode == 400) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text('User with this email does not exists'),
-      //       backgroundColor: Colors.red,
-      //       behavior: SnackBarBehavior.floating,
-      //       margin: EdgeInsets.all(30),
-      //     ),
-      //   );
-      // }
-      // if (res.statusCode == 401) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text('Incorrect password'),
-      //       backgroundColor: Colors.red,
-      //       behavior: SnackBarBehavior.floating,
-      //       margin: EdgeInsets.all(30),
-      //     ),
-      //   );
-      // }
-      // if (res.statusCode == 500) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text(res.body.toString()),
-      //       backgroundColor: Colors.red,
-      //       behavior: SnackBarBehavior.floating,
-      //       margin: EdgeInsets.all(30),
-      //     ),
-      //   );
-      // }
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          Provider.of<UserProvider>(context, listen: false).setUser(res.body);
-          await prefs.setString('authtoken', jsonDecode(res.body)['token']);
+      if (res.statusCode == 200) {
+        //succes signin
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Account has been successfully login'),
+            backgroundColor: Colors.grey,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        Provider.of<UserProvider>(context, listen: false).setUser(res.body);
+        await prefs.setString('authtoken', jsonDecode(res.body)['token']);
+        // navigator.pushAndRemoveUntil(
+        //   CupertinoPageRoute(
+        //     builder: (context) => const Home(),
+        //   ),
+        //   (route) => false,
+        // );
+        final userData = jsonDecode(res.body);
+        if (userData['type'] == 'admin') {
           navigator.pushAndRemoveUntil(
-            MaterialPageRoute(
+            CupertinoPageRoute(
+              builder: (context) => const AdminScreen(),
+            ),
+            (route) => false,
+          );
+        } else {
+          navigator.pushAndRemoveUntil(
+            CupertinoPageRoute(
               builder: (context) => const Home(),
             ),
             (route) => false,
           );
-        },
-      );
+        }
+      }
+
+      if (res.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User with this email does not exists'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+      if (res.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Incorrect password'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+      if (res.statusCode == 500) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
 
       print(res.statusCode);
       print(res.body);
@@ -186,6 +202,7 @@ class AuthService {
     BuildContext context,
   ) async {
     try {
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('authtoken');
 
@@ -211,10 +228,11 @@ class AuthService {
             'authtoken': token
           },
         );
-        var userProvider = Provider.of<UserProvider>(context, listen: false);
+
         userProvider.setUser(userRes.body);
       }
     } catch (e) {
+      showSnackBar(context, e.toString());
       print(e.toString());
     }
   }

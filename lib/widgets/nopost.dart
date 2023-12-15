@@ -7,17 +7,24 @@ class NoPostsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.red,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PostCommu(),
-            ),
-          );
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: FloatingActionButton(
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.red,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PostCommu(),
+              ),
+            );
+          },
+          shape: const CircleBorder(),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       body: Center(

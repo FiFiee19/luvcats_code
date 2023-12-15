@@ -1,7 +1,10 @@
-const mongoose = require("mongoose");
+const { Schema, mongoose } = require("mongoose");
 
 const straycatSchema = mongoose.Schema({
-
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
   user_id: {
     required: true,
     type: String,

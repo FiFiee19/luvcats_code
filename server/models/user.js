@@ -23,6 +23,11 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
   },
+  type: {
+    required: true,
+    type: String,
+    default: "user"
+  },
   
 });
 

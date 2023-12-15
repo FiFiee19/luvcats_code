@@ -6,8 +6,6 @@ import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/widgets/nopost.dart';
 import 'package:luvcats_app/widgets/single_cat.dart';
 
-
-
 class CommScreen extends StatefulWidget {
   const CommScreen({super.key});
 
@@ -45,7 +43,6 @@ class _CommScreenState extends State<CommScreen> {
     if (mounted) {
       setState(() {});
     }
-    // setState(() {});
   }
 
   Future<void> _getData() async {
@@ -184,9 +181,12 @@ class _CommScreenState extends State<CommScreen> {
               ),
             ),
             floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+              padding: const EdgeInsets.only(bottom: 20.0),
               child: FloatingActionButton(
-                child: const Icon(Icons.add),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
                 backgroundColor: Colors.red,
                 onPressed: () {
                   Navigator.push(
@@ -196,6 +196,7 @@ class _CommScreenState extends State<CommScreen> {
                     ),
                   );
                 },
+                shape: const CircleBorder(),
               ),
             ),
             floatingActionButtonLocation:

@@ -52,12 +52,20 @@ class CommuServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Product Added Successfully!');
+          showSnackBar(context, 'Post Added Successfully!');
           Navigator.pop(context);
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      // showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 

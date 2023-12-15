@@ -4,11 +4,12 @@ import 'package:luvcats_app/models/user.dart';
 //ChangeNotifier คือแจ้งเตือนเมื่อมีการเปลี่ยนแปลงข้อมูล
 class UserProvider extends ChangeNotifier {
   User _user = User(
-    id: '',
-    username: '',
-    email: '',
-    token: '',
-    password: '',
+    id: "",
+    username: "",
+    email: "",
+    token: "",
+    password: "",
+    type: "",
   );
 
   User get user => _user;
@@ -22,4 +23,6 @@ class UserProvider extends ChangeNotifier {
     _user = user;
     notifyListeners();
   }
+
+  
 }

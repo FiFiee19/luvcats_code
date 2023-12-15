@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:luvcats_app/models/user.dart';
+
 class Cat {
   final String user_id;
   final String breed;

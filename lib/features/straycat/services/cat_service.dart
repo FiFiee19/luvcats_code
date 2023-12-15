@@ -8,12 +8,14 @@ import 'package:luvcats_app/config/constants.dart';
 import 'package:luvcats_app/config/error.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class CatServices {
   void postcat({
     required BuildContext context,
+    required User user,
     required String user_id,
     required String breed,
     required String description,
@@ -33,7 +35,7 @@ class CatServices {
         );
         imageUrls.add(res.secureUrl);
       }
-
+      
       Cat cat = Cat(
         user_id: user_id,
         breed: breed,
@@ -41,6 +43,7 @@ class CatServices {
         province: province,
         description: description,
         images: imageUrls,
+        
       );
 
       http.Response res = await http.post(
@@ -60,8 +63,28 @@ class CatServices {
           Navigator.pop(context);
         },
       );
+      // if (res.statusCode == 200) {
+      //   // กรณีลงทะเบียนสำเร็จแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: const Text('Product Added Successfully!'),
+      //       backgroundColor: Colors.grey,
+      //       behavior: SnackBarBehavior.floating,
+      //       margin: EdgeInsets.all(30),
+      //     ),
+      //   );
+      //   Navigator.of(context).pop();
+      // }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      // showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 
@@ -75,7 +98,6 @@ class CatServices {
         'authtoken': userProvider.user.token,
       });
 
-      
       httpErrorHandle(
         response: res,
         context: context,

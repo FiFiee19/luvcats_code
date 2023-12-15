@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/models/user.dart';
+import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,17 +13,24 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+    AuthService().getUserData(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserProvider>(context, listen: false).user;
-    
-    
+    final users = Provider.of<UserProvider>(context).user;
+    print(users);
+    print(Provider.of<UserProvider>(context).user.toJson());
 
     return Scaffold(
       body: Center(
-        child: Text(
-          user.username,
+        child: Center(
+            child: Text(
+          users.username,
           style: TextStyle(color: Colors.black),
-        ),
+        )),
       ),
     );
   }

@@ -66,7 +66,7 @@ class _tab_BarState extends State<tab_Bar> {
           BottomNavigationBarItem(icon: Icon(Icons.place), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        selectedItemColor: Color.fromARGB(255, 243, 127, 166),
+        selectedItemColor: Colors.red,
         unselectedItemColor: Colors.black,
         selectedLabelStyle: TextStyle(color: Colors.black),
         unselectedLabelStyle: TextStyle(color: Colors.pink),

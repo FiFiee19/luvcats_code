@@ -7,11 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/straycat/services/cat_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:luvcats_app/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
-// import 'package:luvcat_app/services/auth_services.dart';
 
 class PostStrayCat extends StatefulWidget {
   const PostStrayCat({super.key});
@@ -40,13 +40,23 @@ class _PostStrayCatState extends State<PostStrayCat> {
     }
     super.dispose();
   }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   breedController.dispose();
+  //   descriptionController.dispose();
+  //   provinceController.dispose();
+  //   genderController.dispose();
+  // }
 
   void postcat() {
     if (_postCatFormKey.currentState!.validate() && images.isNotEmpty) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
+      final User user = userProvider.user;
       catServices.postcat(
+        user: user,
         user_id: user_id,
         context: context,
         breed: breedController.text,
@@ -168,6 +178,7 @@ class _PostStrayCatState extends State<PostStrayCat> {
                   text: 'Post',
                   onTap: postcat,
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -175,4 +186,15 @@ class _PostStrayCatState extends State<PostStrayCat> {
       ),
     );
   }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   if (mounted) {
+  //     breedController.dispose();
+  //     descriptionController.dispose();
+  //     provinceController.dispose();
+  //     genderController.dispose();
+  //   }
+  // }
 }

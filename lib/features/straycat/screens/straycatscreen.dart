@@ -32,13 +32,15 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
     if (mounted) {
       setState(() {});
     }
-    // setState(() {});
   }
 
+  // Future<void> _getData() async {
+  //   setState(() {
+  //     fetchAllCats();
+  //   });
+  // }
   Future<void> _getData() async {
-    setState(() {
-      fetchAllCats();
-    });
+    await fetchAllCats();
   }
 
   @override
@@ -133,9 +135,12 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
               ),
             ),
             floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+              padding: const EdgeInsets.only(bottom: 20.0),
               child: FloatingActionButton(
-                child: const Icon(Icons.add),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
                 backgroundColor: Colors.red,
                 onPressed: () {
                   Navigator.push(
@@ -145,6 +150,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                     ),
                   );
                 },
+                shape: const CircleBorder(),
               ),
             ),
             floatingActionButtonLocation:

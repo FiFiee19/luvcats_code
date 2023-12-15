@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/features/auth/screens/signup.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 
-
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
 
@@ -12,12 +11,12 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-   final TextEditingController emailController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final AuthService authService = AuthService();
   bool _isNotValidate = false;
 
-   void loginUser() {
+  void signinUser() {
     authService.signInUser(
       context: context,
       email: emailController.text,
@@ -108,7 +107,7 @@ class _SigninScreenState extends State<SigninScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  loginUser();
+                  signinUser();
                 },
                 child: Container(
                   width: 200.0,
