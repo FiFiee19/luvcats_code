@@ -4,13 +4,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/straycat/services/cat_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
-import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
-import 'package:luvcats_app/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 
 class PostStrayCat extends StatefulWidget {
@@ -21,6 +20,7 @@ class PostStrayCat extends StatefulWidget {
 }
 
 class _PostStrayCatState extends State<PostStrayCat> {
+  final TextEditingController textEditingController = TextEditingController();
   final TextEditingController breedController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController provinceController = TextEditingController();
@@ -29,40 +29,38 @@ class _PostStrayCatState extends State<PostStrayCat> {
   List<File> images = [];
   final _postCatFormKey = GlobalKey<FormState>();
   List<Cat>? cats;
+  String selectedGender = 'ไม่ทราบ';
+  String selectedProvince = 'กรุงเทพมหานคร';
+  final List<String> listgender = [
+    'ผู้',
+    'เมีย',
+    'ไม่ทราบ',
+  ];
 
   @override
   void dispose() {
     if (mounted) {
+      textEditingController.dispose();
       breedController.dispose();
       descriptionController.dispose();
       provinceController.dispose();
-      genderController.dispose();
     }
     super.dispose();
   }
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   breedController.dispose();
-  //   descriptionController.dispose();
-  //   provinceController.dispose();
-  //   genderController.dispose();
-  // }
 
   void postcat() {
     if (_postCatFormKey.currentState!.validate() && images.isNotEmpty) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
-      final User user = userProvider.user;
+
       catServices.postcat(
-        user: user,
         user_id: user_id,
         context: context,
         breed: breedController.text,
         description: descriptionController.text,
-        province: provinceController.text,
-        gender: genderController.text,
+        province: selectedProvince,
+        gender: selectedGender,
         images: images,
       );
     }
@@ -151,26 +149,105 @@ class _PostStrayCatState extends State<PostStrayCat> {
                         ),
                       ),
                 const SizedBox(height: 30),
-                CustomTextField(
+                TextField(
                   controller: breedController,
-                  hintText: 'สายพันธุ์',
+                  decoration: InputDecoration(
+                    hintText: 'สายพันธุ์',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                          15), // ใช้พารามิเตอร์ borderRadius ที่นี่
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
-                CustomTextField(
-                  controller: genderController,
-                  hintText: 'เพศ',
-                  maxLines: 7,
+                DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    // การตกแต่งอื่นๆ...
+                  ),
+                  hint: const Text(
+                    'เพศ',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณาเลือกเพศ';
+                    }
+                    return null;
+                  },
+                  items: listgender.map((String selectedGender) {
+                    return DropdownMenuItem<String>(
+                      value: selectedGender,
+                      child: Text(
+                        selectedGender,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGender = value!;
+                    });
+                  },
+                  // ตัวเลือกอื่นๆ...
                 ),
                 const SizedBox(height: 10),
-                CustomTextField(
-                  controller: provinceController,
-                  hintText: 'จังหวัด',
+                DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    // การตกแต่งอื่นๆ...
+                  ),
+                  hint: const Text(
+                    'จังหวัด',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณาเลือกจังหวัด';
+                    }
+                    return null;
+                  },
+                  items: province.map((String selectedProvince) {
+                    return DropdownMenuItem<String>(
+                      value: selectedProvince,
+                      child: Text(
+                        selectedProvince,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedProvince = value!;
+                    });
+                  },
+                  // ตัวเลือกอื่นๆ...
                 ),
                 const SizedBox(height: 10),
-                CustomTextField(
+                TextField(
                   controller: descriptionController,
-                  hintText: 'รายละเอียด',
                   maxLines: 7,
+                  decoration: InputDecoration(
+                    hintText: 'รายละเอียด',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                          15), // ใช้พารามิเตอร์ borderRadius ที่นี่
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    // การตกแต่งอื่นๆ...
+                  ),
+                  // คุณสมบัติอื่นๆ...
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
@@ -186,15 +263,4 @@ class _PostStrayCatState extends State<PostStrayCat> {
       ),
     );
   }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   if (mounted) {
-  //     breedController.dispose();
-  //     descriptionController.dispose();
-  //     provinceController.dispose();
-  //     genderController.dispose();
-  //   }
-  // }
 }

@@ -1,9 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
-
 
 class DetailStraycatScreen extends StatefulWidget {
   final Cat cat;
@@ -25,13 +23,9 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
         preferredSize: const Size.fromHeight(50),
         child: AppBar(
           title: Center(
-            child: Text(
-              '',
-              style: GoogleFonts.kanit(
-                color: Color.fromARGB(255, 247, 108, 185),
-                fontSize: 30.0,
-              ),
-            ),
+            child: Padding(
+                padding: const EdgeInsets.only(left: 220),
+                child: ReportScreen()),
           ),
         ),
       ),
@@ -58,6 +52,8 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
           SizedBox(
             height: 20,
           ),
+          Padding(
+              padding: const EdgeInsets.only(left: 280), child: ReportScreen()),
           Row(
             children: [
               Padding(
@@ -71,9 +67,6 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                   ],
                 ),
               ),
-              Padding(
-                  padding: const EdgeInsets.only(left: 140),
-                  child: ReportScreen()),
             ],
           ),
           SizedBox(
@@ -116,7 +109,18 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "ข้อมูลเพิ่มเติม:  " + widget.cat.description,
+                  "ข้อมูลเพิ่มเติม: ",
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.cat.description,
                 ),
               ],
             ),

@@ -3,7 +3,7 @@ import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/community/screens/postcommu.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
-import 'package:luvcats_app/widgets/nopost.dart';
+import 'package:luvcats_app/widgets/loader.dart';
 import 'package:luvcats_app/widgets/single_cat.dart';
 
 class CommScreen extends StatefulWidget {
@@ -54,7 +54,7 @@ class _CommScreenState extends State<CommScreen> {
   @override
   Widget build(BuildContext context) {
     return commu == null || commu!.isEmpty
-        ? const NoPostsWidget()
+        ? const Loader()
         : Scaffold(
             backgroundColor: Colors.grey[200],
             body: RefreshIndicator(
@@ -72,7 +72,6 @@ class _CommScreenState extends State<CommScreen> {
 
                   return InkWell(
                     onTap: () {
-                      // ทำสิ่งที่คุณต้องการเมื่อกดที่ Container
                       // Navigator.push(
                       //   context,
                       //   // MaterialPageRoute(

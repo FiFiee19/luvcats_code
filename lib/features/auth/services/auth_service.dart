@@ -9,6 +9,7 @@ import 'package:luvcats_app/features/admin/screens/home_admin.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
 import 'package:luvcats_app/features/home/home.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/widgets/alert_type.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,16 +50,24 @@ class AuthService {
 
       // ตรวจสอบสถานะการตอบกลับจากการส่งคำขอ HTTP
       if (res.statusCode == 200) {
-        // กรณีลงทะเบียนสำเร็จแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Account has been successfully created'),
-            backgroundColor: Colors.grey,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
+        // แสดงป๊อปอัป AlertType
+        await showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return const AlertType();
+          },
         );
-        Navigator.of(context).pop();
+
+        // กรณีลงทะเบียนสำเร็จแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: const Text('Account has been successfully created'),
+        //     backgroundColor: Colors.grey,
+        //     behavior: SnackBarBehavior.floating,
+        //     margin: EdgeInsets.all(30),
+        //   ),
+        // );
+        // Navigator.of(context).pop();
       }
 
       if (res.statusCode == 400) {
@@ -85,6 +94,7 @@ class AuthService {
       }
       print(res.statusCode);
       print(res.body);
+      print(username);
     } catch (e) {
       // กรณีเกิดข้อผิดพลาดในการส่งคำขอ HTTP แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
       ScaffoldMessenger.of(context).showSnackBar(
@@ -128,14 +138,9 @@ class AuthService {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         Provider.of<UserProvider>(context, listen: false).setUser(res.body);
         await prefs.setString('authtoken', jsonDecode(res.body)['token']);
-        // navigator.pushAndRemoveUntil(
-        //   CupertinoPageRoute(
-        //     builder: (context) => const Home(),
-        //   ),
-        //   (route) => false,
-        // );
+
         final userData = jsonDecode(res.body);
-        if (userData['type'] == 'admin') {
+        if (userData['user']['type'] == 'admin') {
           navigator.pushAndRemoveUntil(
             CupertinoPageRoute(
               builder: (context) => const AdminScreen(),
@@ -230,6 +235,7 @@ class AuthService {
         );
 
         userProvider.setUser(userRes.body);
+        print(userRes.body);
       }
     } catch (e) {
       showSnackBar(context, e.toString());

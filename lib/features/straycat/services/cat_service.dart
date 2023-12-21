@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 class CatServices {
   void postcat({
     required BuildContext context,
-    required User user,
     required String user_id,
     required String breed,
     required String description,
@@ -35,7 +34,7 @@ class CatServices {
         );
         imageUrls.add(res.secureUrl);
       }
-      
+
       Cat cat = Cat(
         user_id: user_id,
         breed: breed,
@@ -43,7 +42,6 @@ class CatServices {
         province: province,
         description: description,
         images: imageUrls,
-        
       );
 
       http.Response res = await http.post(

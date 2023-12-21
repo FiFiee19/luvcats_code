@@ -1,21 +1,23 @@
+const { decode } = require("jsonwebtoken");
 const Straycat = require("../models/poststraycat");
 
 exports.create = async (req, res) => {
     try {
         const { breed, gender, province, description, images } = req.body;
-        
+
         let straycat = new Straycat({
-            user_id:req.user,
+            // user:req.user.username,
+            user_id: req.user,
             description,
             breed,
             gender,
             province,
             images
         });
-       
+
         straycat = await straycat.save();
         res.json(straycat);
-        
+
         // res.send(straycat);
     } catch (e) {
         console.log(e);
@@ -33,7 +35,7 @@ exports.list = async (req, res) => {
         console.log(e)
         res.status(500).send('Server Error')
     }
-    
+
 }
 
 exports.id = async (req, res) => {
@@ -46,5 +48,5 @@ exports.id = async (req, res) => {
         console.log(e)
         res.status(500).send('Server Error')
     }
-    
+
 }
