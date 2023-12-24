@@ -18,18 +18,20 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
           hintText: hintText,
           border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10.0),
+              ),
               borderSide: BorderSide(
-            color: Colors.black38,
-          )),
+                color: Colors.black38,
+              )),
           enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(
             color: Colors.black38,
           ))),
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return 'Enter your $hintText';
+          return 'กรุงณากรอก$hintText';
         }
-        return null;
       },
       maxLines: maxLines,
     );

@@ -59,15 +59,40 @@ class AuthService {
         );
       }
       if (res.statusCode == 500) {
+        // if (!RegExp(
+        //         r'^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i')
+        //     .hasMatch(email)) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       content: const Text('กรุณากรอกที่อยู่อีเมลที่ถูกต้อง'),
+        //       backgroundColor: Colors.red,
+        //       behavior: SnackBarBehavior.floating,
+        //       margin: EdgeInsets.all(30),
+        //     ),
+        //   );
+        // }
+
+        // if (!RegExp(r'^(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$').hasMatch(password)) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       content: const Text('รหัสผ่านควรมีอักขระ 8 ตัวขึ้นไป'),
+        //       backgroundColor: Colors.red,
+        //       behavior: SnackBarBehavior.floating,
+        //       margin: EdgeInsets.all(30),
+        //     ),
+        //   );
+        // }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Please enter a valid email address'),
+            content: const Text('Error'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
           ),
         );
       }
+
       print(res.statusCode);
       print(res.body);
       print(username);

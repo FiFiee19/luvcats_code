@@ -4,9 +4,9 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/utils.dart';
-import 'package:luvcats_app/features/auth/screens/signin.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/models/user.dart';
+import 'package:luvcats_app/widgets/custom_button.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -22,7 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _nameController = TextEditingController();
   // final TextEditingController _imageController = TextEditingController();
   final AuthService authService = AuthService();
-  bool _isNotValidate = false;
+  final _signupFormKey = GlobalKey<FormState>();
   File? file;
   String? urlImageProfile;
   bool isImageSelected = false;
@@ -49,7 +49,9 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Future<void> signupUser(BuildContext context) async {
-    if (passwordConfirmed() && _image != null) {
+    if (_signupFormKey.currentState!.validate() &&
+        passwordConfirmed() &&
+        _image != null) {
       final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
       CloudinaryResponse resimg = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(_image!.path, folder: "a"),
@@ -67,7 +69,7 @@ class _SignupScreenState extends State<SignupScreen> {
       if (!passwordConfirmed()) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Enter the same password'),
+            content: const Text('รหัสผ่านไม่ตรงกัน'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -78,7 +80,49 @@ class _SignupScreenState extends State<SignupScreen> {
       if (_image == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Please select an image'),
+            content: const Text('กรุณาเลือกรูปภาพ'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+    }
+  }
+
+  void signupUserr() async {
+    if (_signupFormKey.currentState!.validate() &&
+        passwordConfirmed() &&
+        _image != null) {
+      final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
+      CloudinaryResponse resimg = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(_image!.path, folder: "a"),
+      );
+      print(resimg.secureUrl);
+
+      authService.signUpUser(
+          context: context,
+          email: _emailController.text,
+          password: _passwordController.text,
+          username: _nameController.text,
+          images: resimg.secureUrl,
+          description: '');
+    } else {
+      if (!passwordConfirmed()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('รหัสผ่านไม่ตรงกัน'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+
+      if (_image == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('กรุณาเลือกรูปภาพ'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -108,218 +152,175 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 200),
-                Text(
-                  'LuvCats',
-                  style: GoogleFonts.gluten(fontSize: 60.0, color: Colors.red),
-                ),
-                SizedBox(height: 10),
-                Icon(
-                  Icons.pets,
-                  color: Colors.red,
-                  size: 30.0,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'สมัครสมาชิก',
-                  style: GoogleFonts.gluten(fontSize: 20.0, color: Colors.red),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            _image == null
-                ? CircleAvatar(
-                    radius: 100,
-                    backgroundColor: Colors.grey,
-                  )
-                : CircleAvatar(
-                    radius: 100,
-                    backgroundImage: Image.file(
-                      _image!,
-                      fit: BoxFit.cover,
-                    ).image,
-                    backgroundColor: Colors.white,
+      child: Form(
+        key: _signupFormKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 200),
+                  Text(
+                    'LuvCats',
+                    style:
+                        GoogleFonts.gluten(fontSize: 60.0, color: Colors.red),
                   ),
-            Padding(
-                padding: const EdgeInsets.only(left: 150),
-                child: GestureDetector(
-                  onTap: () {
-                    _pickImage();
+                  SizedBox(height: 10),
+                  Icon(
+                    Icons.pets,
+                    color: Colors.red,
+                    size: 30.0,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'สมัครสมาชิก',
+                    style:
+                        GoogleFonts.gluten(fontSize: 20.0, color: Colors.red),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              _image == null
+                  ? CircleAvatar(
+                      radius: 100,
+                      backgroundColor: Colors.grey,
+                    )
+                  : CircleAvatar(
+                      radius: 100,
+                      backgroundImage: Image.file(
+                        _image!,
+                        fit: BoxFit.cover,
+                      ).image,
+                      backgroundColor: Colors.white,
+                    ),
+              Padding(
+                  padding: const EdgeInsets.only(left: 150),
+                  child: GestureDetector(
+                    onTap: () {
+                      _pickImage();
+                    },
+                    child: Icon(
+                      Icons.image,
+                      color: Colors.black,
+                    ),
+                  )),
+              SizedBox(height: 60),
+              Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
+                  controller: _nameController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกชื่อ';
+                    }
                   },
-                  child: Icon(
-                    Icons.image,
-                    color: Colors.black,
-                  ),
-                )),
-            SizedBox(height: 60),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'สมัครสมาชิก',
-                  style: GoogleFonts.gluten(fontSize: 20.0, color: Colors.red),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: 300,
-              child: TextField(
-                controller: _nameController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  errorStyle: TextStyle(color: Colors.grey),
-                  errorText: _isNotValidate ? "Enter Proper Info" : null,
-                  hintText: "Username",
-                  hintStyle:
-                      TextStyle(color: Color.fromARGB(255, 134, 134, 134)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
+                  decoration: InputDecoration(
+                      hintText: 'ชื่อ',
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      )),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      ))),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: 300,
-              child: TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  errorStyle: TextStyle(color: Colors.grey),
-                  errorText: _isNotValidate ? "Enter Proper Info" : null,
-                  hintText: "Email",
-                  hintStyle:
-                      TextStyle(color: Color.fromARGB(255, 134, 134, 134)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: 300,
-              child: TextField(
-                controller: _passwordController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  errorStyle: TextStyle(color: Colors.grey),
-                  errorText: _isNotValidate ? "Enter Proper Info" : null,
-                  hintText: "Password",
-                  hintStyle:
-                      TextStyle(color: Color.fromARGB(255, 134, 134, 134)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: 300,
-              child: TextField(
-                controller: _cpasswordController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  errorStyle: TextStyle(color: Colors.grey),
-                  errorText: _isNotValidate ? "Enter Proper Info" : null,
-                  hintText: "ConfirmPassword",
-                  hintStyle:
-                      TextStyle(color: Color.fromARGB(255, 134, 134, 134)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    signupUser(context);
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
+                  controller: _emailController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'กรุณากรอกรหัสผ่าน';
+                    } else if (RegExp(
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$')
+                        .hasMatch(val)) {
+                      return null;
+                    } else {
+                      return 'ที่อยู่อีเมลไม่ถูกต้อง';
+                    }
                   },
-                  child: Container(
-                    width: 200.0,
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      color: Colors.red, // สีพื้นหลังของปุ่ม
-                      borderRadius:
-                          BorderRadius.circular(10.0), // รูปร่างของปุ่ม
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "ลงทะเบียน",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
+                  decoration: InputDecoration(
+                      hintText: 'อีเมล',
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      )),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      ))),
                 ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "มีบัญชีอยู่แล้ว?",
-                  style: TextStyle(color: Colors.black, fontSize: 15),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SigninScreen()));
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
+                  controller: _passwordController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'กรุณากรอกรหัสผ่าน';
+                    } else if (RegExp(r'^[A-Za-z\d]{8,}$').hasMatch(val)) {
+                      return null;
+                    } else {
+                      return 'รหัสผ่านควรมีอักขระ 8 ตัวขึ้นไป';
+                    }
                   },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "เข้าสู่ระบบ",
-                        style: TextStyle(color: Colors.red, fontSize: 15),
-                      ),
-                    ],
-                  ),
+                  decoration: InputDecoration(
+                      hintText: 'รหัสผ่าน',
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      )),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      ))),
                 ),
-              ],
-            ),
-            SizedBox(height: 30),
-          ],
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
+                  controller: _cpasswordController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกยืนยันรหัสผ่าน';
+                    }
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'ยืนยันรหัสผ่าน',
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      )),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.black38,
+                      ))),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const SizedBox(height: 10),
+              const SizedBox(height: 10),
+              CustomButton(
+                text: 'ลงทะเบียน',
+                onTap: signupUserr,
+              ),
+              const SizedBox(height: 10),
+              const SizedBox(height: 10),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     ));

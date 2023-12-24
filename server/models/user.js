@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
   username: {
     required: true,
     type: String,
-    trim:true,
+    trim: true,
   },
   email: {
     required: true,
@@ -23,15 +23,21 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
     trim: true,
-    
+    // validate: (value) => {
+    //   const pw =
+    //     /^(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+    //   return value.match(pw);
+    // },
+    // message: "Password must be at least 8 characters long and include a number."
   },
 
+
   type: {
-    required: true,
-    type: String,
-    enum: ['user', 'entrepreneur','admin'],
-    default: "user"
-  },
+  required: true,
+  type: String,
+  enum: ['user', 'entrepreneur', 'admin'],
+  default: "user"
+},
   
 });
 
