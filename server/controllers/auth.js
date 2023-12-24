@@ -39,13 +39,8 @@ exports.signup = async (req, res) => {
       }
     } 
     
-    const token = jwt.sign({ user: { id: user._id } },'jwtsecret', );
-    res.status(200).send({
-      message: 'Register Success!!',
-      user_id: newUser._id,
-      token: token, 
-    });
-    // res.send('Register Success!!');
+    
+    res.send('Register Success!!');
 
   } catch (err) {
     console.log(err);
@@ -105,7 +100,3 @@ exports.list = async (req, res) => {
   res.json({ ...user._doc, token: req.token });
 }
 
-// exports.updatetype = async (req, res) => {
-//   const type = await User.findByIdAndUpdate(req.user, { type: 'entrepreneur' });
-//   res.json(type);
-// } 

@@ -23,20 +23,11 @@ class AuthService {
     required String description,
   }) async {
     try {
-      // สร้าง User object จากข้อมูลที่รับมา
-      // User user = User(
-      //   id: '',
-      //   username: username,
-      //   password: password,
-      //   email: email,
-      //   token: '',
-      //   type: '',
-      // );
       Map<String, dynamic> requestData = {
         'username': username,
         'password': password,
         'email': email,
-        'images': images, // เพิ่ม images ในข้อมูลที่จะส่งไปยัง API
+        'images': images,
         'description': description,
       };
       // ส่งคำขอ HTTP POST เพื่อสร้างบัญชีผู้ใช้ใหม่
@@ -48,30 +39,16 @@ class AuthService {
         },
       );
 
-      // ตรวจสอบสถานะการตอบกลับจากการส่งคำขอ HTTP
       if (res.statusCode == 200) {
-        // แสดงป๊อปอัป AlertType
         await showDialog<void>(
           context: context,
           builder: (BuildContext context) {
             return const AlertType();
           },
         );
-
-        // กรณีลงทะเบียนสำเร็จแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: const Text('Account has been successfully created'),
-        //     backgroundColor: Colors.grey,
-        //     behavior: SnackBarBehavior.floating,
-        //     margin: EdgeInsets.all(30),
-        //   ),
-        // );
-        // Navigator.of(context).pop();
       }
 
       if (res.statusCode == 400) {
-        // กรณีมีบัญชีผู้ใช้ด้วยอีเมลที่ซ้ำกันแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Account with this email already exists'),
@@ -82,7 +59,6 @@ class AuthService {
         );
       }
       if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Please enter a valid email address'),
@@ -96,7 +72,6 @@ class AuthService {
       print(res.body);
       print(username);
     } catch (e) {
-      // กรณีเกิดข้อผิดพลาดในการส่งคำขอ HTTP แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
@@ -126,7 +101,6 @@ class AuthService {
         },
       );
       if (res.statusCode == 200) {
-        //succes signin
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Account has been successfully login'),
@@ -202,7 +176,6 @@ class AuthService {
     }
   }
 
-  // get user data
   void getUserData(
     BuildContext context,
   ) async {

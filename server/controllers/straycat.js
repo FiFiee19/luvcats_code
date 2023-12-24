@@ -1,12 +1,12 @@
 const { decode } = require("jsonwebtoken");
 const Straycat = require("../models/poststraycat");
-
+const User = require("../models/user");
 exports.create = async (req, res) => {
     try {
         const { breed, gender, province, description, images } = req.body;
-
+        // const cats = await Straycat.find({}).populate('user')
+        
         let straycat = new Straycat({
-            // user:req.user.username,
             user_id: req.user,
             description,
             breed,
@@ -28,9 +28,10 @@ exports.create = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        // user_id: req.user
-        const cats = await Straycat.find({})
+        const cats = await Straycat.find({}).populate('user')
         res.json(cats);
+ 
+        // res.json(users);
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -41,7 +42,7 @@ exports.list = async (req, res) => {
 exports.id = async (req, res) => {
     const straycatId = req.params.id;
     try {
-        const straycat = await Straycat.findById(straycatId);
+        const straycat = await Straycat.findById(straycatId).populate('user');
         const { __v, createdAt, ...straycatData } = straycat._doc;
         res.json(straycatData);
     } catch (e) {

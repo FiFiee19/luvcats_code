@@ -21,7 +21,5 @@ authRouter.post("/tokenIsValid", tokenIsValid);
 authRouter.get("/", auth, list);
 
 
-// authRouter.post("/updatetype", updatetype);
-
 module.exports = authRouter;
 

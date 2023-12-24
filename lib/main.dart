@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/admin/screens/home_admin.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
 import 'package:luvcats_app/features/home/home.dart';
+import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-
 
 void main() {
   runApp(

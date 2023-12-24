@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:luvcats_app/models/user.dart';
 
 class Cat {
@@ -39,7 +40,7 @@ class Cat {
       gender: map?['gender'] ?? '',
       province: map?['province'] ?? '',
       description: map?['description'] ?? '',
-      id: map?['_id'], // แก้จาก 'id' เป็น '_id'
+      id: map?['_id'],
       images: List<String>.from(map?['images'] ?? []),
     );
   }
