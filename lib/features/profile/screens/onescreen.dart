@@ -1,27 +1,28 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/features/community/screens/postcommu.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
+import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
-class CommScreen extends StatefulWidget {
-  const CommScreen({super.key});
+class OneScreen extends StatefulWidget {
+  const OneScreen({super.key});
 
   @override
-  State<CommScreen> createState() => _CommScreenState();
+  State<OneScreen> createState() => _OneScreenState();
 }
 
-class _CommScreenState extends State<CommScreen> {
+class _OneScreenState extends State<OneScreen> {
   List<Commu>? commu;
   Commu? commuu;
   final CommuServices commuServices = CommuServices();
   final AuthService authService = AuthService();
+  final ProfileServices profileService = ProfileServices();
+
   CarouselController buttonCarouselController = CarouselController();
   int _current = 0;
   bool isLiked = false;
@@ -29,11 +30,11 @@ class _CommScreenState extends State<CommScreen> {
   @override
   void initState() {
     super.initState();
-    fetchAllCommu();
+    fetchProfile();
   }
 
-  fetchAllCommu() async {
-    commu = await commuServices.fetchAllCommu(context);
+  fetchProfile() async {
+    commu = await profileService.fetchProfile(context);
     if (mounted) {
       setState(() {});
     }
@@ -41,7 +42,7 @@ class _CommScreenState extends State<CommScreen> {
 
   Future<void> _getData() async {
     setState(() {
-      fetchAllCommu();
+      fetchProfile();
     });
   }
 
@@ -59,7 +60,7 @@ class _CommScreenState extends State<CommScreen> {
             'No Post',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-        ),       
+        ),
       );
     } else {
       return Scaffold(
@@ -120,7 +121,53 @@ class _CommScreenState extends State<CommScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    CustomCarouselSlider(images: commuData.images),
+                    CarouselSlider(
+                      items: commuData.images.map(
+                        (i) {
+                          return Builder(
+                            builder: (BuildContext context) => Image.network(
+                              i,
+                              fit: BoxFit.contain,
+                              height: 300,
+                            ),
+                          );
+                        },
+                      ).toList(),
+                      carouselController: buttonCarouselController,
+                      options: CarouselOptions(
+                        viewportFraction: 1,
+                        height: 200,
+                        enableInfiniteScroll: false,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index; // อัปเดตตำแหน่งสไลด์ปัจจุบัน
+                          });
+                        },
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: commuData.images.asMap().entries.map((entry) {
+                        return GestureDetector(
+                          onTap: () =>
+                              buttonCarouselController.animateToPage(entry.key),
+                          child: Container(
+                            width: 12.0,
+                            height: 12.0,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _current == entry.key
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.3),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
@@ -193,26 +240,6 @@ class _CommScreenState extends State<CommScreen> {
             },
           ),
         ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 20.0),
-          child: FloatingActionButton(
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            backgroundColor: Colors.red,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PostCommu(),
-                ),
-              );
-            },
-            shape: const CircleBorder(),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       );
     }
   }

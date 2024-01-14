@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/admin/screens/home_admin.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
-import 'package:luvcats_app/features/home/home.dart';
-import 'package:luvcats_app/features/profile/services/profile_service.dart';
+import 'package:luvcats_app/features/home/splashscreen.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   runApp(
     MultiProvider(
       providers: [
@@ -22,12 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Provider.of<UserProvider>(context).user.token.isEmpty
-          ? const SigninScreen() // ถ้าไม่มี Token, ไปที่หน้า SigninScreen
-          : Provider.of<UserProvider>(context).user.type == 'user'
-              ? const Home() // ถ้ามี Token และเป็น User, ไปที่หน้า Home
-              : const AdminScreen(), // ถ้ามี Token แต่ไม่ใช่ User, ไปที่หน้า AdminScreen
-    );
+    return MaterialApp(home: 
+        Provider.of<UserProvider>(context).user.token.isEmpty
+            ? const SigninScreen() // ถ้าไม่มี Token, ไปที่หน้า SigninScreen
+            : Provider.of<UserProvider>(context).user.type == 'user'
+                ? const SplashScreen() // ถ้ามี Token และเป็น User, ไปที่หน้า Home
+                : const AdminScreen(), // ถ้ามี Token แต่ไม่ใช่ User, ไปที่หน้า AdminScreen
+        );
   }
 }
+

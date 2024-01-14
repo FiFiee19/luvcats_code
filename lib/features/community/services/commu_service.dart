@@ -36,6 +36,7 @@ class CommuServices {
         user_id: user_id,
         title: title,
         description: description,
+        likes: [],
         images: imageUrls,
       );
 
@@ -97,5 +98,25 @@ class CommuServices {
       showSnackBar(context, e.toString());
     }
     return commuList;
+  }
+  
+
+  Future<void> likesCommu(BuildContext context, String post_id) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res =
+          await http.put(Uri.parse('$url/likesCommu/$post_id'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token,
+      });
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {},
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
   }
 }

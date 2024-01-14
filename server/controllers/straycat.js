@@ -4,9 +4,12 @@ const User = require("../models/user");
 exports.create = async (req, res) => {
     try {
         const { breed, gender, province, description, images } = req.body;
-        // const cats = await Straycat.find({}).populate('user')
-        
-        let straycat = new Straycat({
+        const user = await User.findById(req.user);       
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        let straycat = new Straycat({  
+            user: user,
             user_id: req.user,
             description,
             breed,

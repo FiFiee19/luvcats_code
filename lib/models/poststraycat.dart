@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:luvcats_app/models/user.dart';
 
 class Cat {
+  User? user;
   final String user_id;
   final String breed;
   final String gender;
@@ -12,6 +12,7 @@ class Cat {
   final List<String> images;
 
   Cat({
+    this.user,
     required this.user_id,
     required this.breed,
     required this.gender,
@@ -23,6 +24,7 @@ class Cat {
 
   Map<String, dynamic> toMap() {
     return {
+      'user': user?.toMap(),
       'user_id': user_id,
       'breed': breed,
       'gender': gender,
@@ -34,14 +36,18 @@ class Cat {
   }
 
   factory Cat.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
+      throw Exception('Map cannot be null');
+    }
     return Cat(
-      user_id: map?['user_id'] ?? '',
-      breed: map?['breed'] ?? '',
-      gender: map?['gender'] ?? '',
-      province: map?['province'] ?? '',
-      description: map?['description'] ?? '',
-      id: map?['_id'],
-      images: List<String>.from(map?['images'] ?? []),
+      user: map['user'] != null ? User.fromMap(map['user']) : null,
+      user_id: map['user_id'] ?? '',
+      breed: map['breed'] ?? '',
+      gender: map['gender'] ?? '',
+      province: map['province'] ?? '',
+      description: map['description'] ?? '',
+      id: map['_id'],
+      images: List<String>.from(map['images'] ?? []),
     );
   }
 

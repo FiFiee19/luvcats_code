@@ -7,7 +7,6 @@ const entrepreneurRouter = require("./routes/entrepreneur");
 const PORT = process.env.PORT || 5000;
 const app = express();
 const connectDB = require('./config/db');
-const profileRouter = require("./routes/profile");
 
 //เรียกใช้
 app.use(express.json());
@@ -15,7 +14,7 @@ app.use(authRouter);
 app.use(straycatRouter);
 app.use(commuRouter);
 app.use(entrepreneurRouter);
-app.use(profileRouter);
+
 //connect database
 connectDB()
 

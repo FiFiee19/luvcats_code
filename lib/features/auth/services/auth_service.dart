@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
 import 'package:luvcats_app/config/utils.dart';
-import 'package:luvcats_app/features/admin/screens/home_admin.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
-import 'package:luvcats_app/features/home/home.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/alert_type.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +18,6 @@ class AuthService {
     required String password,
     required String username,
     required String images,
-    required String description,
   }) async {
     try {
       Map<String, dynamic> requestData = {
@@ -28,7 +25,6 @@ class AuthService {
         'password': password,
         'email': email,
         'images': images,
-        'description': description,
       };
       // ส่งคำขอ HTTP POST เพื่อสร้างบัญชีผู้ใช้ใหม่
       http.Response res = await http.post(
@@ -126,34 +122,41 @@ class AuthService {
         },
       );
       if (res.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Account has been successfully login'),
-            backgroundColor: Colors.grey,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: const Text('Account has been successfully login'),
+        //     backgroundColor: Colors.grey,
+        //     behavior: SnackBarBehavior.floating,
+        //     margin: EdgeInsets.all(30),
+        //   ),
+        // );
         SharedPreferences prefs = await SharedPreferences.getInstance();
         Provider.of<UserProvider>(context, listen: false).setUser(res.body);
-        await prefs.setString('authtoken', jsonDecode(res.body)['token']);
-
         final userData = jsonDecode(res.body);
-        if (userData['user']['type'] == 'admin') {
-          navigator.pushAndRemoveUntil(
-            CupertinoPageRoute(
-              builder: (context) => const AdminScreen(),
-            ),
-            (route) => false,
-          );
-        } else {
-          navigator.pushAndRemoveUntil(
-            CupertinoPageRoute(
-              builder: (context) => const Home(),
-            ),
-            (route) => false,
-          );
-        }
+        await prefs.setString('authtoken', userData['token']);
+        navigator.pushAndRemoveUntil(
+          CupertinoPageRoute(
+            builder: (context) => const SigninScreen(),
+          ),
+          (route) => false,
+        );
+
+        // await prefs.setString('username', userData['user']['username']);
+        // if (userData['user']['type'] == 'admin') {
+        //   navigator.pushAndRemoveUntil(
+        //     CupertinoPageRoute(
+        //       builder: (context) => const AdminScreen(),
+        //     ),
+        //     (route) => false,
+        //   );
+        // } else {
+        //   navigator.pushAndRemoveUntil(
+        //     CupertinoPageRoute(
+        //       builder: (context) => const Home(),
+        //     ),
+        //     (route) => false,
+        //   );
+        // }
       }
 
       if (res.statusCode == 400) {
@@ -201,9 +204,7 @@ class AuthService {
     }
   }
 
-  void getUserData(
-    BuildContext context,
-  ) async {
+  void getUserData(BuildContext context, String user_id) async {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       SharedPreferences prefs = await SharedPreferences.getInstance();

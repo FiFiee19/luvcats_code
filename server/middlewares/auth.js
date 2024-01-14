@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+const User = require('../models/user');
 const auth = async (req, res, next) => {
   try {
       //code
@@ -8,6 +8,7 @@ const auth = async (req, res, next) => {
           return res.status(401).send('No token')
       }
       const decoded = jwt.verify(token, 'jwtsecret')
+
       req.user = decoded.user.id
       console.log(req.user)
 

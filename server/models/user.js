@@ -23,12 +23,6 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
     trim: true,
-    // validate: (value) => {
-    //   const pw =
-    //     /^(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
-    //   return value.match(pw);
-    // },
-    // message: "Password must be at least 8 characters long and include a number."
   },
 
 
@@ -37,6 +31,10 @@ const userSchema = mongoose.Schema({
   type: String,
   enum: ['user', 'entrepreneur', 'admin'],
   default: "user"
+},
+images: {
+  required: false,
+  type: String,
 },
   
 });

@@ -1,12 +1,10 @@
 const User = require('../models/user');
-const Profile = require('../models/profile');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { create } = require('./entrepreneur.js');
 
 exports.signup = async (req, res) => {
   try {
-    const { username, email, password, type } = req.body;
+    const { username, email, password, type, images } = req.body;
 
     // Check if user exists in UserSchema
     var user = await User.findOne({ email });
@@ -14,33 +12,21 @@ exports.signup = async (req, res) => {
       return res.send('User Already Exists!!!').status(400);
     }
 
-
     const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(password, salt);
-
+    
 
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
-      type
+      type,
+      images
     });
     await newUser.save();
-
-    if (newUser.type === 'user') {
-      var profile = await Profile.findOne({ user_id: newUser._id });
-      if (!profile) {
-        profile = new Profile({
-          user_id: newUser._id,
-          images: req.body.images,
-          description: req.body.description,
-        });
-        await profile.save();
-      }
-    } 
-    
     
     res.send('Register Success!!');
+
 
   } catch (err) {
     console.log(err);
@@ -96,7 +82,7 @@ exports.tokenIsValid = async (req, res) => {
 }
 
 exports.list = async (req, res) => {
-  const user = await User.findById(req.user);
+  const user = await User.find({})
   res.json({ ...user._doc, token: req.token });
 }
 

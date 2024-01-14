@@ -1,11 +1,11 @@
-const { Schema, mongoose } = require("mongoose");
+const { mongoose } = require("mongoose");
 
 const straycatSchema = mongoose.Schema({
-  user: [{
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }],
+  },
   user_id: {
     required: true,
     type: String,
@@ -33,6 +33,12 @@ const straycatSchema = mongoose.Schema({
       required: false,
     },
   ],
+  status: {
+    required: true,
+    type: String,
+    enum: ['no', 'yes'],
+    default: "no"
+  },
 });
 
 const Straycat = mongoose.model("Straycat", straycatSchema);

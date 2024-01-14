@@ -64,7 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
           password: _passwordController.text,
           username: _nameController.text,
           images: resimg.secureUrl,
-          description: '');
+          );
     } else {
       if (!passwordConfirmed()) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -106,7 +106,7 @@ class _SignupScreenState extends State<SignupScreen> {
           password: _passwordController.text,
           username: _nameController.text,
           images: resimg.secureUrl,
-          description: '');
+          );
     } else {
       if (!passwordConfirmed()) {
         ScaffoldMessenger.of(context).showSnackBar(

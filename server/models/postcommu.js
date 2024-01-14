@@ -4,7 +4,12 @@ const commuSchema = mongoose.Schema({
     user_id: {
         required: true,
         type: String,
-    },
+          },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
     title: {
         required: true,
         type: String,
@@ -23,10 +28,12 @@ const commuSchema = mongoose.Schema({
     //     required: false,
     //     type: String,
     // }, 
-    // like: {
-    //     required: true,
-    //     type: String,
-    // },
+    likes:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
+        }
+    ],
 },
 { timestamps: true },    
 )

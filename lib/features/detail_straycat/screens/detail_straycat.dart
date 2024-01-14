@@ -1,7 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/widgets/carouselslider.dart';
 
 class DetailStraycatScreen extends StatefulWidget {
   final Cat cat;
@@ -32,28 +32,11 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          CarouselSlider(
-            items: widget.cat.images.map(
-              (i) {
-                return Builder(
-                  builder: (BuildContext context) => Image.network(
-                    i,
-                    fit: BoxFit.contain,
-                    height: 200,
-                  ),
-                );
-              },
-            ).toList(),
-            options: CarouselOptions(
-              viewportFraction: 1,
-              height: 300,
-            ),
+          CustomCarouselSlider(images: widget.cat.images,
           ),
           SizedBox(
             height: 20,
           ),
-          Padding(
-              padding: const EdgeInsets.only(left: 280), child: ReportScreen()),
           Row(
             children: [
               Padding(
@@ -61,8 +44,21 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    SizedBox(
+                      width: 10,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      backgroundImage: NetworkImage(
+                        widget.cat.user!.images,
+                      ),
+                      radius: 10,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Text(
-                      widget.cat.user_id,
+                      widget.cat.user!.username,
                     ),
                   ],
                 ),
