@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
+import 'package:luvcats_app/features/community/screens/detail_commu.dart';
 import 'package:luvcats_app/features/community/screens/postcommu.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
@@ -23,7 +24,6 @@ class _CommScreenState extends State<CommScreen> {
   final CommuServices commuServices = CommuServices();
   final AuthService authService = AuthService();
   CarouselController buttonCarouselController = CarouselController();
-  int _current = 0;
   bool isLiked = false;
 
   @override
@@ -59,7 +59,7 @@ class _CommScreenState extends State<CommScreen> {
             'No Post',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-        ),       
+        ),
       );
     } else {
       return Scaffold(
@@ -181,6 +181,22 @@ class _CommScreenState extends State<CommScreen> {
                                 ),
                                 Text(
                                   '${commuData.likes.length}', // แสดงจำนวน likes
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.comment,
+                                  ),
+                                  onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailCommuScreen(
+                                        commu: commuData,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '${commuData.comments.length}', // แสดงจำนวน likes
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],

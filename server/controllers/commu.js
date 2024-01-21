@@ -1,5 +1,6 @@
 const Commu = require('../models/postcommu')
 const User = require('../models/user');
+const Comment = require('../models/comment');
 exports.list = async (req,res) => {
     try {
         const commu = await Commu.find({}).populate('user')
@@ -68,4 +69,58 @@ exports.id = async (req,res) => {
 
     }
 }
+
+exports.addComment = async (req, res) => {
+    try {
+        const{message} = req.body;
+        const {post_id} = req.params;
+        const user = await User.findById(req.user);
+        const post = await Commu.findById(post_id);
+        const newComment = new Comment({
+            message,
+            user_id: req.user,
+            user: user,
+            post: post
+        })
+        await newComment.save();
+        var getPost = await Commu.findById(post_id);
+        getPost = await Commu.findByIdAndUpdate(
+            post_id,
+            { $push: { comments: newComment } },
+            { new: true }
+        );
+        
+        return res.status(200).json(await getPost.populate('user_id'));
+
+    }catch (e){
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
+
+exports.comment = async (req, res) => {
+    try {
+        // สมมติว่าคุณส่ง post_id ผ่าน req.params
+        const { post_id } = req.params;
+
+        // ดึงข้อมูลโพสต์ที่เฉพาะเจาะจงและคอมเมนต์ที่เกี่ยวข้อง
+        const post = await Commu.findById(post_id)
+            .populate({
+                path: 'comments',
+                populate: { path: 'user' }
+            });
+
+        // ตรวจสอบว่าพบโพสต์หรือไม่
+        if (!post) {
+            return res.status(404).json({ msg: 'Post not found' });
+        }
+
+        res.json(post.comments); // ส่งคอมเมนต์กลับไปยัง client
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Server Error');
+    }
+};
+
 

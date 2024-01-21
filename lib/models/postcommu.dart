@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:luvcats_app/models/user.dart';
 
 class Commu {
@@ -8,6 +9,7 @@ class Commu {
   final String description;
   final String? id;
   final likes;
+  final comments;
   final List<String> images;
 
   Commu({
@@ -16,6 +18,7 @@ class Commu {
     required this.title,
     required this.description,
     required this.likes,
+    required this.comments,
     this.id,
     required this.images,
   });
@@ -28,6 +31,7 @@ class Commu {
       'description': description,
       'id': id,
       'likes': likes,
+      'comments': comments,
       'images': images,
     };
   }
@@ -43,6 +47,7 @@ class Commu {
       description: map['description'] ?? '',
       id: map['_id'], // Assuming '_id' is the correct field from your backend
       likes: map['likes'] ?? [],
+      comments: map['comments'] ?? [],
       images: List<String>.from(map['images'] ?? []),
     );
   }
