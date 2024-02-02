@@ -12,7 +12,7 @@ class UserProvider extends ChangeNotifier {
     token: "",
     password: "",
     type: "",
-    images: "",
+    imagesP: "",
 
   );
 

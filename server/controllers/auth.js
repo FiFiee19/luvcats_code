@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
   try {
-    const { username, email, password, type, images } = req.body;
+    const { username, email, password, type, imagesP } = req.body;
 
     // Check if user exists in UserSchema
     var user = await User.findOne({ email });
@@ -21,7 +21,7 @@ exports.signup = async (req, res) => {
       email,
       password: hashedPassword,
       type,
-      images
+      imagesP
     });
     await newUser.save();
     

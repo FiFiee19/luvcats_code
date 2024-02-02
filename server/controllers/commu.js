@@ -42,10 +42,10 @@ exports.create = async (req,res) => {
 exports.likes = async (req , res ) => {
     try {
         const {post_id} = req.params;
-        // get post 
+         
         var getPost = await Commu.findById(post_id);
         if(!getPost) return res.status(404).json("Post not found !!")
-        // check if user liked on this post before or not
+        
         if(getPost.likes.includes(req.user)){
             getPost = await Commu.findByIdAndUpdate(post_id , {$pull:{likes:req.user}} , {new:true}) 
         }else{
@@ -122,5 +122,35 @@ exports.comment = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.deletepost = async (req, res) => {
+    
+    try {
+        const { post_id } = req.params;
+        await Commu.findByIdAndDelete(post_id);
+        return res.status(200).json({message:"Post Deleted successfully"})
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+
+}
+
+exports.editpost = async(req, res) => {
+    try {
+        // สมมติว่าคุณส่ง post_id ผ่าน req.params
+        const { post_id } = req.params;
+
+        // ดึงข้อมูลโพสต์ที่เฉพาะเจาะจงและคอมเมนต์ที่เกี่ยวข้อง
+        const post = await Commu.findById(post_id)
+        const newPost = await Commu.findOneAndUpdate(post , req.body , {new:true});
+
+        return res.status(200).json({data:newPost , message:"updated successfully "});
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Server Error');
+    }
+};
+
 
 

@@ -1,4 +1,4 @@
-const { decode } = require("jsonwebtoken");
+const Commu = require("../models/postcommu");
 const Straycat = require("../models/poststraycat");
 const User = require("../models/user");
 exports.create = async (req, res) => {
@@ -25,7 +25,7 @@ exports.create = async (req, res) => {
     } catch (e) {
         console.log(e);
         res.status(500).send('Server Error');
-        //check error
+        
     }
 }
 
@@ -34,7 +34,7 @@ exports.list = async (req, res) => {
         const cats = await Straycat.find({}).populate('user')
         res.json(cats);
  
-        // res.json(users);
+        
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -43,11 +43,36 @@ exports.list = async (req, res) => {
 }
 
 exports.id = async (req, res) => {
+    try {
+        const straycat = await Straycat.find( {user_id: req.user} ).populate('user')
+        res.json(straycat);
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+}
+
+exports.deletepost = async (req, res) => {
     const straycatId = req.params.id;
     try {
-        const straycat = await Straycat.findById(straycatId).populate('user');
-        const { __v, createdAt, ...straycatData } = straycat._doc;
-        res.json(straycatData);
+        await Straycat.findByIdAndDelete(straycatId);
+        return res.status(200).json({message:"Post Deleted successfully"})
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+
+}
+
+exports.editpost = async (req, res) => {
+    const straycatId = req.params.id;
+    try { 
+        const newPost = await Straycat.findByIdAndUpdate(
+            straycatId, 
+            req.body, 
+            { new: true } // ตัวเลือกนี้จะทำให้ method คืนค่าเอกสารหลังจากอัปเดต
+        );
+        return res.status(200).json({data:newPost , message:"updated successfully "});
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')

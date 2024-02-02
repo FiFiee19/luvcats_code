@@ -31,16 +31,16 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
     fetchAllCats();
   }
 
-  fetchAllCats() async {
+  Future<void> fetchAllCats() async {
     cats = await catServices.fetchAllCats(context);
     if (mounted) {
       setState(() {});
     }
   }
 
-  Future<void> _getData() async {
-    await fetchAllCats();
-  }
+  // Future<void> _getData() async {
+  //   await fetchAllCats();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
       bodyContent = const Loader(); // แสดงตัวโหลด
     } else if (cats!.isEmpty) {
       bodyContent = RefreshIndicator(
-          onRefresh: _getData,
+          onRefresh: fetchAllCats,
           child: Center(
             child: Text(
               'No Post',
@@ -59,7 +59,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
           ));
     } else {
       bodyContent = RefreshIndicator(
-        onRefresh: _getData,
+        onRefresh: fetchAllCats,
         child: GridView.builder(
           itemCount: cats!.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -108,7 +108,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               CircleAvatar(
                                 backgroundColor: Colors.grey,
                                 backgroundImage: NetworkImage(
-                                  catData.user!.images,
+                                  catData.user!.imagesP,
                                 ),
                                 radius: 10,
                               ),

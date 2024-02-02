@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
@@ -12,7 +14,6 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:luvcats_app/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
-// import 'package:luvcat_app/services/auth_services.dart';
 
 class FormsEntre extends StatefulWidget {
   const FormsEntre({super.key});
@@ -22,7 +23,7 @@ class FormsEntre extends StatefulWidget {
 }
 
 class _FormsEntreState extends State<FormsEntre> {
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController fullnameController = TextEditingController();
   final TextEditingController user_addressController = TextEditingController();
   final TextEditingController store_addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -30,49 +31,91 @@ class _FormsEntreState extends State<FormsEntre> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController contactController = TextEditingController();
   final TextEditingController provinceController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _cpasswordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   final EntreService entreService = EntreService();
   List<File> images = [];
   final _formsEntreFormKey = GlobalKey<FormState>();
   List<Entrepreneur>? entre;
   Cathotel? cathotel;
+  File? _imageP;
+  String selectedProvince = 'กรุงเทพมหานคร';
 
-  @override
-  void dispose() {
-    if (mounted) {
-      nameController.dispose();
-      user_addressController.dispose();
-      store_addressController.dispose();
-      phoneController.dispose();
-      descriptionController.dispose();
-      priceController.dispose();
-      contactController.dispose();
-      provinceController.dispose();
-    }
-    super.dispose();
+  void _pickImage() async {
+    var res = await pickImage();
+    if (!mounted) return;
+    setState(() {
+      _imageP = res;
+    });
   }
 
-  void formsentre({String store_id = ''}) {
-    if (_formsEntreFormKey.currentState!.validate() && images.isNotEmpty) {
+  void formsentre({String store_id = ''}) async {
+    if (_formsEntreFormKey.currentState!.validate() &&
+        passwordConfirmed() &&
+        _imageP != null &&
+        images.isNotEmpty) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
+      final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
+      CloudinaryResponse resimg = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(_imageP!.path, folder: "a"),
+      );
+      print(resimg.secureUrl);
       entreService.cathotel(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _nameController.text,
+        imagesP: resimg.secureUrl,
         user_id: user_id,
         context: context,
         store_id: store_id,
-        name: nameController.text,
+        name: fullnameController.text,
         user_address: user_addressController.text,
         store_address: store_addressController.text,
         phone: phoneController.text,
         description: descriptionController.text,
         price: priceController.text,
         contact: contactController.text,
-        province: provinceController.text,
-        review_id: '',
-        rating: '',
+        province: selectedProvince,
         images: images,
       );
+    } else {
+      if (!passwordConfirmed()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('รหัสผ่านไม่ตรงกัน'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+
+      if (_imageP == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('กรุณาเลือกรูปภาพ'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+
+      if (images.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('กรุณาเลือกรูปภาพ'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
     }
   }
 
@@ -81,6 +124,32 @@ class _FormsEntreState extends State<FormsEntre> {
     setState(() {
       images = res;
     });
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() == _cpasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  void dispose() {
+    if (mounted) {
+      fullnameController.dispose();
+      user_addressController.dispose();
+      store_addressController.dispose();
+      phoneController.dispose();
+      descriptionController.dispose();
+      priceController.dispose();
+      contactController.dispose();
+      provinceController.dispose();
+      _emailController.dispose();
+      _passwordController.dispose();
+      _nameController.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -107,6 +176,125 @@ class _FormsEntreState extends State<FormsEntre> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
+                Center(child: Text('เลือกรูปภาพโปรไฟล์')),
+                const SizedBox(height: 10),
+                _imageP == null
+                    ? CircleAvatar(
+                        radius: 100,
+                        backgroundColor: Colors.grey,
+                      )
+                    : CircleAvatar(
+                        radius: 100,
+                        backgroundImage: Image.file(
+                          _imageP!,
+                          fit: BoxFit.cover,
+                        ).image,
+                        backgroundColor: Colors.white,
+                      ),
+                Padding(
+                    padding: const EdgeInsets.only(left: 150),
+                    child: GestureDetector(
+                      onTap: () {
+                        _pickImage();
+                      },
+                      child: Icon(
+                        Icons.image,
+                        color: Colors.black,
+                      ),
+                    )),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: _nameController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกชื่อ';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'ชื่อ',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: _emailController,
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return 'กรุณากรอกอีเมล';
+                      } else if (RegExp(
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$')
+                          .hasMatch(val)) {
+                        return null;
+                      } else {
+                        return 'ที่อยู่อีเมลไม่ถูกต้อง';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'อีเมล',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return 'กรุณากรอกรหัสผ่าน';
+                      } else if (RegExp(r'^[A-Za-z\d]{8,}$').hasMatch(val)) {
+                        return null;
+                      } else {
+                        return 'รหัสผ่านควรมีอักขระ 8 ตัวขึ้นไป';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'รหัสผ่าน',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: _cpasswordController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกยืนยันรหัสผ่าน';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'ยืนยันรหัสผ่าน',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Center(child: Text('เลือกรูปภาพร้านค้า')),
+                const SizedBox(height: 10),
                 images.isNotEmpty
                     ? CarouselSlider(
                         items: images.map(
@@ -160,18 +348,10 @@ class _FormsEntreState extends State<FormsEntre> {
                       ),
                 const SizedBox(height: 30),
                 CustomTextField(
-                  controller: nameController,
+                  controller: fullnameController,
                   hintText: 'ชื่อ-นามสกุล',
                 ),
                 const SizedBox(height: 10),
-                CustomTextField(
-                  controller: user_addressController,
-                  hintText: 'ที่อยู่',
-                ),
-                CustomTextField(
-                  controller: store_addressController,
-                  hintText: 'ที่อยู่ร้าน',
-                ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: phoneController,
@@ -194,14 +374,56 @@ class _FormsEntreState extends State<FormsEntre> {
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
-                  controller: provinceController,
-                  hintText: 'จังหวัด',
+                  controller: user_addressController,
+                  hintText: 'ที่อยู่',
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  controller: store_addressController,
+                  hintText: 'ที่อยู่ของร้าน',
+                ),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    // การตกแต่งอื่นๆ...
+                  ),
+                  hint: const Text(
+                    'จังหวัด',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณาเลือกจังหวัด';
+                    }
+                    return null;
+                  },
+                  items: province.map((String selectedProvince) {
+                    return DropdownMenuItem<String>(
+                      value: selectedProvince,
+                      child: Text(
+                        selectedProvince,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedProvince = value!;
+                    });
+                  },
+                  // ตัวเลือกอื่นๆ...
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
                 CustomButton(
-                  text: 'Post',
+                  text: 'ลงทะเบียน',
                   onTap: formsentre,
                 ),
               ],

@@ -59,12 +59,12 @@ class _SignupScreenState extends State<SignupScreen> {
       print(resimg.secureUrl);
 
       authService.signUpUser(
-          context: context,
-          email: _emailController.text,
-          password: _passwordController.text,
-          username: _nameController.text,
-          images: resimg.secureUrl,
-          );
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _nameController.text,
+        imagesP: resimg.secureUrl,
+      );
     } else {
       if (!passwordConfirmed()) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -101,12 +101,12 @@ class _SignupScreenState extends State<SignupScreen> {
       print(resimg.secureUrl);
 
       authService.signUpUser(
-          context: context,
-          email: _emailController.text,
-          password: _passwordController.text,
-          username: _nameController.text,
-          images: resimg.secureUrl,
-          );
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _nameController.text,
+        imagesP: resimg.secureUrl,
+      );
     } else {
       if (!passwordConfirmed()) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -222,15 +222,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                   },
                   decoration: InputDecoration(
-                      hintText: 'ชื่อ',
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      )),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      ))),
+                    hintText: 'ชื่อ',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -240,7 +238,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: _emailController,
                   validator: (val) {
                     if (val!.isEmpty) {
-                      return 'กรุณากรอกรหัสผ่าน';
+                      return 'กรุณากรอกอีเมล';
                     } else if (RegExp(
                             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$')
                         .hasMatch(val)) {
@@ -250,15 +248,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                   },
                   decoration: InputDecoration(
-                      hintText: 'อีเมล',
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      )),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      ))),
+                    hintText: 'อีเมล',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -276,15 +272,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                   },
                   decoration: InputDecoration(
-                      hintText: 'รหัสผ่าน',
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      )),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      ))),
+                    hintText: 'รหัสผ่าน',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -298,15 +292,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                   },
                   decoration: InputDecoration(
-                      hintText: 'ยืนยันรหัสผ่าน',
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      )),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.black38,
-                      ))),
+                    hintText: 'ยืนยันรหัสผ่าน',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),

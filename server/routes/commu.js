@@ -7,7 +7,9 @@ const {
     likes,
     id,
     addComment,
-    comment
+    comment,
+    deletepost,
+    editpost
 } = require('../controllers/commu')
 
 const auth = require('../middlewares/auth')
@@ -18,5 +20,7 @@ commuRouter.put('/likesCommu/:post_id',auth,likes)
 commuRouter.get('/getCommu/:user_id',auth,id)
 commuRouter.post('/addComment/:post_id',auth,addComment)
 commuRouter.get('/getComment/:post_id',auth,comment)
+commuRouter.delete('/getCommu/delete/:post_id',auth,deletepost)
+commuRouter.put('/getCommu/edit/:post_id',auth,editpost)
 
 module.exports = commuRouter

@@ -16,6 +16,10 @@ import 'package:provider/provider.dart';
 class EntreService {
   void cathotel({
     required BuildContext context,
+    required String email,
+    required String password,
+    required String username,
+    required String imagesP,
     required String user_id,
     required String store_id,
     required String name,
@@ -26,8 +30,6 @@ class EntreService {
     required String price,
     required String contact,
     required String province,
-    required String review_id,
-    required String rating,
     required List<File> images,
   }) async {
     final navigator = Navigator.of(context);
@@ -44,7 +46,12 @@ class EntreService {
       }
 
       Map<String, dynamic> requestData = {
+        'username': username,
+        'password': password,
+        'email': email,
+        'imagesP': imagesP,
         'user_id': userProvider.user.id,
+        'store_id':store_id,
         'name': name,
         'user_address': user_address,
         'store_address': store_address,
@@ -53,8 +60,6 @@ class EntreService {
         'price': price,
         'contact': contact,
         'province': province,
-        'review_id': review_id,
-        'rating': rating,
         'images': imageUrls,
       };
       http.Response res = await http.post(
@@ -62,7 +67,6 @@ class EntreService {
         body: jsonEncode(requestData),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'authtoken': userProvider.user.token,
         },
       );
       if (res.statusCode == 200) {
@@ -81,7 +85,7 @@ class EntreService {
             margin: EdgeInsets.all(30),
           ),
         );
-        Navigator.of(context).pop();
+        
       }
 
       if (res.statusCode == 400) {

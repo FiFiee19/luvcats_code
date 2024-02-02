@@ -125,18 +125,14 @@ class CommuServices {
       BuildContext context, String post_id, String message) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      http.Response res = await http.post(
-        Uri.parse('$url/addComment/$post_id'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'authtoken': userProvider.user.token,
-        },
-        body: jsonEncode({
-          'post_id': post_id,
-          'message': message,
-          'user_id': userProvider.user.id
-        }),
-      );
+      Comment comment =
+          Comment(message: message, user_id: userProvider.user.id);
+      http.Response res = await http.post(Uri.parse('$url/addComment/$post_id'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'authtoken': userProvider.user.token,
+          },
+          body: comment.toJson());
 
       httpErrorHandle(
         response: res,
@@ -150,33 +146,6 @@ class CommuServices {
     }
   }
 
-  // Inside CommuServices class
-  // Future<List<Comment>> fetchComment(
-  //     BuildContext context, String post_id) async {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   try {
-  //     http.Response res = await http.get(
-  //       Uri.parse('$url/getComment/$post_id'),
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //         'authtoken': userProvider.user.token,
-  //       },
-  //     );
-
-  //     if (res.statusCode == 200) {
-  //       List<Comment> comments = (jsonDecode(res.body) as List)
-  //           .map((commentJson) => Comment.fromJson(commentJson))
-  //           .toList();
-  //       print(commentsData);
-  //       return comments;
-  //     } else {
-  //       throw Exception('Failed to load comments');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Error fetching comments: $e');
-  //   }
-
-  // }
   Future<List<Comment>> fetchComment(
       BuildContext context, String post_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/profile/screens/editprofile.dart';
 import 'package:luvcats_app/features/profile/screens/onescreen.dart';
+import 'package:luvcats_app/features/profile/screens/twoscreen.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                   backgroundColor: Colors.grey,
                   backgroundImage: NetworkImage(
-                    user.images,
+                    user.imagesP,
                   ),
                   radius: 50,
                 ),
@@ -115,6 +116,6 @@ class OneScreen1 extends StatelessWidget {
 class TwoScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Home'));
+    return TwoScreen();
   }
 }

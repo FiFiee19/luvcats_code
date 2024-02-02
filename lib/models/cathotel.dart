@@ -7,8 +7,6 @@ class Cathotel {
   final String price;
   final String contact;
   final String province;
-  final String rating;
-  final String review_id;
   final List<String> images;
   Cathotel({
     required this.id,
@@ -17,8 +15,6 @@ class Cathotel {
     required this.price,
     required this.contact,
     required this.province,
-    required this.rating,
-    required this.review_id,
     required this.images,
   });
 
@@ -30,8 +26,6 @@ class Cathotel {
       'price': price,
       'contact': contact,
       'province': province,
-      'rating': rating,
-      'review_id': review_id,
       'images': images,
     };
   }
@@ -44,8 +38,6 @@ class Cathotel {
       price: map['price'] ?? '',
       contact: map['contact'] ?? '',
       province: map['province'] ?? '',
-      rating: map['rating'] ?? '',
-      review_id: map['review_id'] ?? '',
       images: map['images'] ?? '',
     );
   }

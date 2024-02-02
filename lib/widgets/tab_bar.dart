@@ -47,7 +47,7 @@ class _tab_BarState extends State<tab_Bar> {
         children: <Widget>[
           StrayCatScreen(),
           CathotelScreen(),
-          CommScreen(),
+          CommuScreen(),
           Map_Cat(),
           ProfileScreen(),
         ],
@@ -59,7 +59,7 @@ class _tab_BarState extends State<tab_Bar> {
         currentIndex: currentIndex,
         backgroundColor: Colors.white,
         onTap: onTap,
-        items: const <BottomNavigationBarItem>[
+        items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Store'),
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: 'Community'),
@@ -68,8 +68,6 @@ class _tab_BarState extends State<tab_Bar> {
         ],
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.black,
-        selectedLabelStyle: TextStyle(color: Colors.black),
-        unselectedLabelStyle: TextStyle(color: Colors.pink),
       ),
     );
   }

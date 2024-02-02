@@ -32,7 +32,8 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          CustomCarouselSlider(images: widget.cat.images,
+          CustomCarouselSlider(
+            images: widget.cat.images,
           ),
           SizedBox(
             height: 20,
@@ -50,7 +51,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                     CircleAvatar(
                       backgroundColor: Colors.grey,
                       backgroundImage: NetworkImage(
-                        widget.cat.user!.images,
+                        widget.cat.user!.imagesP,
                       ),
                       radius: 10,
                     ),
@@ -94,7 +95,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "อายุ:  " + widget.cat.province,
+                  "จังหวัด:  " + widget.cat.province,
                 ),
               ],
             ),

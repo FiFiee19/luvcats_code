@@ -1,30 +1,28 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
-import 'package:luvcats_app/models/postcommu.dart';
+import 'package:luvcats_app/features/straycat/services/cat_service.dart';
+import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
-class OneScreen extends StatefulWidget {
-  const OneScreen({super.key});
+class TwoScreen extends StatefulWidget {
+  const TwoScreen({super.key});
 
   @override
-  State<OneScreen> createState() => _OneScreenState();
+  State<TwoScreen> createState() => _TwoScreenState();
 }
 
-class _OneScreenState extends State<OneScreen> {
-  List<Commu>? commu;
-  final CommuServices commuServices = CommuServices();
+class _TwoScreenState extends State<TwoScreen> {
+  List<Cat>? cat;
+  final CatServices catServices = CatServices();
   final AuthService authService = AuthService();
   final ProfileServices profileService = ProfileServices();
 
   CarouselController buttonCarouselController = CarouselController();
   int _current = 0;
-  bool isLiked = false;
 
   @override
   void initState() {
@@ -32,25 +30,19 @@ class _OneScreenState extends State<OneScreen> {
     fetchProfile();
   }
 
-  fetchProfile() async {
-    commu = await profileService.fetchCommuProfile(context);
+  Future<void> fetchProfile() async {
+    cat = await profileService.fetchStrayCatProfile(context);
     if (mounted) {
       setState(() {});
     }
   }
 
-  Future<void> _getData() async {
-    setState(() {
-      fetchProfile();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
-    if (commu == null) {
+    if (cat == null) {
       return const Loader(); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
-    } else if (commu!.isEmpty) {
+    } else if (cat!.isEmpty) {
       // แสดงข้อความ No Post ถ้าไม่มีโพสต์
       return Scaffold(
         backgroundColor: Colors.grey[200],
@@ -65,9 +57,9 @@ class _OneScreenState extends State<OneScreen> {
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
-          onRefresh: _getData,
+          onRefresh: fetchProfile,
           child: ListView.builder(
-            itemCount: commu!.length,
+            itemCount: cat!.length,
             // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             //   crossAxisCount: 1,
             //   crossAxisSpacing: 12.0,
@@ -75,7 +67,7 @@ class _OneScreenState extends State<OneScreen> {
             //   mainAxisExtent: 450,
             // ),
             itemBuilder: (context, index) {
-              final commuData = commu![index];
+              final catData = cat![index];
 
               return Container(
                 decoration: BoxDecoration(
@@ -85,49 +77,8 @@ class _OneScreenState extends State<OneScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 10,
-                          ),
-                          CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(
-                              commuData.user!.imagesP,
-                            ),
-                            radius: 20,
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "${commuData.user!.username}",
-                            style: Theme.of(context).textTheme.subtitle1!.merge(
-                                  const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black),
-                                ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 220),
-                            child: IconButton(
-                                onPressed: () {
-                                  profileService.deleteCat(
-                                      context, commuData.id!);
-                                },
-                                icon: Icon(Icons.delete_sharp)),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
                     CarouselSlider(
-                      items: commuData.images.map(
+                      items: catData.images.map(
                         (i) {
                           return Builder(
                             builder: (BuildContext context) => Image.network(
@@ -152,7 +103,7 @@ class _OneScreenState extends State<OneScreen> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: commuData.images.asMap().entries.map((entry) {
+                      children: catData.images.asMap().entries.map((entry) {
                         return GestureDetector(
                           onTap: () =>
                               buttonCarouselController.animateToPage(entry.key),
@@ -174,16 +125,54 @@ class _OneScreenState extends State<OneScreen> {
                       }).toList(),
                     ),
                     Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(
+                              catData.user!.imagesP,
+                            ),
+                            radius: 20,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "${catData.user!.username}",
+                            style: Theme.of(context).textTheme.subtitle1!.merge(
+                                  const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black),
+                                ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 220),
+                            child: IconButton(
+                                onPressed: () {
+                                  profileService.deleteCat(
+                                      context, catData.id!);
+                                },
+                                icon: Icon(Icons.delete_sharp)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${commuData.title}",
+                              "${catData.breed}",
                               style:
                                   Theme.of(context).textTheme.subtitle1!.merge(
                                         const TextStyle(
-                                            fontWeight: FontWeight.w700,
+                                            fontWeight: FontWeight.w500,
                                             color: Colors.black),
                                       ),
                             ),
@@ -191,7 +180,18 @@ class _OneScreenState extends State<OneScreen> {
                               height: 10.0,
                             ),
                             Text(
-                              "${commuData.description}",
+                              "${catData.gender}",
+                              style:
+                                  Theme.of(context).textTheme.subtitle2!.merge(
+                                        TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              "${catData.province}",
                               style:
                                   Theme.of(context).textTheme.subtitle2!.merge(
                                         TextStyle(
@@ -203,41 +203,23 @@ class _OneScreenState extends State<OneScreen> {
                             const SizedBox(
                               height: 10.0,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                LikeAnimation(
-                                  isAnimating: commuData.likes.contains(user),
-                                  smallLike: true,
-                                  child: IconButton(
-                                    icon: commuData.likes.contains(user)
-                                        ? const Icon(
-                                            Icons.favorite,
-                                            color: Colors.red,
-                                          )
-                                        : const Icon(
-                                            Icons.favorite_border,
-                                          ),
-                                    onPressed: () async {
-                                      setState(() {
-                                        if (commuData.likes.contains(user)) {
-                                          commuData.likes.remove(user);
-                                        } else {
-                                          commuData.likes.add(user);
-                                        }
-                                      });
-                                      await commuServices.likesCommu(
-                                          context, commuData.id!);
-                                    },
-                                  ),
-                                ),
-                                Text(
-                                  '${commuData.likes.length}', // แสดงจำนวน likes
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
+                            Text(
+                              "${catData.description}",
+                              style:
+                                  Theme.of(context).textTheme.subtitle2!.merge(
+                                        TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                            ),
+                            const SizedBox(
+                              height: 10.0,
                             ),
                           ]),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                   ],
                 ),

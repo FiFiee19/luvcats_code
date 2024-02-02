@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/features/auth/screens/signup.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/forms_entre.dart';
 import 'package:luvcats_app/widgets/custom_textfield.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController passwordController = TextEditingController();
   final AuthService authService = AuthService();
   final _signinFormKey = GlobalKey<FormState>();
-  
+
   void signinUser() {
     if (_signinFormKey.currentState!.validate()) {
       authService.signInUser(
@@ -132,6 +132,37 @@ class _SigninScreenState extends State<SigninScreen> {
                               children: [
                                 Text(
                                   "สมัครสมาชิก",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "เป็นผู้ประกอบการไหม?",
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FormsEntre()));
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "สมัครเป็นผู้ประกอบการ",
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 15),
                                 ),

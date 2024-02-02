@@ -11,14 +11,14 @@ import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
-class CommScreen extends StatefulWidget {
-  const CommScreen({super.key});
+class CommuScreen extends StatefulWidget {
+  const CommuScreen({super.key});
 
   @override
-  State<CommScreen> createState() => _CommScreenState();
+  State<CommuScreen> createState() => _CommuScreenState();
 }
 
-class _CommScreenState extends State<CommScreen> {
+class _CommuScreenState extends State<CommuScreen> {
   List<Commu>? commu;
   Commu? commuu;
   final CommuServices commuServices = CommuServices();
@@ -95,7 +95,7 @@ class _CommScreenState extends State<CommScreen> {
                           CircleAvatar(
                             backgroundColor: Colors.grey,
                             backgroundImage: NetworkImage(
-                              commuData.user!.images,
+                              commuData.user!.imagesP,
                             ),
                             radius: 20,
                           ),

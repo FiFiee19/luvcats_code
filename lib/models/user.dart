@@ -7,7 +7,7 @@ class User {
   String token;
   String password;
   String type;
-  String images;
+  String imagesP;
 
   User({
     required this.id,
@@ -16,7 +16,7 @@ class User {
     required this.token,
     required this.password,
     required this.type,
-    required this.images,
+    required this.imagesP,
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
@@ -27,7 +27,7 @@ class User {
       token: map['token'] ?? '', // Ensure token is handled here
       password: map['password'] ?? '',
       type: map['type'] ?? '',
-      images: map['images'] ?? '',
+      imagesP: map['images'] ?? '',
     );
   }
 
@@ -39,7 +39,7 @@ class User {
       'token': token,
       'password': password,
       'type': type,
-      'images': images,
+      'imagesP': imagesP,
     };
   }
 

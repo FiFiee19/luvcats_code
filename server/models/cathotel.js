@@ -12,7 +12,7 @@ const cathotelSchema = mongoose.Schema({
     },
     price: {
         required: true,
-        type: Number,
+        type: String,
     },
     contact: {
         required: true,
@@ -24,19 +24,18 @@ const cathotelSchema = mongoose.Schema({
         type: String,
     },
 
-    rating: {
-        required: false,
-        type: String,
-        default:null
-    },
+    // rating: {
+    //     required: false,
+    //     type: String,
+    //     default:null
+    // },
 
-    review_id: [
-        {
-            type: String,
-            required: false,
-            default:null
-        },
-    ],
+    // review: [
+    //     {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Review',
+    //     },
+    // ],
 
     images: [
         {

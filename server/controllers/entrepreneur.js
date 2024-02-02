@@ -1,31 +1,47 @@
 const Cathotel = require('../models/cathotel')
 const Entre = require('../models/entrepreneur')
 const User = require('../models/user')
-const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 exports.create = async (req, res) => {
     try {
-        const { description,
+        const { username, email, password, imagesP,description,
             price,
             contact,
             province,
-            review_id,
-            rating,
-            images } = req.body
+            images, } = req.body;
 
+    
+    var user = await User.findOne({ email });
+    if (user) {
+      return res.send('User Already Exists!!!').status(400);
+    }
+
+    const salt = await bcrypt.genSalt(8);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      type: 'entrepreneur',
+      imagesP
+    });
+    await newUser.save();
+    
+        
         cathotel = new Cathotel({
-            user_id: User.id,
+            user_id: newUser.id,
             description,
             price,
             contact,
             province,
-            review_id,
-            rating,
             images
         });
         await cathotel.save();
 
         let newEntre = new Entre({
-            user_id: User.id,
+            user_id: newUser.id,
             store_id: cathotel.id,
             name: req.body.name,
             user_address: req.body.user_address,

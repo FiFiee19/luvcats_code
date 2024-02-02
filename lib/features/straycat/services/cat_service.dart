@@ -7,9 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
 import 'package:luvcats_app/config/error.dart';
 import 'package:luvcats_app/config/utils.dart';
-import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
-import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -34,9 +32,8 @@ class CatServices {
         );
         imageUrls.add(res.secureUrl);
       }
-      
+
       Cat cat = Cat(
-        
         user_id: user_id,
         breed: breed,
         gender: gender,
@@ -117,4 +114,6 @@ class CatServices {
     }
     return catList;
   }
+
+  
 }

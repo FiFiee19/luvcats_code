@@ -17,14 +17,14 @@ class AuthService {
     required String email,
     required String password,
     required String username,
-    required String images,
+    required String imagesP,
   }) async {
     try {
       Map<String, dynamic> requestData = {
         'username': username,
         'password': password,
         'email': email,
-        'images': images,
+        'imagesP': imagesP,
       };
       // ส่งคำขอ HTTP POST เพื่อสร้างบัญชีผู้ใช้ใหม่
       http.Response res = await http.post(
@@ -55,29 +55,7 @@ class AuthService {
         );
       }
       if (res.statusCode == 500) {
-        // if (!RegExp(
-        //         r'^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i')
-        //     .hasMatch(email)) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: const Text('กรุณากรอกที่อยู่อีเมลที่ถูกต้อง'),
-        //       backgroundColor: Colors.red,
-        //       behavior: SnackBarBehavior.floating,
-        //       margin: EdgeInsets.all(30),
-        //     ),
-        //   );
-        // }
-
-        // if (!RegExp(r'^(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$').hasMatch(password)) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: const Text('รหัสผ่านควรมีอักขระ 8 ตัวขึ้นไป'),
-        //       backgroundColor: Colors.red,
-        //       behavior: SnackBarBehavior.floating,
-        //       margin: EdgeInsets.all(30),
-        //     ),
-        //   );
-        // }
+        
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

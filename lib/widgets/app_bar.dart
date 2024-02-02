@@ -17,6 +17,7 @@ AppBar customAppBar(BuildContext context) {
         ),
       ),
     ),
+    // centerTitle: true,
     actions: [
       TextButton(
         onPressed: () {

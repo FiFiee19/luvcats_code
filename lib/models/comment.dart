@@ -6,12 +6,14 @@ import 'package:luvcats_app/models/user.dart';
 class Comment {
   User? user;
   Commu? post_id;
+  final String user_id;
   final String? id;
   final String message;
   final String? createdAt;
 
   Comment({
     this.user,
+    required this.user_id,
     this.post_id,
     this.id,
     required this.message,
@@ -22,6 +24,7 @@ class Comment {
       'user': user?.toMap(),
       'post_id': post_id?.toMap(),
       'message': message,
+      'user_id': user_id,
       'id': id,
       'createdAt': createdAt,
     };
@@ -35,6 +38,7 @@ class Comment {
       user: map['user'] != null ? User.fromMap(map['user']) : null,
       post_id: map['post_id'] != null ? Commu.fromMap(map['post_id']) : null,
       message: map['message'] ?? '',
+      user_id: map['user_id'] ?? '',
       id: map['_id'],
       createdAt: map['createdAt'],
     );

@@ -1,4 +1,4 @@
-//import
+
 const express = require("express");
 const authRouter = require("./routes/auth");
 const straycatRouter = require("./routes/straycat");
@@ -18,7 +18,7 @@ app.use(entrepreneurRouter);
 //connect database
 connectDB()
 
-  //runserver
+//runserver
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`connected at port ${PORT}`);
 });
