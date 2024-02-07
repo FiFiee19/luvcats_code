@@ -59,18 +59,6 @@ class CatServices {
           Navigator.pop(context);
         },
       );
-      // if (res.statusCode == 200) {
-      //   // กรณีลงทะเบียนสำเร็จแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: const Text('Product Added Successfully!'),
-      //       backgroundColor: Colors.grey,
-      //       behavior: SnackBarBehavior.floating,
-      //       margin: EdgeInsets.all(30),
-      //     ),
-      //   );
-      //   Navigator.of(context).pop();
-      // }
     } catch (e) {
       // showSnackBar(context, e.toString());
       ScaffoldMessenger.of(context).showSnackBar(

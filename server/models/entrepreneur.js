@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const entrepreneurSchema = mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
     user_id: {
         required: true,
         type: String,

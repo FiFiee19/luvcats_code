@@ -67,7 +67,7 @@ class _PostStrayCatState extends State<PostStrayCat> {
   }
 
   void selectImages() async {
-    var res = await pickImages();
+    var res = await pickImagesFiles();
     setState(() {
       images = res;
     });

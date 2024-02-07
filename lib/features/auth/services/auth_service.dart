@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
 import 'package:luvcats_app/config/utils.dart';
+import 'package:luvcats_app/features/admin/screens/home_admin.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/entrescreen.dart';
+import 'package:luvcats_app/features/home/home.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/alert_type.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +28,7 @@ class AuthService {
         'email': email,
         'imagesP': imagesP,
       };
-      // ส่งคำขอ HTTP POST เพื่อสร้างบัญชีผู้ใช้ใหม่
+      final navigator = Navigator.of(context);
       http.Response res = await http.post(
         Uri.parse('${url}/api/signup'),
         body: jsonEncode(requestData),
@@ -36,11 +38,11 @@ class AuthService {
       );
 
       if (res.statusCode == 200) {
-        await showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return const AlertType();
-          },
+        await navigator.pushAndRemoveUntil(
+          CupertinoPageRoute(
+            builder: (context) => const SigninScreen(),
+          ),
+          (route) => false,
         );
       }
 
@@ -55,8 +57,6 @@ class AuthService {
         );
       }
       if (res.statusCode == 500) {
-        
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Error'),
@@ -99,15 +99,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      if (res.statusCode == 200) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: const Text('Account has been successfully login'),
-        //     backgroundColor: Colors.grey,
-        //     behavior: SnackBarBehavior.floating,
-        //     margin: EdgeInsets.all(30),
-        //   ),
-        // );
+      if (res.statusCode == 200) { 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         Provider.of<UserProvider>(context, listen: false).setUser(res.body);
         final userData = jsonDecode(res.body);
@@ -119,22 +111,28 @@ class AuthService {
           (route) => false,
         );
 
-        // await prefs.setString('username', userData['user']['username']);
-        // if (userData['user']['type'] == 'admin') {
-        //   navigator.pushAndRemoveUntil(
-        //     CupertinoPageRoute(
-        //       builder: (context) => const AdminScreen(),
-        //     ),
-        //     (route) => false,
-        //   );
-        // } else {
-        //   navigator.pushAndRemoveUntil(
-        //     CupertinoPageRoute(
-        //       builder: (context) => const Home(),
-        //     ),
-        //     (route) => false,
-        //   );
-        // }
+        if (userData['user']['type'] == 'admin') {
+          navigator.pushAndRemoveUntil(
+            CupertinoPageRoute(
+              builder: (context) => const AdminScreen(),
+            ),
+            (route) => false,
+          );
+        } else if (userData['user']['type'] == 'entrepreneur') {
+          navigator.pushAndRemoveUntil(
+            CupertinoPageRoute(
+              builder: (context) => const HomeScreen_Entre(),
+            ),
+            (route) => false,
+          );
+        } else {
+          navigator.pushAndRemoveUntil(
+            CupertinoPageRoute(
+              builder: (context) => const Home(),
+            ),
+            (route) => false,
+          );
+        }
       }
 
       if (res.statusCode == 400) {

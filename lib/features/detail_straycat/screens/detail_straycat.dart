@@ -53,13 +53,19 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                       backgroundImage: NetworkImage(
                         widget.cat.user!.imagesP,
                       ),
-                      radius: 10,
+                      radius: 16,
                     ),
                     SizedBox(
-                      width: 10,
+                      width: 20,
                     ),
                     Text(
                       widget.cat.user!.username,
+                      style: Theme.of(context).textTheme.subtitle2!.merge(
+                            TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.grey.shade900,
+                                fontSize: 16),
+                          ),
                     ),
                   ],
                 ),
@@ -67,14 +73,22 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
             ],
           ),
           SizedBox(
-            height: 20,
+            height: 30,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30, bottom: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("สายพันธุ์: " + widget.cat.breed),
+                Text(
+                  "สายพันธุ์: " + widget.cat.breed,
+                  style: Theme.of(context).textTheme.subtitle2!.merge(
+                        TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey.shade900,
+                        ),
+                      ),
+                ),
               ],
             ),
           ),
@@ -85,6 +99,12 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   "เพศ:  " + widget.cat.gender,
+                  style: Theme.of(context).textTheme.subtitle2!.merge(
+                        TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey.shade900,
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -96,6 +116,12 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   "จังหวัด:  " + widget.cat.province,
+                  style: Theme.of(context).textTheme.subtitle2!.merge(
+                        TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey.shade900,
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -107,17 +133,33 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   "ข้อมูลเพิ่มเติม: ",
+                  style: Theme.of(context).textTheme.subtitle2!.merge(
+                        TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey.shade900,
+                        ),
+                      ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
+            padding: const EdgeInsets.only(left: 30, bottom: 20, right: 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.cat.description,
+                Expanded(
+                  child: Text(
+                    widget.cat.description,
+                    softWrap: true, 
+                    overflow: TextOverflow.visible,
+                    style: Theme.of(context).textTheme.subtitle2!.merge(
+                          TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey.shade900,
+                          ),
+                        ),
+                  ),
                 ),
               ],
             ),

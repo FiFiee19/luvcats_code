@@ -18,7 +18,7 @@ exports.create = async (req, res) => {
 
     const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
+      
 
     const newUser = new User({
       username,
@@ -31,6 +31,7 @@ exports.create = async (req, res) => {
     
         
         cathotel = new Cathotel({
+            user:newUser,
             user_id: newUser.id,
             description,
             price,
@@ -41,6 +42,7 @@ exports.create = async (req, res) => {
         await cathotel.save();
 
         let newEntre = new Entre({
+            user:newUser,
             user_id: newUser.id,
             store_id: cathotel.id,
             name: req.body.name,
@@ -63,7 +65,7 @@ exports.create = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        const entre = await Entre.find({})
+        const entre = await Entre.find({}).populate('user')
         res.json(entre)
 
     } catch (e) {

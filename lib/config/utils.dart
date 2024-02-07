@@ -12,7 +12,7 @@ void showSnackBar(BuildContext mainContext, String text) {
   );
 }
 
-Future<List<File>> pickImages() async {
+Future<List<File>> pickImagesFiles() async {
   List<File> images = [];
   try {
     var files = await FilePicker.platform.pickFiles(
@@ -30,7 +30,7 @@ Future<List<File>> pickImages() async {
   return images;
 }
 
-Future pickImage() async {
+Future pickImageGallery() async {
   File? _image;
   try {
     final picker = ImagePicker();

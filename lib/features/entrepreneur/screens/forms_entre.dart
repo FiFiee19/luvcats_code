@@ -45,7 +45,7 @@ class _FormsEntreState extends State<FormsEntre> {
   String selectedProvince = 'กรุงเทพมหานคร';
 
   void _pickImage() async {
-    var res = await pickImage();
+    var res = await pickImageGallery();
     if (!mounted) return;
     setState(() {
       _imageP = res;
@@ -120,7 +120,7 @@ class _FormsEntreState extends State<FormsEntre> {
   }
 
   void selectImages() async {
-    var res = await pickImages();
+    var res = await pickImagesFiles();
     setState(() {
       images = res;
     });

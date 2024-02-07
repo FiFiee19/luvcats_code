@@ -75,11 +75,35 @@ class ProfileServices {
     return catList;
   }
 
-  Future<void> deleteCat(BuildContext context, String post_id) async {
+  Future<void> deleteCatCommu(BuildContext context, String post_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
         Uri.parse('$url/getCommu/delete/$post_id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, "Post deleted successfully.");
+          // คุณอาจต้องการอัปเดต UI ที่นี่
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  Future<void> deleteCatStrayCat(BuildContext context, String post_id) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.delete(
+        Uri.parse('$url/getStrayCat/delete/$post_id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,

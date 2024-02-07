@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
+import 'package:luvcats_app/features/community/screens/detail_commu.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
@@ -32,17 +33,11 @@ class _OneScreenState extends State<OneScreen> {
     fetchProfile();
   }
 
-  fetchProfile() async {
+  Future<void> fetchProfile() async {
     commu = await profileService.fetchCommuProfile(context);
     if (mounted) {
       setState(() {});
     }
-  }
-
-  Future<void> _getData() async {
-    setState(() {
-      fetchProfile();
-    });
   }
 
   @override
@@ -65,15 +60,15 @@ class _OneScreenState extends State<OneScreen> {
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
-          onRefresh: _getData,
-          child: ListView.builder(
+          onRefresh: fetchProfile,
+          child: GridView.builder(
             itemCount: commu!.length,
-            // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //   crossAxisCount: 1,
-            //   crossAxisSpacing: 12.0,
-            //   mainAxisSpacing: 12.0,
-            //   mainAxisExtent: 450,
-            // ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0,
+              mainAxisExtent: 480,
+            ),
             itemBuilder: (context, index) {
               final commuData = commu![index];
 
@@ -115,7 +110,7 @@ class _OneScreenState extends State<OneScreen> {
                             padding: const EdgeInsets.only(left: 220),
                             child: IconButton(
                                 onPressed: () {
-                                  profileService.deleteCat(
+                                  profileService.deleteCatCommu(
                                       context, commuData.id!);
                                 },
                                 icon: Icon(Icons.delete_sharp)),
@@ -233,6 +228,22 @@ class _OneScreenState extends State<OneScreen> {
                                 ),
                                 Text(
                                   '${commuData.likes.length}', // แสดงจำนวน likes
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.comment,
+                                  ),
+                                  onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailCommuScreen(
+                                        commu: commuData,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '${commuData.comments.length}', // แสดงจำนวน likes
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],

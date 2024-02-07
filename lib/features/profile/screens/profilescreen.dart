@@ -80,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           BottomNavigationBar(
-            items: <BottomNavigationBarItem>[
+            items: [
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.view_module_outlined,
@@ -96,6 +96,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: onTabTapped,
             showSelectedLabels: false,
             showUnselectedLabels: false,
+            selectedItemColor: Colors.red,
+            unselectedItemColor: Colors.black,
           ),
           Expanded(
             child: _pages.elementAt(_selectedIndex),

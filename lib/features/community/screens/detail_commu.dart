@@ -34,7 +34,7 @@ class _DetailCommuScreenState extends State<DetailCommuScreen> {
     super.initState();
     loadComments();
 
-    // แก้ไขการเรียกใช้ฟังก์ชัน
+    
   }
 
   Future<void> loadComments() async {
@@ -60,21 +60,15 @@ class _DetailCommuScreenState extends State<DetailCommuScreen> {
     if (_sendCommentFormKey.currentState != null &&
         _sendCommentFormKey.currentState!.validate()) {
       try {
-        final UserProvider userProvider =
-            Provider.of<UserProvider>(context, listen: false);
-        final String user_id = userProvider.user.id;
         await commuServices.addComment(
           context,
-          widget.commu.id!, // ใช้ ID ของโพสต์, ไม่ใช่ user_id
-          commentController.text, // ใช้ข้อความจากตัวควบคุม
+          widget.commu.id!, 
+          commentController.text, 
         );
-        // // โหลดคอมเมนต์ใหม่หลังจากเพิ่มเรียบร้อย
-        // loadComments();
-        // // ล้างข้อความในตัวควบคุมเพื่อรอการคอมเมนต์ครั้งต่อไป
-        // commentController.clear();
+        
       } catch (e) {
         print(e.toString());
-        // แสดงข้อความผิดพลาดใน Snackbar หรือการแจ้งเตือนอื่นๆ
+        
       }
     }
   }
@@ -228,12 +222,12 @@ class _DetailCommuScreenState extends State<DetailCommuScreen> {
                 ),
                 Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment.start, // ให้เนื้อหาชิดซ้าย
+                      CrossAxisAlignment.start, 
                   children: comments
                       .map(
                         (comment) => Align(
                           alignment: Alignment
-                              .centerLeft, // ใช้ Align เพื่อจัดให้เนื้อหาชิดซ้าย
+                              .centerLeft, 
                           child: Padding(
                             padding:
                                 const EdgeInsets.only(left: 30, bottom: 20),

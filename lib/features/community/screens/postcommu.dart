@@ -53,7 +53,7 @@ class _PostCommuState extends State<PostCommu> {
   }
 
   void selectImages() async {
-    var res = await pickImages();
+    var res = await pickImagesFiles();
     setState(() {
       images = res;
     });

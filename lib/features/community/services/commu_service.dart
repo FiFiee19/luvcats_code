@@ -138,7 +138,7 @@ class CommuServices {
         response: res,
         context: context,
         onSuccess: () {
-          // Your success handling code here
+          
         },
       );
     } catch (e) {
@@ -162,7 +162,7 @@ class CommuServices {
         List<dynamic> commentsData = jsonDecode(res.body);
         print(commentsData);
         return commentsData.map((data) {
-          // แปลง data เป็น Map<String, dynamic> และส่งไปยัง Comment.fromMap
+          
           return Comment.fromMap(data as Map<String, dynamic>);
         }).toList();
       } else {

@@ -38,8 +38,9 @@ const straycatSchema = mongoose.Schema({
     type: String,
     enum: ['no', 'yes'],
     default: "no"
-  },
-});
+  }, 
+},
+{ timestamps: true }, );
 
 const Straycat = mongoose.model("Straycat", straycatSchema);
 module.exports = Straycat;

@@ -1,4 +1,3 @@
-const Commu = require("../models/postcommu");
 const Straycat = require("../models/poststraycat");
 const User = require("../models/user");
 exports.create = async (req, res) => {

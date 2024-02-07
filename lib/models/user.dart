@@ -27,7 +27,7 @@ class User {
       token: map['token'] ?? '', // Ensure token is handled here
       password: map['password'] ?? '',
       type: map['type'] ?? '',
-      imagesP: map['images'] ?? '',
+      imagesP: map['imagesP'] ?? '',
     );
   }
 

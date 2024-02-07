@@ -7,7 +7,6 @@ import 'package:luvcats_app/features/straycat/screens/poststraycat.dart';
 import 'package:luvcats_app/features/straycat/services/cat_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/loader.dart';
-import 'package:luvcats_app/widgets/single_cat.dart';
 
 class StrayCatScreen extends StatefulWidget {
   const StrayCatScreen({Key? key}) : super(key: key);
@@ -17,13 +16,10 @@ class StrayCatScreen extends StatefulWidget {
 }
 
 class _StrayCatScreenState extends State<StrayCatScreen> {
-  // List<User>? users;
   List<Cat>? cats;
   final CatServices catServices = CatServices();
   final AuthService authService = AuthService();
   String? finalEmail;
-
-  // late User users;
 
   @override
   void initState() {
@@ -38,16 +34,12 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
     }
   }
 
-  // Future<void> _getData() async {
-  //   await fetchAllCats();
-  // }
-
   @override
   Widget build(BuildContext context) {
     Widget bodyContent;
 
     if (cats == null) {
-      bodyContent = const Loader(); // แสดงตัวโหลด
+      bodyContent = const Loader();
     } else if (cats!.isEmpty) {
       bodyContent = RefreshIndicator(
           onRefresh: fetchAllCats,
@@ -73,7 +65,6 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
 
             return InkWell(
               onTap: () {
-                // ทำสิ่งที่คุณต้องการเมื่อกดที่ Container
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -94,8 +85,17 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                         topLeft: Radius.circular(16.0),
                         topRight: Radius.circular(16.0),
                       ),
-                      child: SingleCat(
-                        image: catData.images[0],
+                      child: Center(
+                        child: Container(
+                          width: 180,
+                          height: 180,
+                          padding: const EdgeInsets.all(10),
+                          child: Image.network(
+                            catData.images[0],
+                            fit: BoxFit.fitHeight,
+                            width: 180,
+                          ),
+                        ),
                       ),
                     ),
                     Padding(
@@ -135,7 +135,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                             height: 8.0,
                           ),
                           Text(
-                            "สายพันธุ์:  ${catData.breed}",
+                            "สายพันธุ์: ${catData.breed.split(" ").first}",
                             style: Theme.of(context).textTheme.subtitle2!.merge(
                                   TextStyle(
                                     fontWeight: FontWeight.w700,

@@ -29,68 +29,17 @@ class _SignupScreenState extends State<SignupScreen> {
   var user = User;
   File? _image;
 
-  // void _pickImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       _image = File(pickedFile.path);
-  //       print(pickedFile.path);
-  //     } else {
-  //       print("no img seleted");
-  //     }
-  //   });
-  // }
+  
   void _pickImage() async {
-    var res = await pickImage();
+    var res = await pickImageGallery();
     setState(() {
       _image = res;
     });
   }
 
-  Future<void> signupUser(BuildContext context) async {
-    if (_signupFormKey.currentState!.validate() &&
-        passwordConfirmed() &&
-        _image != null) {
-      final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
-      CloudinaryResponse resimg = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(_image!.path, folder: "a"),
-      );
-      print(resimg.secureUrl);
+  
 
-      authService.signUpUser(
-        context: context,
-        email: _emailController.text,
-        password: _passwordController.text,
-        username: _nameController.text,
-        imagesP: resimg.secureUrl,
-      );
-    } else {
-      if (!passwordConfirmed()) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('รหัสผ่านไม่ตรงกัน'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
-
-      if (_image == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('กรุณาเลือกรูปภาพ'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
-    }
-  }
-
-  void signupUserr() async {
+  void signupUser() async {
     if (_signupFormKey.currentState!.validate() &&
         passwordConfirmed() &&
         _image != null) {
@@ -306,7 +255,7 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 10),
               CustomButton(
                 text: 'ลงทะเบียน',
-                onTap: signupUserr,
+                onTap: signupUser,
               ),
               const SizedBox(height: 10),
               const SizedBox(height: 10),

@@ -49,9 +49,9 @@ class _CommuScreenState extends State<CommuScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return const Loader(); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
+      return const Loader(); 
     } else if (commu!.isEmpty) {
-      // แสดงข้อความ No Post ถ้าไม่มีโพสต์
+      
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Center(
