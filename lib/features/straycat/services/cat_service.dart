@@ -103,5 +103,32 @@ class CatServices {
     return catList;
   }
 
-  
+  Future<void> updateCatStatus(
+      BuildContext context, String cat_id, String newStatus) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$url/updateStatus/$cat_id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'status': newStatus,
+        }),
+      );
+
+      if (res.statusCode == 200) {
+        // อัปเดตสำเร็จ
+        print('Status updated');
+        // อาจจะมีการอัปเดต UI หรือ state ที่นี่ตามความจำเป็น
+      } else {
+        // มีข้อผิดพลาด
+        print('Failed to update status: ${res.body}');
+      }
+    } catch (error) {
+      print('Error updating status: $error');
+    }
+  }
 }

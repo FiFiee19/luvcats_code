@@ -121,30 +121,32 @@ class CommuServices {
     }
   }
 
-  Future<void> addComment(
-      BuildContext context, String post_id, String message) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    try {
-      Comment comment =
-          Comment(message: message, user_id: userProvider.user.id);
-      http.Response res = await http.post(Uri.parse('$url/addComment/$post_id'),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'authtoken': userProvider.user.token,
-          },
-          body: comment.toJson());
+  // Future<void> addComment(
+  //     BuildContext context, String post_id, String message) async {
+  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
+  //   try {
+  //     Comment comment =
+  //         Comment(message: message, user_id: userProvider.user.id);
+  //     http.Response res = await http.post(
+  //       Uri.parse('$url/addComment/$post_id'),
+  //       headers: {
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //         'authtoken': userProvider.user.token,
+  //       },
+  //       body: jsonEncode(comment.toJson()), // ใช้ jsonEncode ที่นี่
+  //     );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          
-        },
-      );
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-  }
+  //     httpErrorHandle(
+  //       response: res,
+  //       context: context,
+  //       onSuccess: () {
+  //         // โค้ดที่จะทำเมื่อสำเร็จ
+  //       },
+  //     );
+  //   } catch (e) {
+  //     showSnackBar(context, e.toString());
+  //   }
+  // }
 
   Future<List<Comment>> fetchComment(
       BuildContext context, String post_id) async {
@@ -162,7 +164,6 @@ class CommuServices {
         List<dynamic> commentsData = jsonDecode(res.body);
         print(commentsData);
         return commentsData.map((data) {
-          
           return Comment.fromMap(data as Map<String, dynamic>);
         }).toList();
       } else {
@@ -170,6 +171,45 @@ class CommuServices {
       }
     } catch (e) {
       throw Exception('Error fetching comments: $e');
+    }
+  }
+
+  Future<void> addComment({
+    required BuildContext context,
+    required String user_id,
+    required String message,
+    required String post_id, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      final response = await http.post(
+        Uri.parse('$url/addComment/$post_id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'user_id': user_id,
+          'message': message,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Add Comment Success')),
+        );
+        Navigator.pop(context);
+      } else {
+        throw Exception('Failed to add comment');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }

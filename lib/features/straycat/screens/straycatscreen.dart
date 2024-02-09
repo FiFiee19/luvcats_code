@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/features/detail_straycat/screens/detail_straycat.dart';
+import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/straycat/screens/poststraycat.dart';
 import 'package:luvcats_app/features/straycat/services/cat_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
@@ -29,6 +29,10 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
 
   Future<void> fetchAllCats() async {
     cats = await catServices.fetchAllCats(context);
+    if (cats != null) {
+      // กรองเฉพาะ cats ที่มีสถานะเป็น "no"
+      cats = cats!.where((cat) => cat.status == 'no').toList();
+    }
     if (mounted) {
       setState(() {});
     }
@@ -135,7 +139,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                             height: 8.0,
                           ),
                           Text(
-                            "สายพันธุ์: ${catData.breed.split(" ").first}",
+                            "สายพันธุ์:  ${catData.breed.split(" ").first}",
                             style: Theme.of(context).textTheme.subtitle2!.merge(
                                   TextStyle(
                                     fontWeight: FontWeight.w700,
@@ -144,7 +148,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 ),
                           ),
                           Text(
-                            "เพศ:   ${catData.gender}",
+                            "เพศ:  ${catData.gender}",
                             style: Theme.of(context).textTheme.subtitle2!.merge(
                                   TextStyle(
                                     fontWeight: FontWeight.w700,
@@ -155,7 +159,16 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                           const SizedBox(
                             height: 20.0,
                           ),
-                          Row(
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                          child: Row(
                             children: [
                               Icon(
                                 Icons.place,
@@ -179,7 +192,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

@@ -78,3 +78,22 @@ exports.editpost = async (req, res) => {
     }
 
 }
+
+exports.updateStatus = async (req, res) => {
+    try {
+        const straycatId = req.params.id;
+        const status = req.body.status; // สถานะที่จะอัปเดต ('yes' หรือ 'no')
+    
+        const straycat = await Straycat.findByIdAndUpdate(straycatId, { status: status }, { new: true });
+        
+        if (!straycat) {
+          return res.status(404).send('Stray cat not found');
+        }
+    
+        res.status(200).json(straycat);
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+
+}

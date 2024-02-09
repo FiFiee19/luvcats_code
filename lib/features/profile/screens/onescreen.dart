@@ -61,18 +61,13 @@ class _OneScreenState extends State<OneScreen> {
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
           onRefresh: fetchProfile,
-          child: GridView.builder(
+          child: ListView.builder(
             itemCount: commu!.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              crossAxisSpacing: 12.0,
-              mainAxisSpacing: 12.0,
-              mainAxisExtent: 480,
-            ),
             itemBuilder: (context, index) {
               final commuData = commu![index];
 
               return Container(
+                margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5.0),
                   color: Colors.white,

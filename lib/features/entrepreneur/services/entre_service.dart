@@ -51,7 +51,7 @@ class EntreService {
         'email': email,
         'imagesP': imagesP,
         'user_id': userProvider.user.id,
-        'store_id':store_id,
+        'store_id': store_id,
         'name': name,
         'user_address': user_address,
         'store_address': store_address,
@@ -85,7 +85,6 @@ class EntreService {
             margin: EdgeInsets.all(30),
           ),
         );
-        
       }
 
       if (res.statusCode == 400) {
@@ -145,4 +144,68 @@ Future<List<Entrepreneur>> fetchAllEntre(BuildContext context) async {
     showSnackBar(context, e.toString());
   }
   return entreList;
+}
+
+Future<List<Entrepreneur>> fetchEntreProfile(BuildContext context) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  final user = userProvider.user.id;
+  List<Entrepreneur> entreIdList = [];
+  try {
+    http.Response res =
+        await http.get(Uri.parse('$url/getEntre/$user'), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authtoken': userProvider.user.token,
+    });
+
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          entreIdList.add(
+            Entrepreneur.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
+              ),
+            ),
+          );
+        }
+      },
+    );
+  } catch (e) {
+    showSnackBar(context, e.toString());
+  }
+  return entreIdList;
+}
+
+Future<List<Entrepreneur>> fetchEntreIdProfile(BuildContext context) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  final user = userProvider.user.id;
+  List<Entrepreneur> entreIdList = [];
+  try {
+    http.Response res =
+        await http.get(Uri.parse('$url/getEntre/$user'), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'authtoken': userProvider.user.token,
+    });
+
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          entreIdList.add(
+            Entrepreneur.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
+              ),
+            ),
+          );
+        }
+      },
+    );
+  } catch (e) {
+    showSnackBar(context, e.toString());
+  }
+  return entreIdList;
 }

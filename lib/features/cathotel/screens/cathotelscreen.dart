@@ -125,16 +125,15 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                           color: Colors.black),
                                     ),
                               ),
-                              const SizedBox(
-                                width: 96.0,
-                              ),
                             ],
                           ),
                           const SizedBox(
                             height: 8.0,
                           ),
                           Text(
-                            "${catData.description.split(" ").first}",
+                            catData.description.length > 60
+                                ? "${catData.description.substring(0, 60)}..."
+                                : catData.description,
                             style: Theme.of(context).textTheme.subtitle2!.merge(
                                   TextStyle(
                                     fontWeight: FontWeight.w700,
@@ -142,34 +141,63 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                 ),
                           ),
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                          Row(
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .spaceBetween, // ใช้ spaceBetween ที่นี่
                             children: [
-                              Icon(
-                                Icons.place,
-                                size: 18,
-                                color: Colors.grey,
+                              // วิดเจ็ตสำหรับแสดง province
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.place,
+                                    size: 18,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    "${catData.province}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle2!
+                                        .merge(
+                                          TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.grey.shade500,
+                                          ),
+                                        ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(
-                                width: 5.0,
-                              ),
+                              // วิดเจ็ตสำหรับแสดง price
                               Text(
-                                "${catData.province}",
+                                "${catData.price}/คืน",
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle2!
                                     .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade500,
+                                        color: Colors.red,
                                       ),
                                     ),
                               ),
+                              SizedBox(
+                                width: 3,
+                              )
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

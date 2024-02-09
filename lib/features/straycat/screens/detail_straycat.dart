@@ -81,7 +81,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "สายพันธุ์: " + widget.cat.breed,
+                  "สายพันธุ์:  " + widget.cat.breed,
                   style: Theme.of(context).textTheme.subtitle2!.merge(
                         TextStyle(
                           fontWeight: FontWeight.w700,
@@ -151,11 +151,11 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                 Expanded(
                   child: Text(
                     widget.cat.description,
-                    softWrap: true, 
+                    softWrap: true,
                     overflow: TextOverflow.visible,
                     style: Theme.of(context).textTheme.subtitle2!.merge(
                           TextStyle(
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w500,
                             color: Colors.grey.shade900,
                           ),
                         ),

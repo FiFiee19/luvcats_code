@@ -74,3 +74,13 @@ exports.list = async (req, res) => {
 
     }
 }
+
+exports.id = async (req, res) => {
+    try {
+        const entreId = await Entre.find( {user_id: req.user} ).populate('user')
+        res.json(entreId);
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+}

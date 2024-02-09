@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/features/detail_straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
+import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/straycat/services/cat_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/loader.dart';
@@ -19,6 +19,7 @@ class _TwoScreenState extends State<TwoScreen> {
   final CatServices catServices = CatServices();
   final AuthService authService = AuthService();
   final ProfileServices profileService = ProfileServices();
+  Map<String, bool> statusCats = {};
 
   CarouselController buttonCarouselController = CarouselController();
   int _current = 0;
@@ -31,8 +32,14 @@ class _TwoScreenState extends State<TwoScreen> {
 
   Future<void> fetchProfile() async {
     cat = await profileService.fetchStrayCatProfile(context);
-    if (mounted) {
-      setState(() {});
+    if (cat != null) {
+      final newstatusCats = <String, bool>{};
+      for (var c in cat!) {
+        newstatusCats[c.id!] = c.status == 'yes';
+      }
+      setState(() {
+        statusCats = newstatusCats;
+      });
     }
   }
 
@@ -56,14 +63,8 @@ class _TwoScreenState extends State<TwoScreen> {
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
           onRefresh: fetchProfile,
-          child: GridView.builder(
+          child: ListView.builder(
             itemCount: cat!.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              crossAxisSpacing: 12.0,
-              mainAxisSpacing: 12.0,
-              mainAxisExtent: 500,
-            ),
             itemBuilder: (context, index) {
               final catData = cat![index];
 
@@ -78,6 +79,7 @@ class _TwoScreenState extends State<TwoScreen> {
                   );
                 },
                 child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
@@ -176,51 +178,149 @@ class _TwoScreenState extends State<TwoScreen> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "${catData.breed}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .merge(
-                                      const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "สายพันธุ์:  " + catData.breed,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2!
+                                          .merge(
+                                            TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.grey.shade900,
+                                            ),
+                                          ),
                                     ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(
-                                height: 10.0,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "เพศ:  " + catData.gender,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2!
+                                          .merge(
+                                            TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.grey.shade900,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                "${catData.gender}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade500,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "จังหวัด:  " + catData.province,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2!
+                                          .merge(
+                                            TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.grey.shade900,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "ข้อมูลเพิ่มเติม: ",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2!
+                                          .merge(
+                                            TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.grey.shade900,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 30, bottom: 20, right: 30),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        catData.description,
+                                        softWrap: true,
+                                        overflow: TextOverflow.visible,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .merge(
+                                              TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey.shade900,
+                                              ),
+                                            ),
                                       ),
                                     ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                "${catData.province}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade500,
-                                      ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              if (!(statusCats[catData.id] ?? false))
+                                Center(
+                                  child: ElevatedButton(
+                                    onPressed: () =>
+                                        catServices.updateCatStatus(
+                                      context,
+                                      '${catData.id}',
+                                      'yes',
                                     ),
-                              ),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: const Size(40, 40),
+                                        primary: Colors.red),
+                                    child: Text(
+                                      'ได้บ้านแล้ว',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              if (statusCats[catData.id] ?? false)
+                                Center(
+                                  child: Text('ได้บ้านแล้ว',
+                                      style: TextStyle(color: Colors.red)),
+                                ),
                             ]),
                       ),
                       SizedBox(

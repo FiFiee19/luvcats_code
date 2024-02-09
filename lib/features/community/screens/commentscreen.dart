@@ -23,7 +23,7 @@ class _CommentScreenState extends State<CommentScreen> {
               builder: (context) => AlertDialog(
                     title: Center(
                       child: Text(
-                        'รายงานน',
+                        'รายงาน',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

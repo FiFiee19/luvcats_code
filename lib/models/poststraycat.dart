@@ -10,6 +10,7 @@ class Cat {
   final String description;
   final String? id;
   final List<String> images;
+  final String? status;
 
   Cat({
     this.user,
@@ -20,6 +21,7 @@ class Cat {
     required this.description,
     this.id,
     required this.images,
+    this.status,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +34,7 @@ class Cat {
       'description': description,
       'id': id,
       'images': images,
+      'status': status,
     };
   }
 
@@ -46,6 +49,7 @@ class Cat {
       gender: map['gender'] ?? '',
       province: map['province'] ?? '',
       description: map['description'] ?? '',
+      status: map['status'],
       id: map['_id'],
       images: List<String>.from(map['images'] ?? []),
     );

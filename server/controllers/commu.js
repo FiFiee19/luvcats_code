@@ -101,17 +101,17 @@ exports.addComment = async (req, res) => {
 
 exports.comment = async (req, res) => {
     try {
-        // สมมติว่าคุณส่ง post_id ผ่าน req.params
+        
         const { post_id } = req.params;
 
-        // ดึงข้อมูลโพสต์ที่เฉพาะเจาะจงและคอมเมนต์ที่เกี่ยวข้อง
+        
         const post = await Commu.findById(post_id)
             .populate({
                 path: 'comments',
                 populate: { path: 'user' }
             });
 
-        // ตรวจสอบว่าพบโพสต์หรือไม่
+        
         if (!post) {
             return res.status(404).json({ msg: 'Post not found' });
         }

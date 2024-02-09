@@ -49,9 +49,8 @@ class _CommuScreenState extends State<CommuScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return const Loader(); 
+      return const Loader();
     } else if (commu!.isEmpty) {
-      
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Center(
@@ -60,150 +59,180 @@ class _CommuScreenState extends State<CommuScreen> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: FloatingActionButton(
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.red,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostCommu(),
+                ),
+              );
+            },
+            shape: const CircleBorder(),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       );
     } else {
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
           onRefresh: _getData,
-          child: GridView.builder(
+          child: ListView.builder(
             itemCount: commu!.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              crossAxisSpacing: 12.0,
-              mainAxisSpacing: 12.0,
-              mainAxisExtent: 450,
-            ),
             itemBuilder: (context, index) {
               final commuData = commu![index];
 
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 10,
-                          ),
-                          CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(
-                              commuData.user!.imagesP,
-                            ),
-                            radius: 20,
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "${commuData.user!.username}",
-                            style: Theme.of(context).textTheme.subtitle1!.merge(
-                                  const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black),
-                                ),
-                          ),
-                          const SizedBox(
-                            width: 96.0,
-                          ),
-                        ],
-                      ),
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailCommuScreen(commu: commuData),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomCarouselSlider(images: commuData.images),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
                           children: [
+                            SizedBox(
+                              width: 10,
+                            ),
+                            CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              backgroundImage: NetworkImage(
+                                commuData.user!.imagesP,
+                              ),
+                              radius: 20,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
                             Text(
-                              "${commuData.title}",
+                              "${commuData.user!.username}",
                               style:
                                   Theme.of(context).textTheme.subtitle1!.merge(
                                         const TextStyle(
+                                            fontSize: 18,
                                             fontWeight: FontWeight.w700,
                                             color: Colors.black),
                                       ),
                             ),
                             const SizedBox(
-                              height: 10.0,
+                              width: 96.0,
                             ),
-                            Text(
-                              "${commuData.description}",
-                              style:
-                                  Theme.of(context).textTheme.subtitle2!.merge(
-                                        TextStyle(
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CustomCarouselSlider(images: commuData.images),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${commuData.title}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1!
+                                    .merge(
+                                      const TextStyle(
                                           fontWeight: FontWeight.w700,
-                                          color: Colors.grey.shade500,
-                                        ),
+                                          color: Colors.black),
+                                    ),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                "${commuData.description}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade500,
                                       ),
-                            ),
-                            const SizedBox(
-                              height: 8.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                LikeAnimation(
-                                  isAnimating: commuData.likes.contains(user),
-                                  smallLike: true,
-                                  child: IconButton(
-                                    icon: commuData.likes.contains(user)
-                                        ? const Icon(
-                                            Icons.favorite,
-                                            color: Colors.red,
-                                          )
-                                        : const Icon(
-                                            Icons.favorite_border,
-                                          ),
-                                    onPressed: () async {
-                                      setState(() {
-                                        if (commuData.likes.contains(user)) {
-                                          commuData.likes.remove(user);
-                                        } else {
-                                          commuData.likes.add(user);
-                                        }
-                                      });
-                                      await commuServices.likesCommu(
-                                          context, commuData.id!);
-                                    },
+                                    ),
+                              ),
+                              const SizedBox(
+                                height: 8.0,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  LikeAnimation(
+                                    isAnimating: commuData.likes.contains(user),
+                                    smallLike: true,
+                                    child: IconButton(
+                                      icon: commuData.likes.contains(user)
+                                          ? const Icon(
+                                              Icons.favorite,
+                                              color: Colors.red,
+                                            )
+                                          : const Icon(
+                                              Icons.favorite_border,
+                                            ),
+                                      onPressed: () async {
+                                        setState(() {
+                                          if (commuData.likes.contains(user)) {
+                                            commuData.likes.remove(user);
+                                          } else {
+                                            commuData.likes.add(user);
+                                          }
+                                        });
+                                        await commuServices.likesCommu(
+                                            context, commuData.id!);
+                                      },
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '${commuData.likes.length}', // แสดงจำนวน likes
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.comment,
+                                  Text(
+                                    '${commuData.likes.length}', // แสดงจำนวน likes
+                                    style: TextStyle(color: Colors.grey),
                                   ),
-                                  onPressed: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailCommuScreen(
-                                        commu: commuData,
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.comment,
+                                    ),
+                                    onPressed: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailCommuScreen(
+                                          commu: commuData,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  '${commuData.comments.length}', // แสดงจำนวน likes
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ]),
-                    ),
-                  ],
+                                  Text(
+                                    '${commuData.comments.length}', // แสดงจำนวน likes
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

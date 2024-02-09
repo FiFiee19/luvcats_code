@@ -12,3 +12,13 @@ exports.list = async (req, res) => {
     }
 
 }
+
+exports.id = async (req, res) => {
+    try {
+        const catId = await Cathotel.find( {user_id: req.user} ).populate('user')
+        res.json(catId);
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+}

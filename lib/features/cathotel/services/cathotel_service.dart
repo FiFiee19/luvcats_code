@@ -40,4 +40,36 @@ class CathotelServices {
     }
     return cathotelList;
   }
+
+  // Future<List<Cathotel>> fetchCatIdProfile(BuildContext context) async {
+  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
+  //   final user = userProvider.user.id;
+  //   List<Cathotel> cathoteIdlList = [];
+  //   try {
+  //     http.Response res =
+  //         await http.get(Uri.parse('$url/getCathotel/$user'), headers: {
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //       'authtoken': userProvider.user.token,
+  //     });
+
+  //     httpErrorHandle(
+  //       response: res,
+  //       context: context,
+  //       onSuccess: () {
+  //         for (int i = 0; i < jsonDecode(res.body).length; i++) {
+  //           cathoteIdlList.add(
+  //             Cathotel.fromJson(
+  //               jsonEncode(
+  //                 jsonDecode(res.body)[i],
+  //               ),
+  //             ),
+  //           );
+  //         }
+  //       },
+  //     );
+  //   } catch (e) {
+  //     showSnackBar(context, e.toString());
+  //   }
+  //   return cathoteIdlList;
+  // }
 }
