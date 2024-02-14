@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/features/community/screens/detail_commu.dart';
-import 'package:luvcats_app/features/community/screens/postcommu.dart';
+import 'package:luvcats_app/features/community/screens/detail_comment.dart';
+import 'package:luvcats_app/features/community/screens/forms_commu.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
@@ -20,7 +20,6 @@ class CommuScreen extends StatefulWidget {
 
 class _CommuScreenState extends State<CommuScreen> {
   List<Commu>? commu;
-  Commu? commuu;
   final CommuServices commuServices = CommuServices();
   final AuthService authService = AuthService();
   CarouselController buttonCarouselController = CarouselController();
@@ -71,7 +70,7 @@ class _CommuScreenState extends State<CommuScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PostCommu(),
+                  builder: (context) => FormsCommu(),
                 ),
               );
             },
@@ -95,7 +94,7 @@ class _CommuScreenState extends State<CommuScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailCommuScreen(commu: commuData),
+                      builder: (context) => DetailCommentScreen(commu: commuData),
                     ),
                   );
                 },
@@ -217,7 +216,7 @@ class _CommuScreenState extends State<CommuScreen> {
                                     ),
                                     onPressed: () => Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => DetailCommuScreen(
+                                        builder: (context) => DetailCommentScreen(
                                           commu: commuData,
                                         ),
                                       ),
@@ -250,7 +249,7 @@ class _CommuScreenState extends State<CommuScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PostCommu(),
+                  builder: (context) => FormsCommu(),
                 ),
               );
             },

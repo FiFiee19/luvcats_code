@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/community/screens/postcommu.dart';
+import 'package:luvcats_app/features/community/screens/forms_commu.dart';
 
 class NoPostsWidget extends StatelessWidget {
   const NoPostsWidget({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class NoPostsWidget extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PostCommu(),
+                builder: (context) => FormsCommu(),
               ),
             );
           },

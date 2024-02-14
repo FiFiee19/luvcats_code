@@ -102,11 +102,11 @@ class CommuServices {
     return commuList;
   }
 
-  Future<void> likesCommu(BuildContext context, String post_id) async {
+  Future<void> likesCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res =
-          await http.put(Uri.parse('$url/likesCommu/$post_id'), headers: {
+          await http.put(Uri.parse('$url/likesCommu/$commuId'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'authtoken': userProvider.user.token,
       });
@@ -121,45 +121,54 @@ class CommuServices {
     }
   }
 
-  // Future<void> addComment(
-  //     BuildContext context, String post_id, String message) async {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   try {
-  //     Comment comment =
-  //         Comment(message: message, user_id: userProvider.user.id);
-  //     http.Response res = await http.post(
-  //       Uri.parse('$url/addComment/$post_id'),
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //         'authtoken': userProvider.user.token,
-  //       },
-  //       body: jsonEncode(comment.toJson()), // ใช้ jsonEncode ที่นี่
-  //     );
-
-  //     httpErrorHandle(
-  //       response: res,
-  //       context: context,
-  //       onSuccess: () {
-  //         // โค้ดที่จะทำเมื่อสำเร็จ
-  //       },
-  //     );
-  //   } catch (e) {
-  //     showSnackBar(context, e.toString());
-  //   }
-  // }
-
-  Future<List<Comment>> fetchComment(
-      BuildContext context, String post_id) async {
+  Future<Commu> fetchIdCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(
-        Uri.parse('$url/getComment/$post_id'),
+        Uri.parse('$url/getCommu/$commuId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
       );
+      
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+        if (data is List) {
+          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
+          final firstPost = data.first;
+          if (firstPost is Map<String, dynamic>) {
+            return Commu.fromMap(firstPost);
+          } else {
+            throw Exception('Data format is not correct');
+          }
+        } else if (data is Map<String, dynamic>) {
+          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
+          return Commu.fromMap(data);
+        } else {
+          throw Exception('Data format is not correct');
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
+  }
 
+  Future<List<Comment>> fetchComment(
+      BuildContext context, String commuId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/getComment/$commuId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+      
       if (res.statusCode == 200) {
         List<dynamic> commentsData = jsonDecode(res.body);
         print(commentsData);
@@ -178,13 +187,13 @@ class CommuServices {
     required BuildContext context,
     required String user_id,
     required String message,
-    required String post_id, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+    required String commuId, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      final response = await http.post(
-        Uri.parse('$url/addComment/$post_id'),
+      final res = await http.post(
+        Uri.parse('$url/addComment/$commuId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -195,7 +204,7 @@ class CommuServices {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Add Comment Success')),
         );
@@ -210,6 +219,52 @@ class CommuServices {
           backgroundColor: Colors.red,
         ),
       );
+    }
+  }
+
+  Future<void> editPost(
+    BuildContext context,
+    String commuId,
+    String title,
+    String description,
+    List<File> images, // รูปภาพใหม่เป็น File
+  ) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    // อัปโหลดรูปภาพใหม่และรับ URL
+    try {
+      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+      List<String> imageUrls = [];
+
+      for (int i = 0; i < images.length; i++) {
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+        );
+        imageUrls.add(res.secureUrl);
+      }
+
+      final res = await http.put(
+        Uri.parse('$url/getCommu/edit/$commuId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'title': title,
+          'description': description,
+          'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
+        }),
+      );
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Post updated successfully with new image!')),
+        );
+      } else {
+        print('Failed to update post: ${res.body}');
+      }
+    } catch (e) {
+      print('Error updating post: $e');
     }
   }
 }

@@ -8,19 +8,17 @@ import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/custom_button.dart';
-import 'package:luvcats_app/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 // import 'package:luvcat_app/services/auth_services.dart';
 
-class PostCommu extends StatefulWidget {
-  const PostCommu({super.key});
+class FormsCommu extends StatefulWidget {
+  const FormsCommu({super.key});
 
   @override
-  State<PostCommu> createState() => _PostCommuState();
+  State<FormsCommu> createState() => _FormsCommuState();
 }
 
-class _PostCommuState extends State<PostCommu> {
+class _FormsCommuState extends State<FormsCommu> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final CommuServices commuServices = CommuServices();
@@ -38,7 +36,7 @@ class _PostCommuState extends State<PostCommu> {
   }
 
   void postcommu() {
-    if (_postCommuFormKey.currentState!.validate() && images.isNotEmpty) {
+    if (_postCommuFormKey.currentState!.validate()) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
@@ -75,8 +73,7 @@ class _PostCommuState extends State<PostCommu> {
               ),
             ),
           )),
-      body: SingleChildScrollView(
-        child: Form(
+      body: Form(
           key: _postCommuFormKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -102,7 +99,6 @@ class _PostCommuState extends State<PostCommu> {
                         ),
                       )
                     : GestureDetector(
-                        onTap: selectImages,
                         child: DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(10),
@@ -117,10 +113,7 @@ class _PostCommuState extends State<PostCommu> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
-                                  Icons.folder_open,
-                                  size: 40,
-                                ),
+                                
                                 const SizedBox(height: 15),
                                 Text(
                                   'Select Images',
@@ -134,28 +127,70 @@ class _PostCommuState extends State<PostCommu> {
                           ),
                         ),
                       ),
+                      Center(
+            child: IconButton(
+              icon: const Icon(
+                Icons.upload_sharp,
+              ),
+              onPressed: () => selectImages(),
+            ),
+          ),
                 const SizedBox(height: 30),
-                CustomTextField(
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: titleController,
-                  hintText: 'หัวเรื่อง',
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกหัวเรื่อง';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'หัวเรื่อง',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
+              ),
                 const SizedBox(height: 10),
-                CustomTextField(
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: descriptionController,
-                  hintText: 'รายละเอียด',
                   maxLines: 7,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกรายละเอียด';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'รายละเอียด',
+                    
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
+              ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
-                CustomButton(
-                  text: 'Post',
-                  onTap: postcommu,
+                ElevatedButton(
+                  onPressed: postcommu,
+                  child: const Text('โพสต์',style: TextStyle(color: Colors.white,)),
+                  style: ElevatedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 50), primary: Colors.red),
                 ),
               ],
             ),
           ),
         ),
-      ),
+      
     );
   }
 }

@@ -17,7 +17,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
   List<Cathotel>? cathotel;
   final CathotelServices cathotelServices = CathotelServices();
   final AuthService authService = AuthService();
-  String? finalEmail;
 
   @override
   void initState() {

@@ -64,7 +64,6 @@ class _FormsEntreState extends State<FormsEntre> {
       CloudinaryResponse resimg = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(_imageP!.path, folder: "a"),
       );
-      print(resimg.secureUrl);
       entreService.cathotel(
         email: _emailController.text,
         password: _passwordController.text,

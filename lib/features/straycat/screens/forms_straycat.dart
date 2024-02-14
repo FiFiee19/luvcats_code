@@ -7,19 +7,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/straycat/services/cat_service.dart';
-import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
-class PostStrayCat extends StatefulWidget {
-  const PostStrayCat({super.key});
+class FormsStrayCat extends StatefulWidget {
+  const FormsStrayCat({super.key});
 
   @override
-  State<PostStrayCat> createState() => _PostStrayCatState();
+  State<FormsStrayCat> createState() => _FormsStrayCatState();
 }
 
-class _PostStrayCatState extends State<PostStrayCat> {
+class _FormsStrayCatState extends State<FormsStrayCat> {
   final TextEditingController textEditingController = TextEditingController();
   final TextEditingController breedController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -28,7 +27,6 @@ class _PostStrayCatState extends State<PostStrayCat> {
   final CatServices catServices = CatServices();
   List<File> images = [];
   final _postCatFormKey = GlobalKey<FormState>();
-  List<Cat>? cats;
   String selectedGender = 'ไม่ทราบ';
   String selectedProvince = 'กรุงเทพมหานคร';
   final List<String> listgender = [
@@ -49,7 +47,15 @@ class _PostStrayCatState extends State<PostStrayCat> {
   }
 
   void postcat() {
-    if (_postCatFormKey.currentState!.validate() && images.isNotEmpty) {
+    if (_postCatFormKey.currentState!.validate()) {
+    if (images.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('กรุณาเลือกรูปภาพ'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
@@ -64,6 +70,7 @@ class _PostStrayCatState extends State<PostStrayCat> {
         images: images,
       );
     }
+  }
   }
 
   void selectImages() async {
@@ -116,7 +123,6 @@ class _PostStrayCatState extends State<PostStrayCat> {
                         ),
                       )
                     : GestureDetector(
-                        onTap: selectImages,
                         child: DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(10),
@@ -131,10 +137,6 @@ class _PostStrayCatState extends State<PostStrayCat> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
-                                  Icons.folder_open,
-                                  size: 40,
-                                ),
                                 const SizedBox(height: 15),
                                 Text(
                                   'Select Images',
@@ -148,18 +150,36 @@ class _PostStrayCatState extends State<PostStrayCat> {
                           ),
                         ),
                       ),
+                Center(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.upload_sharp,
+                    ),
+                    onPressed: () => selectImages(),
+                    
+                  ),
+                ),
                 const SizedBox(height: 30),
-                TextField(
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: breedController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกสายพันธุ์';
+                    }
+                  },
                   decoration: InputDecoration(
                     hintText: 'สายพันธุ์',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          15), // ใช้พารามิเตอร์ borderRadius ที่นี่
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
                   ),
                 ),
+              ),
+                
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
@@ -235,20 +255,27 @@ class _PostStrayCatState extends State<PostStrayCat> {
                   // ตัวเลือกอื่นๆ...
                 ),
                 const SizedBox(height: 10),
-                TextField(
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: descriptionController,
                   maxLines: 7,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกรายละเอียด';
+                    }
+                  },
                   decoration: InputDecoration(
                     hintText: 'รายละเอียด',
+                    
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          15), // ใช้พารามิเตอร์ borderRadius ที่นี่
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    // การตกแต่งอื่นๆ...
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
                   ),
-                  // คุณสมบัติอื่นๆ...
                 ),
+              ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
                 CustomButton(

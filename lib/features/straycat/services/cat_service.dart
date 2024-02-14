@@ -33,7 +33,7 @@ class CatServices {
         imageUrls.add(res.secureUrl);
       }
 
-      Cat cat = Cat(
+      Straycat cat = Straycat(
         user_id: user_id,
         breed: breed,
         gender: gender,
@@ -72,9 +72,9 @@ class CatServices {
     }
   }
 
-  Future<List<Cat>> fetchAllCats(BuildContext context) async {
+  Future<List<Straycat>> fetchAllCats(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    List<Cat> catList = [];
+    List<Straycat> catList = [];
     try {
       http.Response res =
           await http.get(Uri.parse('$url/getStrayCat'), headers: {
@@ -88,7 +88,7 @@ class CatServices {
         onSuccess: () {
           for (int i = 0; i < jsonDecode(res.body).length; i++) {
             catList.add(
-              Cat.fromJson(
+              Straycat.fromJson(
                 jsonEncode(
                   jsonDecode(res.body)[i],
                 ),
@@ -104,12 +104,12 @@ class CatServices {
   }
 
   Future<void> updateCatStatus(
-      BuildContext context, String cat_id, String newStatus) async {
+      BuildContext context, String StraycatId, String newStatus) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$url/updateStatus/$cat_id'),
+        Uri.parse('$url/updateStatus/$StraycatId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -118,17 +118,68 @@ class CatServices {
           'status': newStatus,
         }),
       );
-
-      if (res.statusCode == 200) {
-        // อัปเดตสำเร็จ
-        print('Status updated');
-        // อาจจะมีการอัปเดต UI หรือ state ที่นี่ตามความจำเป็น
-      } else {
-        // มีข้อผิดพลาด
-        print('Failed to update status: ${res.body}');
-      }
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Status updated!');
+          Navigator.pop(context);
+        },
+      );
+      
     } catch (error) {
       print('Error updating status: $error');
+    }
+  }
+
+  Future<void> editPostCat(
+    BuildContext context,
+    String postId,
+    String breed,
+    String gender,
+    String province,
+    String description,
+    List<File> images, // รูปภาพใหม่เป็น File
+  ) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    // อัปโหลดรูปภาพใหม่และรับ URL
+    try {
+      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+      List<String> imageUrls = [];
+
+      for (int i = 0; i < images.length; i++) {
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+        );
+        imageUrls.add(res.secureUrl);
+      }
+
+      final res = await http.put(
+        Uri.parse('$url/getCommu/edit/$postId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'breed': breed,
+          'gender': gender,
+          'province': province,
+          'description': description,
+          'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
+        }),
+      );
+       httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Post updated successfully!');
+          Navigator.pop(context);
+        },
+      );
+      
+    } catch (e) {
+      print('Error updating post: $e');
     }
   }
 }

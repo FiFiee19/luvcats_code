@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:luvcats_app/models/user.dart';
 
-class Cat {
+class Straycat {
   User? user;
   final String user_id;
   final String breed;
@@ -12,7 +12,7 @@ class Cat {
   final List<String> images;
   final String? status;
 
-  Cat({
+  Straycat({
     this.user,
     required this.user_id,
     required this.breed,
@@ -38,11 +38,11 @@ class Cat {
     };
   }
 
-  factory Cat.fromMap(Map<String, dynamic>? map) {
+  factory Straycat.fromMap(Map<String, dynamic>? map) {
     if (map == null) {
       throw Exception('Map cannot be null');
     }
-    return Cat(
+    return Straycat(
       user: map['user'] != null ? User.fromMap(map['user']) : null,
       user_id: map['user_id'] ?? '',
       breed: map['breed'] ?? '',
@@ -57,7 +57,7 @@ class Cat {
 
   String toJson() => json.encode(toMap());
 
-  factory Cat.fromJson(String source) => Cat.fromMap(json.decode(source));
+  factory Straycat.fromJson(String source) => Straycat.fromMap(json.decode(source));
 
   // Cat copyWith({
   //   String? user_id,

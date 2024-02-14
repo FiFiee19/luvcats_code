@@ -8,19 +8,23 @@ const {
     id,
     addComment,
     comment,
-    deletepost,
-    editpost
+    deletePost,
+    editPost,
+    userId,
+    commuId,
+
 } = require('../controllers/commu')
 
 const auth = require('../middlewares/auth')
 
 commuRouter.get('/getCommu',auth,list)
 commuRouter.post('/postCommu',auth,create)
-commuRouter.put('/likesCommu/:post_id',auth,likes)
-commuRouter.get('/getCommu/:user_id',auth,id)
-commuRouter.post('/addComment/:post_id',auth,addComment)
-commuRouter.get('/getComment/:post_id',auth,comment)
-commuRouter.delete('/getCommu/delete/:post_id',auth,deletepost)
-commuRouter.put('/getCommu/edit/:post_id',auth,editpost)
+commuRouter.put('/likesCommu/:commuId',auth,likes)
+commuRouter.get('/getCommu/:user_id',auth,userId)
+commuRouter.get('/getCommu/:commuId',auth,commuId)
+commuRouter.post('/addComment/:commuId',auth,addComment)
+commuRouter.get('/getComment/:commuId',auth,comment)
+commuRouter.delete('/getCommu/delete/:commuId',auth,deletePost)
+commuRouter.put('/getCommu/edit/:commuId',auth,editPost)
 
 module.exports = commuRouter

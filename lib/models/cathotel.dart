@@ -36,6 +36,9 @@ class Cathotel {
   }
 
   factory Cathotel.fromMap(Map<String, dynamic> map) {
+    if (map == null) {
+      throw Exception('Map cannot be null');
+    }
     return Cathotel(
       user: map['user'] != null ? User.fromMap(map['user']) : null,
       id: map['_id'] ?? '',

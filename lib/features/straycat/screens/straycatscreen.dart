@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
-import 'package:luvcats_app/features/straycat/screens/poststraycat.dart';
+import 'package:luvcats_app/features/straycat/screens/forms_straycat.dart';
 import 'package:luvcats_app/features/straycat/services/cat_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/loader.dart';
@@ -16,7 +16,7 @@ class StrayCatScreen extends StatefulWidget {
 }
 
 class _StrayCatScreenState extends State<StrayCatScreen> {
-  List<Cat>? cats;
+  List<Straycat>? straycatlist;
   final CatServices catServices = CatServices();
   final AuthService authService = AuthService();
   String? finalEmail;
@@ -28,10 +28,10 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
   }
 
   Future<void> fetchAllCats() async {
-    cats = await catServices.fetchAllCats(context);
-    if (cats != null) {
+    straycatlist = await catServices.fetchAllCats(context);
+    if (straycatlist != null) {
       // กรองเฉพาะ cats ที่มีสถานะเป็น "no"
-      cats = cats!.where((cat) => cat.status == 'no').toList();
+      straycatlist = straycatlist!.where((cat) => cat.status == 'no').toList();
     }
     if (mounted) {
       setState(() {});
@@ -42,9 +42,9 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
   Widget build(BuildContext context) {
     Widget bodyContent;
 
-    if (cats == null) {
+    if (straycatlist == null) {
       bodyContent = const Loader();
-    } else if (cats!.isEmpty) {
+    } else if (straycatlist!.isEmpty) {
       bodyContent = RefreshIndicator(
           onRefresh: fetchAllCats,
           child: Center(
@@ -57,7 +57,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
       bodyContent = RefreshIndicator(
         onRefresh: fetchAllCats,
         child: GridView.builder(
-          itemCount: cats!.length,
+          itemCount: straycatlist!.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 12.0,
@@ -65,14 +65,14 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
             mainAxisExtent: 330,
           ),
           itemBuilder: (context, index) {
-            final catData = cats![index];
+            final straycat = straycatlist![index];
 
             return InkWell(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailStraycatScreen(cat: catData),
+                    builder: (context) => DetailStraycatScreen(straycat: straycat),
                   ),
                 );
               },
@@ -95,7 +95,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                           height: 180,
                           padding: const EdgeInsets.all(10),
                           child: Image.network(
-                            catData.images[0],
+                            straycat.images[0],
                             fit: BoxFit.fitHeight,
                             width: 180,
                           ),
@@ -112,7 +112,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               CircleAvatar(
                                 backgroundColor: Colors.grey,
                                 backgroundImage: NetworkImage(
-                                  catData.user!.imagesP,
+                                  straycat.user!.imagesP,
                                 ),
                                 radius: 10,
                               ),
@@ -120,7 +120,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 width: 10,
                               ),
                               Text(
-                                "${catData.user?.username}",
+                                "${straycat.user?.username}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle1!
@@ -130,25 +130,32 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                           color: Colors.black),
                                     ),
                               ),
-                              const SizedBox(
-                                width: 96.0,
-                              ),
                             ],
                           ),
                           const SizedBox(
                             height: 8.0,
                           ),
-                          Text(
-                            "สายพันธุ์:  ${catData.breed.split(" ").first}",
-                            style: Theme.of(context).textTheme.subtitle2!.merge(
-                                  TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.grey.shade900,
-                                  ),
-                                ),
+                          Row(
+                            children: [
+                              Text("สายพันธุ์:  "),
+                              Text(
+                                straycat.breed.length > 10
+                                    ? "${straycat.breed.substring(0, 10)}..."
+                                    : straycat.breed,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                    ),
+                              ),
+                            ],
                           ),
                           Text(
-                            "เพศ:  ${catData.gender}",
+                            "เพศ:  ${straycat.gender}",
                             style: Theme.of(context).textTheme.subtitle2!.merge(
                                   TextStyle(
                                     fontWeight: FontWeight.w700,
@@ -179,7 +186,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 width: 5.0,
                               ),
                               Text(
-                                "${catData.province}",
+                                "${straycat.province}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle2!
@@ -219,7 +226,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PostStrayCat(),
+                builder: (context) => FormsStrayCat(),
               ),
             );
           },

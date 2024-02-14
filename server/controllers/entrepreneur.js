@@ -11,48 +11,45 @@ exports.create = async (req, res) => {
             images, } = req.body;
 
     
-    var user = await User.findOne({ email });
-    if (user) {
+    var user_email = await User.findOne({ email });
+    if (user_email) {
       return res.send('User Already Exists!!!').status(400);
     }
 
     const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(password, salt);
-      
 
     const newUser = new User({
-      username,
-      email,
-      password: hashedPassword,
-      type: 'entrepreneur',
-      imagesP
+        username,
+        email,
+        password: hashedPassword,
+        type: 'entrepreneur',
+        imagesP
     });
     await newUser.save();
     
-        
-        cathotel = new Cathotel({
-            user:newUser,
-            user_id: newUser.id,
-            description,
-            price,
-            contact,
-            province,
-            images
-        });
-        await cathotel.save();
+    const cathotel = new Cathotel({
+        user: newUser._id,
+        user_id: newUser._id,
+        description,
+        price,
+        contact,
+        province,
+        images
+    });
+    await cathotel.save();
 
-        let newEntre = new Entre({
-            user:newUser,
-            user_id: newUser.id,
-            store_id: cathotel.id,
-            name: req.body.name,
-            user_address: req.body.user_address,
-            store_address: req.body.store_address,
-            phone: req.body.phone
+    const newEntre = new Entre({
+        user: newUser._id,
+        user_id: newUser._id, // ใช้ newUser._id แทน newUser และ user_id
+        store_id: cathotel._id, // ใช้ _id ที่ถูกต้องจาก Mongoose
+        name: req.body.name,
+        user_address: req.body.user_address,
+        store_address: req.body.store_address,
+        phone: req.body.phone
+    });
 
-        });
-
-        await newEntre.save();
+    await newEntre.save();
         console.log(req.body)
         res.send('Register Success!!');
 
@@ -75,7 +72,7 @@ exports.list = async (req, res) => {
     }
 }
 
-exports.id = async (req, res) => {
+exports.userId = async (req, res) => {
     try {
         const entreId = await Entre.find( {user_id: req.user} ).populate('user')
         res.json(entreId);

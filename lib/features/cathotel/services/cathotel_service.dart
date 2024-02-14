@@ -41,35 +41,37 @@ class CathotelServices {
     return cathotelList;
   }
 
-  // Future<List<Cathotel>> fetchCatIdProfile(BuildContext context) async {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   final user = userProvider.user.id;
-  //   List<Cathotel> cathoteIdlList = [];
-  //   try {
-  //     http.Response res =
-  //         await http.get(Uri.parse('$url/getCathotel/$user'), headers: {
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //       'authtoken': userProvider.user.token,
-  //     });
+Future<Cathotel?> fetchCatIdProfile(BuildContext context, String user_id) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  Cathotel? catprofile;
 
-  //     httpErrorHandle(
-  //       response: res,
-  //       context: context,
-  //       onSuccess: () {
-  //         for (int i = 0; i < jsonDecode(res.body).length; i++) {
-  //           cathoteIdlList.add(
-  //             Cathotel.fromJson(
-  //               jsonEncode(
-  //                 jsonDecode(res.body)[i],
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       },
-  //     );
-  //   } catch (e) {
-  //     showSnackBar(context, e.toString());
-  //   }
-  //   return cathoteIdlList;
-  // }
+  try {
+    final http.Response res = await http.get(
+      Uri.parse('$url/getCathotel/$user_id'), // Ensure $url is correctly defined
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token,
+      },
+    );
+
+    if (res.statusCode == 200) {
+      final List<dynamic> body = jsonDecode(res.body);
+      if (body.isNotEmpty) {
+        // Assuming you want the first Cathotel object from the list
+        catprofile = Cathotel.fromMap(body.first);
+      } else {
+        showSnackBar(context, 'No Cathotel data found for the user.');
+      }
+    } else {
+      showSnackBar(context, 'Error: ${res.statusCode}');
+    }
+  } catch (e) {
+    showSnackBar(context, e.toString());
+  }
+
+  return catprofile;
+}
+
+
+
 }

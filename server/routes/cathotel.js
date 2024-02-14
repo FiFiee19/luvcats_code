@@ -5,9 +5,12 @@ const auth = require("../middlewares/auth");
 
 const {
     list,
-    id
+    userId,
+    cathotelId
 } = require('../controllers/cathotel');
 
-cathotelRouter.get("/getCathotel", auth, list);
-cathotelRouter.get("/getCathotel/:id", auth, id);
+cathotelRouter.get("/getCathotel", auth, list)
+cathotelRouter.get("/getCathotel/:user_id", auth, userId)
+cathotelRouter.get("/getCathotel/:id", auth, cathotelId)
+
 module.exports = cathotelRouter;

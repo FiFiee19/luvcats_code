@@ -86,3 +86,17 @@ exports.list = async (req, res) => {
   res.json({ ...user._doc, token: req.token });
 }
 
+exports.editUser = async(req, res) => {
+  try {
+
+      // ดึงข้อมูลโพสต์ที่เฉพาะเจาะจงและคอมเมนต์ที่เกี่ยวข้อง
+      const user = await User.findById(req.user)
+      const newUser = await User.findOneAndUpdate({user_id:user} , req.body , {new:true});
+
+      return res.status(200).json({data:newUser , message:"updated successfully "});
+  } catch (e) {
+      console.log(e);
+      res.status(500).send('Server Error');
+  }
+};
+

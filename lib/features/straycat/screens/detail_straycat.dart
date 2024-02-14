@@ -4,10 +4,10 @@ import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 
 class DetailStraycatScreen extends StatefulWidget {
-  final Cat cat;
+  final Straycat straycat;
   const DetailStraycatScreen({
     Key? key,
-    required this.cat,
+    required this.straycat,
   }) : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
           child: Column(
         children: [
           CustomCarouselSlider(
-            images: widget.cat.images,
+            images: widget.straycat.images,
           ),
           SizedBox(
             height: 20,
@@ -51,7 +51,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                     CircleAvatar(
                       backgroundColor: Colors.grey,
                       backgroundImage: NetworkImage(
-                        widget.cat.user!.imagesP,
+                        widget.straycat.user!.imagesP,
                       ),
                       radius: 16,
                     ),
@@ -59,7 +59,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                       width: 20,
                     ),
                     Text(
-                      widget.cat.user!.username,
+                      widget.straycat.user!.username,
                       style: Theme.of(context).textTheme.subtitle2!.merge(
                             TextStyle(
                                 fontWeight: FontWeight.w700,
@@ -81,7 +81,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "สายพันธุ์:  " + widget.cat.breed,
+                  "สายพันธุ์:  " + widget.straycat.breed,
                   style: Theme.of(context).textTheme.subtitle2!.merge(
                         TextStyle(
                           fontWeight: FontWeight.w700,
@@ -98,7 +98,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "เพศ:  " + widget.cat.gender,
+                  "เพศ:  " + widget.straycat.gender,
                   style: Theme.of(context).textTheme.subtitle2!.merge(
                         TextStyle(
                           fontWeight: FontWeight.w700,
@@ -115,7 +115,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "จังหวัด:  " + widget.cat.province,
+                  "จังหวัด:  " + widget.straycat.province,
                   style: Theme.of(context).textTheme.subtitle2!.merge(
                         TextStyle(
                           fontWeight: FontWeight.w700,
@@ -150,7 +150,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.cat.description,
+                    widget.straycat.description,
                     softWrap: true,
                     overflow: TextOverflow.visible,
                     style: Theme.of(context).textTheme.subtitle2!.merge(

@@ -124,59 +124,58 @@ class EntreService {
   }
 }
 
-Future<List<Entrepreneur>> fetchAllEntre(BuildContext context) async {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
-  List<Entrepreneur> entreList = [];
-  try {
-    http.Response res = await http.get(Uri.parse('$url/getEntre'), headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'authtoken': userProvider.user.token,
-    });
+// Future<List<Entrepreneur>> fetchAllEntre(BuildContext context) async {
+//   final userProvider = Provider.of<UserProvider>(context, listen: false);
+//   List<Entrepreneur> entreList = [];
+//   try {
+//     http.Response res = await http.get(Uri.parse('$url/getEntre'), headers: {
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       'authtoken': userProvider.user.token,
+//     });
 
-    httpErrorHandle(
-      response: res,
-      context: context,
-      onSuccess: () {
-        res.body;
+//     httpErrorHandle(
+//       response: res,
+//       context: context,
+//       onSuccess: () {
+//         res.body;
+//       },
+//     );
+//   } catch (e) {
+//     showSnackBar(context, e.toString());
+//   }
+//   return entreList;
+// }
+Future<Entrepreneur?> fetchIdProfile(BuildContext context, String user_id) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  Entrepreneur? catprofile;
+
+  try {
+    final http.Response res = await http.get(
+      Uri.parse('$url/getEntre/$user_id'), // Ensure $url is correctly defined
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token,
       },
     );
+
+    if (res.statusCode == 200) {
+      final List<dynamic> body = jsonDecode(res.body);
+      if (body.isNotEmpty) {
+        // Assuming you want the first Cathotel object from the list
+        catprofile = Entrepreneur.fromMap(body.first);
+      } else {
+        showSnackBar(context, 'No Cathotel data found for the user.');
+      }
+    } else {
+      showSnackBar(context, 'Error: ${res.statusCode}');
+    }
   } catch (e) {
     showSnackBar(context, e.toString());
   }
-  return entreList;
+
+  return catprofile;
 }
 
-Future<List<Entrepreneur>> fetchEntreProfile(BuildContext context) async {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
-  final user = userProvider.user.id;
-  List<Entrepreneur> entreIdList = [];
-  try {
-    http.Response res =
-        await http.get(Uri.parse('$url/getEntre/$user'), headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'authtoken': userProvider.user.token,
-    });
-
-    httpErrorHandle(
-      response: res,
-      context: context,
-      onSuccess: () {
-        for (int i = 0; i < jsonDecode(res.body).length; i++) {
-          entreIdList.add(
-            Entrepreneur.fromJson(
-              jsonEncode(
-                jsonDecode(res.body)[i],
-              ),
-            ),
-          );
-        }
-      },
-    );
-  } catch (e) {
-    showSnackBar(context, e.toString());
-  }
-  return entreIdList;
-}
 
 Future<List<Entrepreneur>> fetchEntreIdProfile(BuildContext context) async {
   final userProvider = Provider.of<UserProvider>(context, listen: false);

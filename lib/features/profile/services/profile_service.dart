@@ -43,10 +43,10 @@ class ProfileServices {
     return commuList;
   }
 
-  Future<List<Cat>> fetchStrayCatProfile(BuildContext context) async {
+  Future<List<Straycat>> fetchStrayCatProfile(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user = userProvider.user.id;
-    List<Cat> catList = [];
+    List<Straycat> straycatList = [];
     try {
       http.Response res =
           await http.get(Uri.parse('$url/getStrayCat/$user'), headers: {
@@ -59,8 +59,8 @@ class ProfileServices {
         context: context,
         onSuccess: () {
           for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            catList.add(
-              Cat.fromJson(
+            straycatList.add(
+              Straycat.fromJson(
                 jsonEncode(
                   jsonDecode(res.body)[i],
                 ),
@@ -72,14 +72,14 @@ class ProfileServices {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
-    return catList;
+    return straycatList;
   }
 
-  Future<void> deleteCatCommu(BuildContext context, String post_id) async {
+  Future<void> deleteCatCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
-        Uri.parse('$url/getCommu/delete/$post_id'),
+        Uri.parse('$url/getCommu/delete/$commuId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -99,11 +99,11 @@ class ProfileServices {
     }
   }
 
-  Future<void> deleteCatStrayCat(BuildContext context, String post_id) async {
+  Future<void> deleteCatStrayCat(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
-        Uri.parse('$url/getStrayCat/delete/$post_id'),
+        Uri.parse('$url/getStrayCat/delete/$commuId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,

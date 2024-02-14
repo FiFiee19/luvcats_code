@@ -6,7 +6,7 @@ const auth = require("../middlewares/auth");
 const {
     create,
     list,
-    id,
+    userId,
     deletepost,
     editpost,
     updateStatus
@@ -14,7 +14,7 @@ const {
 
 straycatRouter.post("/postStrayCat", auth, create);
 straycatRouter.get("/getStrayCat", auth, list);
-straycatRouter.get("/getStrayCat/:user_id", auth, id);
+straycatRouter.get("/getStrayCat/:user_id", auth, userId);
 straycatRouter.delete("/getStrayCat/delete/:id", auth, deletepost);
 straycatRouter.put("/getStrayCat/edit/:id", auth, editpost);
 straycatRouter.post("/updateStatus/:id", auth, updateStatus);

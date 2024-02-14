@@ -15,7 +15,7 @@ class TwoScreen extends StatefulWidget {
 }
 
 class _TwoScreenState extends State<TwoScreen> {
-  List<Cat>? cat;
+  List<Straycat>? straycats;
   final CatServices catServices = CatServices();
   final AuthService authService = AuthService();
   final ProfileServices profileService = ProfileServices();
@@ -27,14 +27,14 @@ class _TwoScreenState extends State<TwoScreen> {
   @override
   void initState() {
     super.initState();
-    fetchProfile();
+    fetchStraycatsProfile();
   }
 
-  Future<void> fetchProfile() async {
-    cat = await profileService.fetchStrayCatProfile(context);
-    if (cat != null) {
+  Future<void> fetchStraycatsProfile() async {
+    straycats = await profileService.fetchStrayCatProfile(context);
+    if (straycats != null) {
       final newstatusCats = <String, bool>{};
-      for (var c in cat!) {
+      for (var c in straycats!) {
         newstatusCats[c.id!] = c.status == 'yes';
       }
       setState(() {
@@ -45,9 +45,9 @@ class _TwoScreenState extends State<TwoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (cat == null) {
+    if (straycats == null) {
       return const Loader(); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
-    } else if (cat!.isEmpty) {
+    } else if (straycats!.isEmpty) {
       // แสดงข้อความ No Post ถ้าไม่มีโพสต์
       return Scaffold(
         backgroundColor: Colors.grey[200],
@@ -62,11 +62,11 @@ class _TwoScreenState extends State<TwoScreen> {
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
-          onRefresh: fetchProfile,
+          onRefresh: fetchStraycatsProfile,
           child: ListView.builder(
-            itemCount: cat!.length,
+            itemCount: straycats!.length,
             itemBuilder: (context, index) {
-              final catData = cat![index];
+              final catData = straycats![index];
 
               return InkWell(
                 onTap: () {
@@ -74,7 +74,7 @@ class _TwoScreenState extends State<TwoScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailStraycatScreen(cat: catData),
+                      builder: (context) => DetailStraycatScreen(straycat: catData),
                     ),
                   );
                 },
@@ -161,15 +161,7 @@ class _TwoScreenState extends State<TwoScreen> {
                                             color: Colors.black),
                                       ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 220),
-                              child: IconButton(
-                                  onPressed: () {
-                                    profileService.deleteCatStrayCat(
-                                        context, catData.id!);
-                                  },
-                                  icon: Icon(Icons.delete_sharp)),
-                            ),
+                            
                           ],
                         ),
                       ),
@@ -291,6 +283,35 @@ class _TwoScreenState extends State<TwoScreen> {
                                     ),
                                   ],
                                 ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      // Make sure 'commuData.id' is non-nullable before you pass it
+                                      // if (catData.id != null) {
+                                      //   Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //       // builder: (context) => EditCommu(
+                                      //       //   post_id: catData.id!,
+                                      //       // ),
+                                      //     ),
+                                      //   );
+                                      // } else {
+                                      //   // Handle the case where 'commuData.id' is null
+                                      // }
+                                    },
+                                    icon: Icon(Icons.edit),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        profileService.deleteCatStrayCat(
+                                            context, catData.id!);
+                                      },
+                                      icon: Icon(Icons.delete_sharp)),
+                                ],
                               ),
                               const SizedBox(
                                 height: 10.0,

@@ -20,7 +20,7 @@ exports.create = async (req,res) => {
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        let commu = new Commu({
+        const commu = new Commu({
             user: user,
             user_id:req.user,
             title,
@@ -41,27 +41,27 @@ exports.create = async (req,res) => {
 
 exports.likes = async (req , res ) => {
     try {
-        const {post_id} = req.params;
+        const {commuId} = req.params;
          
-        var getPost = await Commu.findById(post_id);
-        if(!getPost) return res.status(404).json("Post not found !!")
+        var likesPost = await Commu.findById(commuId);
+        if(!likesPost) return res.status(404).json("Post not found !!")
         
-        if(getPost.likes.includes(req.user)){
-            getPost = await Commu.findByIdAndUpdate(post_id , {$pull:{likes:req.user}} , {new:true}) 
+        if(likesPost.likes.includes(req.user)){
+            likesPost = await Commu.findByIdAndUpdate(commuId , {$pull:{likes:req.user}} , {new:true}) 
         }else{
-            getPost = await Commu.findByIdAndUpdate(post_id , {$push:{likes:req.user}} , {new:true}) 
+            likesPost = await Commu.findByIdAndUpdate(commuId , {$push:{likes:req.user}} , {new:true}) 
         }
         
-        return res.status(200).json(await getPost.populate('user_id'));
+        return res.status(200).json(await likesPost.populate('user_id'));
     } catch (error) {
         return res.status(500).json(error.message);
     }
 }
 
-exports.id = async (req,res) => {
+exports.userId = async (req,res) => {
     try {
-        const userCommu = await Commu.find({ user_id: req.user }).populate('user')
-        res.json(userCommu);
+        const findUserId = await Commu.find({ user_id: req.user }).populate('user')
+        res.json(findUserId);
 
     } catch (e) {
         console.log(e)
@@ -70,27 +70,42 @@ exports.id = async (req,res) => {
     }
 }
 
+exports.commuId = async (req,res) => {
+    try {
+        const { commuId } = req.params;
+        const findCommuId = await Commu.findById( commuId ).populate('user')
+        res.json(findCommuId);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
+
+
+
 exports.addComment = async (req, res) => {
     try {
         const{message} = req.body;
-        const {post_id} = req.params;
+        const {commuId} = req.params;
         const user = await User.findById(req.user);
-        const post = await Commu.findById(post_id);
+        const commu = await Commu.findById(commuId);
         const newComment = new Comment({
             message,
             user_id: req.user,
             user: user,
-            post: post
+            post: commu
         })
         await newComment.save();
-        var getPost = await Commu.findById(post_id);
-        getPost = await Commu.findByIdAndUpdate(
-            post_id,
+        var addComment = await Commu.findById(commuId);
+        addComment = await Commu.findByIdAndUpdate(
+            commuId,
             { $push: { comments: newComment } },
             { new: true }
         );
         
-        return res.status(200).json(await getPost.populate('user_id'));
+        return res.status(200).json(await addComment.populate('user_id'));
 
     }catch (e){
         console.log(e)
@@ -102,32 +117,28 @@ exports.addComment = async (req, res) => {
 exports.comment = async (req, res) => {
     try {
         
-        const { post_id } = req.params;
-
-        
-        const post = await Commu.findById(post_id)
+        const { commuId } = req.params;   
+        const commentPost = await Commu.findById(commuId)
             .populate({
                 path: 'comments',
                 populate: { path: 'user' }
-            });
-
-        
-        if (!post) {
+            });  
+        if (!commentPost) {
             return res.status(404).json({ msg: 'Post not found' });
         }
 
-        res.json(post.comments); // ส่งคอมเมนต์กลับไปยัง client
+        res.json(commentPost.comments); // ส่งคอมเมนต์กลับไปยัง client
     } catch (e) {
         console.log(e);
         res.status(500).send('Server Error');
     }
 };
 
-exports.deletepost = async (req, res) => {
+exports.deletePost = async (req, res) => {
     
     try {
-        const { post_id } = req.params;
-        await Commu.findByIdAndDelete(post_id);
+        const { commuId } = req.params;
+        await Commu.findByIdAndDelete(commuId);
         return res.status(200).json({message:"Post Deleted successfully"})
     } catch (e) {
         console.log(e)
@@ -136,14 +147,12 @@ exports.deletepost = async (req, res) => {
 
 }
 
-exports.editpost = async(req, res) => {
+exports.editPost = async(req, res) => {
     try {
-        // สมมติว่าคุณส่ง post_id ผ่าน req.params
-        const { post_id } = req.params;
+        const { commuId } = req.params;
 
-        // ดึงข้อมูลโพสต์ที่เฉพาะเจาะจงและคอมเมนต์ที่เกี่ยวข้อง
-        const post = await Commu.findById(post_id)
-        const newPost = await Commu.findOneAndUpdate(post , req.body , {new:true});
+        const commu = await Commu.findById(commuId)
+        const newPost = await Commu.findOneAndUpdate(commu , req.body , {new:true});
 
         return res.status(200).json({data:newPost , message:"updated successfully "});
     } catch (e) {

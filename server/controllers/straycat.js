@@ -7,7 +7,7 @@ exports.create = async (req, res) => {
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        let straycat = new Straycat({  
+        const straycat = new Straycat({  
             user: user,
             user_id: req.user,
             description,
@@ -30,8 +30,8 @@ exports.create = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        const cats = await Straycat.find({}).populate('user')
-        res.json(cats);
+        const straycatlist = await Straycat.find({}).populate('user')
+        res.json(straycatlist);
  
         
     } catch (e) {
@@ -41,10 +41,10 @@ exports.list = async (req, res) => {
 
 }
 
-exports.id = async (req, res) => {
+exports.userId = async (req, res) => {
     try {
-        const straycat = await Straycat.find( {user_id: req.user} ).populate('user')
-        res.json(straycat);
+        const straycatId = await Straycat.find( {user_id: req.user} ).populate('user')
+        res.json(straycatId);
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -55,7 +55,7 @@ exports.deletepost = async (req, res) => {
     const straycatId = req.params.id;
     try {
         await Straycat.findByIdAndDelete(straycatId);
-        return res.status(200).json({message:"Post Deleted successfully"})
+        return res.status(200).json({message:"Deleted successfully"})
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -71,7 +71,7 @@ exports.editpost = async (req, res) => {
             req.body, 
             { new: true } // ตัวเลือกนี้จะทำให้ method คืนค่าเอกสารหลังจากอัปเดต
         );
-        return res.status(200).json({data:newPost , message:"updated successfully "});
+        return res.status(200).json({data:newPost , message:"Updated successfully "});
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
