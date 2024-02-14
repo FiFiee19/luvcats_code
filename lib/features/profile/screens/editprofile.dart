@@ -1,4 +1,12 @@
+import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/config/utils.dart';
+import 'package:luvcats_app/features/profile/services/profile_service.dart';
+import 'package:luvcats_app/models/user.dart';
+import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class Editprofile extends StatefulWidget {
   const Editprofile({super.key});
@@ -8,8 +16,155 @@ class Editprofile extends StatefulWidget {
 }
 
 class _EditprofileState extends State<Editprofile> {
+  final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
+  late TextEditingController usernameController;
+  bool isLoading = true;
+  File? imagesP; // รูปภาพที่เลือกใหม่
+  String? imageUrl;
+  
+  ProfileServices profileServices = ProfileServices();
+
+  @override
+  void initState() {
+    super.initState();
+    usernameController = TextEditingController();
+
+    // ทำการโหลดข้อมูลโพสต์เดิม
+    _loadProfile();
+  }
+
+  @override
+  void dispose() {
+    if (mounted) {
+      usernameController.dispose();
+    }
+    super.dispose();
+  }
+
+  void _submitForm() async {
+  if (globalFormKey.currentState!.validate()) {
+    User? updatedUser = await profileServices.editUser(context, usernameController.text, imagesP);
+    if (updatedUser != null) {
+      // Update the UserProvider with the updated user data
+      Provider.of<UserProvider>(context, listen: false).updateUser(updatedUser);
+      // Optionally pop back to the previous screen or refresh the UI as needed
+      Navigator.pop(context, true);
+    } else {
+      // Handle the case where the user update was not successful
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update the profile')),
+      );
+    }
+  }
+}
+
+
+
+  Future<void> _loadProfile() async {
+    try {
+      final profile = await profileServices.fetchIdUser(
+        context,
+      );
+      // นำข้อมูลเดิมมาใส่ใน TextEditingController
+      usernameController.text = profile.username;
+      imageUrl = profile.imagesP;
+    } catch (e) {
+      print('Error loading post data: $e');
+    }
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void selectImages() async {
+    var res = await pickImageGallery();
+    setState(() {
+      imagesP = res;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Text('Edit'),);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: globalFormKey,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (imagesP != null)
+                  Image.file(imagesP!, fit: BoxFit.cover, height: 200)
+                else if (imageUrl != null)
+                  Image.network(imageUrl!, fit: BoxFit.cover, height: 200)
+                else
+                  GestureDetector(
+                    onTap: selectImages,
+                    child: DottedBorder(
+                      borderType: BorderType.RRect,
+                      radius: const Radius.circular(10),
+                      dashPattern: const [10, 4],
+                      strokeCap: StrokeCap.round,
+                      child: Container(
+                        width: double.infinity,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.camera_alt,
+                                color: Colors.grey, size: 50),
+                            SizedBox(height: 15),
+                            
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                Center(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.upload_sharp,
+                    ),
+                    onPressed: () => selectImages(),
+                  ),
+                ),
+                TextFormField(
+                  controller: usernameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Username',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child: const Text('Submit',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      primary: Colors.red),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

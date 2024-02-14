@@ -31,7 +31,6 @@ exports.userId = async (req,res) => {
 exports.cathotelId = async (req,res) => {
     try {
         const id = req.params.id;
-        // Use findById to find a single document by its ID
         const cathotelId = await Cathotel.findById(id).populate('user');
         res.json(cathotelId);
 

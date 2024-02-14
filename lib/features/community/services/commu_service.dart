@@ -257,9 +257,8 @@ class CommuServices {
       );
 
       if (res.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Post updated successfully with new image!')),
-        );
+        showSnackBar(context, 'Post updated successfully!');
+          Navigator.pop(context);
       } else {
         print('Failed to update post: ${res.body}');
       }

@@ -103,6 +103,42 @@ class CatServices {
     return catList;
   }
 
+  Future<Straycat> fetchIdStraycats(BuildContext context, String straycatsId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/getStrayCat/$straycatsId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+      
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+        if (data is List) {
+          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
+          final firstPost = data.first;
+          if (firstPost is Map<String, dynamic>) {
+            return Straycat.fromMap(firstPost);
+          } else {
+            throw Exception('Data format is not correct');
+          }
+        } else if (data is Map<String, dynamic>) {
+          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
+          return Straycat.fromMap(data);
+        } else {
+          throw Exception('Data format is not correct');
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
+  }
+
   Future<void> updateCatStatus(
       BuildContext context, String StraycatId, String newStatus) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -134,7 +170,7 @@ class CatServices {
 
   Future<void> editPostCat(
     BuildContext context,
-    String postId,
+    String starycatsId,
     String breed,
     String gender,
     String province,
@@ -156,7 +192,7 @@ class CatServices {
       }
 
       final res = await http.put(
-        Uri.parse('$url/getCommu/edit/$postId'),
+        Uri.parse('$url/getStrayCat/edit/$starycatsId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -182,4 +218,5 @@ class CatServices {
       print('Error updating post: $e');
     }
   }
+  
 }

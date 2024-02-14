@@ -29,6 +29,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: customAppBar(context), body: const tab_Bar());
+    return Scaffold( body: const tab_Bar());
   }
 }

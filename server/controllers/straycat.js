@@ -41,17 +41,32 @@ exports.list = async (req, res) => {
 
 }
 
-exports.userId = async (req, res) => {
+exports.userId = async (req,res) => {
     try {
-        const straycatId = await Straycat.find( {user_id: req.user} ).populate('user')
-        res.json(straycatId);
+        const findUserId = await Straycat.find({ user_id: req.user }).populate('user')
+        res.json(findUserId);
+
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
+
     }
 }
 
-exports.deletepost = async (req, res) => {
+exports.straycatsId = async (req,res) => {
+    try {
+        const { straycatsId } = req.params;
+        const findstraycatsId = await Straycat.findById( straycatsId ).populate('user')
+        res.json(findstraycatsId);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
+
+exports.deleteStraycats = async (req, res) => {
     const straycatId = req.params.id;
     try {
         await Straycat.findByIdAndDelete(straycatId);
@@ -63,7 +78,7 @@ exports.deletepost = async (req, res) => {
 
 }
 
-exports.editpost = async (req, res) => {
+exports.editStraycats = async (req, res) => {
     const straycatId = req.params.id;
     try { 
         const newPost = await Straycat.findByIdAndUpdate(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/straycat/screens/forms_straycat.dart';
-import 'package:luvcats_app/features/straycat/services/cat_service.dart';
+import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 

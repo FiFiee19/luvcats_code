@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
-import 'package:luvcats_app/features/straycat/services/cat_service.dart';
+import 'package:luvcats_app/features/straycat/screens/editstraycats.dart';
+import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 
@@ -37,9 +38,10 @@ class _TwoScreenState extends State<TwoScreen> {
       for (var c in straycats!) {
         newstatusCats[c.id!] = c.status == 'yes';
       }
-      setState(() {
-        statusCats = newstatusCats;
-      });
+      if (mounted) {
+      setState(() {statusCats = newstatusCats;});
+    }
+      
     }
   }
 
@@ -289,19 +291,19 @@ class _TwoScreenState extends State<TwoScreen> {
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      // Make sure 'commuData.id' is non-nullable before you pass it
-                                      // if (catData.id != null) {
-                                      //   Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //       // builder: (context) => EditCommu(
-                                      //       //   post_id: catData.id!,
-                                      //       // ),
-                                      //     ),
-                                      //   );
-                                      // } else {
-                                      //   // Handle the case where 'commuData.id' is null
-                                      // }
+                                      
+                                      if (catData.id != null) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => EditStraycats(
+                                              starycatsId: catData.id!,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        
+                                      }
                                     },
                                     icon: Icon(Icons.edit),
                                   ),

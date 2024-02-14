@@ -59,3 +59,19 @@ exports.editUser = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.userId = async (req,res) => {
+    try {
+        const user_id  = req.params.id;
+        const user = await User.findById(user_id)
+        if (!user) {
+            return res.status(404).send('user not found');
+        }
+        res.json(user);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}

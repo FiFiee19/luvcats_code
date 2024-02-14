@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
@@ -7,6 +9,7 @@ import 'package:luvcats_app/config/error.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +76,43 @@ class ProfileServices {
       showSnackBar(context, e.toString());
     }
     return straycatList;
+  }
+
+  Future<User> fetchIdUser(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user_id = userProvider.user.id;
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/profile/$user_id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+        if (data is List) {
+          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
+          final firstPost = data.first;
+          if (firstPost is Map<String, dynamic>) {
+            return User.fromMap(firstPost);
+          } else {
+            throw Exception('Data format is not correct');
+          }
+        } else if (data is Map<String, dynamic>) {
+          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
+          return User.fromMap(data);
+        } else {
+          throw Exception('Data format is not correct');
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
   }
 
   Future<void> deleteCatCommu(BuildContext context, String commuId) async {
@@ -154,34 +194,47 @@ class ProfileServices {
     }
   }
 
-  Future<void> editUser(
-    BuildContext context,
-    String password,
-  ) async {
+  Future<User?> editUser(
+      BuildContext context, String username, File? image) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final user_id = userProvider.user.id;
-    // อัปโหลดรูปภาพใหม่และรับ URL
+    final userId = userProvider.user.id;
+
+    String? imageUrl = userProvider.user.imagesP;
+
     try {
-      final res = await http.put(
-        Uri.parse('$url/editU/$user_id'),
+      if (image != null) {
+        final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+        CloudinaryResponse response = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(image.path, folder: 'a'),
+        );
+        imageUrl = response.secureUrl;
+      }
+
+      final response = await http.put(
+        Uri.parse('$url/editU/$userId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
         body: jsonEncode({
-          'password': password,
+          'username': username,
+          'imagesP': imageUrl,
         }),
       );
 
-      if (res.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Password updated successfully')),
-        );
+      if (response.statusCode == 200) {
+        showSnackBar(context, 'Profile updated successfully!');
+        Navigator.pop(context);
+
+        // Assuming you have a function to parse the updated user data from the response
+        User updatedUser = User.fromJson(json.decode(response.body));
+        return updatedUser; // Return the updated user
       } else {
-        print('Failed to update password: ${res.body}');
+        print('Failed to update profile: ${response.body}');
       }
     } catch (e) {
-      print('Error updating password: $e');
+      print('Error updating profile: $e');
     }
+    return null; // Return null if the update was not successful
   }
 }
