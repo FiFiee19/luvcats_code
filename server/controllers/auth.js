@@ -85,18 +85,63 @@ exports.list = async (req, res) => {
   const user = await User.find({})
   res.json({ ...user._doc, token: req.token });
 }
+// exports.editPassword = async (req, res) => {
 
-exports.editUser = async(req, res) => {
-  try {
+//   try {
+//       const { password } = req.body; // รับค่ารหัสผ่านใหม่จาก body ของ request
+//       const user_id = req.user; // สมมติว่า req.user เก็บค่า ID ของผู้ใช้ที่ต้องการแก้ไข
 
-      // ดึงข้อมูลโพสต์ที่เฉพาะเจาะจงและคอมเมนต์ที่เกี่ยวข้อง
-      const user = await User.findById(req.user)
-      const newUser = await User.findOneAndUpdate({user_id:user} , req.body , {new:true});
+//       if (!password) {
+//           return res.status(400).send('Password is required');
+//       }
 
-      return res.status(200).json({data:newUser , message:"updated successfully "});
-  } catch (e) {
-      console.log(e);
-      res.status(500).send('Server Error');
-  }
-};
+//       // ค้นหาผู้ใช้จากฐานข้อมูลด้วย ID
+//       const user = await User.findById(user_id);
+//       if (!user) {
+//           return res.status(404).send('User not found');
+//       }
+
+//       // สร้างรหัสผ่านที่ถูกเข้ารหัส
+//       const salt = await bcrypt.genSalt(8);
+//       const hashedPassword = await bcrypt.hash(password, salt);
+
+//       // อัปเดตรหัสผ่านของผู้ใช้
+//       user.password = hashedPassword;
+//       await user.save();
+
+//       res.send('Password updated successfully');
+//       console.log(user)
+//   } catch (e) {
+//       console.log(e);
+//       res.status(500).send('Server Error');
+//   }
+
+// };
+
+// exports.editUsername = async (req, res) => {
+//   try {
+//       const { username, imagesP } = req.body;
+//       const user_id = req.user; // สมมติว่า req.user เก็บค่า ID ของผู้ใช้ที่ต้องการแก้ไข
+
+//       // ค้นหาและอัปเดตผู้ใช้
+//       const updatedUser = await User.findByIdAndUpdate(user_id, {
+//           $set: {
+//               username: username,
+//               imagesP: imagesP
+//           }
+//       }, { new: true }).select('-password'); // ไม่คืนค่ารหัสผ่าน
+
+//       if (!updatedUser) {
+//           return res.status(404).send('User not found');
+//       }
+
+//       res.json({ user: updatedUser, message: "User updated successfully" });
+
+//   } catch (e) {
+//       console.log(e);
+//       res.status(500).send('Server Error');
+//   }
+// };
+
+
 

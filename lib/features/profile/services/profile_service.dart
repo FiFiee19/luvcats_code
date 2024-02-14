@@ -122,4 +122,66 @@ class ProfileServices {
       showSnackBar(context, e.toString());
     }
   }
+
+  Future<void> editPassword(
+    BuildContext context,
+    String password,
+  ) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user_id = userProvider.user.id;
+    // อัปโหลดรูปภาพใหม่และรับ URL
+    try {
+      final res = await http.put(
+        Uri.parse('$url/editU/$user_id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'password': password,
+        }),
+      );
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Password updated successfully')),
+        );
+      } else {
+        print('Failed to update password: ${res.body}');
+      }
+    } catch (e) {
+      print('Error updating password: $e');
+    }
+  }
+
+  Future<void> editUser(
+    BuildContext context,
+    String password,
+  ) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user_id = userProvider.user.id;
+    // อัปโหลดรูปภาพใหม่และรับ URL
+    try {
+      final res = await http.put(
+        Uri.parse('$url/editU/$user_id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'password': password,
+        }),
+      );
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Password updated successfully')),
+        );
+      } else {
+        print('Failed to update password: ${res.body}');
+      }
+    } catch (e) {
+      print('Error updating password: $e');
+    }
+  }
 }
