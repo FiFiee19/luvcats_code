@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
+import 'package:luvcats_app/features/expense/screens/expensescreen.dart';
 import 'package:luvcats_app/features/profile/screens/editpassword.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,10 @@ class Hamburger extends StatelessWidget {
             leading: Icon(Icons.calculate),
             title: const Text('บันทึกค่าใช้จ่าย'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ExpenseScreen()),
+              );
             },
           ),
           Divider(),
