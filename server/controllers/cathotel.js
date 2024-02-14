@@ -40,3 +40,19 @@ exports.cathotelId = async (req,res) => {
 
     }
 }
+
+exports.editCathotl = async (req, res) => {
+    const cathotelId = req.params.id;
+    try { 
+        const newCathotel = await Cathotel.findByIdAndUpdate(
+            cathotelId, 
+            req.body, 
+            { new: true } // ตัวเลือกนี้จะทำให้ method คืนค่าเอกสารหลังจากอัปเดต
+        );
+        return res.status(200).json({data:newCathotel , message:"Updated successfully "});
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+
+}

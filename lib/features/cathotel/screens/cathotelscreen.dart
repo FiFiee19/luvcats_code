@@ -165,13 +165,16 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                     width: 5.0,
                                   ),
                                   Text(
-                                    "${catData.province}",
+                                    catData.province.length > 10
+                                ? "${catData.province.substring(0, 10)}..."
+                                : catData.province,
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2!
                                         .merge(
                                           TextStyle(
                                             fontWeight: FontWeight.w700,
+                                            fontSize: 12,
                                             color: Colors.grey.shade500,
                                           ),
                                         ),
@@ -187,6 +190,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                     .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
+                                        fontSize: 12,
                                         color: Colors.red,
                                       ),
                                     ),

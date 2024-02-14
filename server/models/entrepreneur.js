@@ -19,10 +19,6 @@ const entrepreneurSchema = mongoose.Schema({
         type: String,
     },
     
-    user_address: {
-        required: true,
-        type: String,
-    },
     store_address: {
         required: true,
         type: String,

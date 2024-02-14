@@ -5,7 +5,6 @@ class Entrepreneur {
   final String user_id;
   final String store_id;
   final String name;
-  final String user_address;
   final String store_address;
   final String phone;
   Entrepreneur({
@@ -13,7 +12,6 @@ class Entrepreneur {
     required this.user_id,
     required this.store_id,
     required this.name,
-    required this.user_address,
     required this.store_address,
     required this.phone,
   });
@@ -24,7 +22,6 @@ class Entrepreneur {
       'user_id': user_id,
       'store_id': store_id,
       'name': name,
-      'user_address': user_address,
       'store_address': store_address,
       'phone': phone,
     };
@@ -36,7 +33,6 @@ class Entrepreneur {
       user_id: map['user_id'] ?? '',
       store_id: map['store_id'] ?? '',
       name: map['name']?? '',
-      user_address: map['user_address']?? '',
       store_address: map['store_address']?? '',
       phone: map['phone']?? '',
     );

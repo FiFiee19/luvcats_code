@@ -7,7 +7,7 @@ class Cathotel {
   User? user;
   final String user_id;
   final String description;
-  final String price;
+  final double price;
   final String contact;
   final String province;
   final List<String> images;
@@ -44,7 +44,7 @@ class Cathotel {
       id: map['_id'] ?? '',
       user_id: map['user_id'] ?? '',
       description: map['description'] ?? '',
-      price: map['price'] ?? '',
+      price: map['price']?.toDouble() ?? 0.0,
       contact: map['contact'] ?? '',
       province: map['province'] ?? '',
       images: List<String>.from(map['images'] ?? []),

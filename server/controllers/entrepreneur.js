@@ -81,3 +81,19 @@ exports.userId = async (req, res) => {
         res.status(500).send('Server Error')
     }
 }
+
+// exports.editEntre = async (req, res) => {
+//     const straycatId = req.params.id;
+//     try { 
+//         const newPost = await Straycat.findByIdAndUpdate(
+//             straycatId, 
+//             req.body, 
+//             { new: true } // ตัวเลือกนี้จะทำให้ method คืนค่าเอกสารหลังจากอัปเดต
+//         );
+//         return res.status(200).json({data:newPost , message:"Updated successfully "});
+//     } catch (e) {
+//         console.log(e)
+//         res.status(500).send('Server Error')
+//     }
+
+// }

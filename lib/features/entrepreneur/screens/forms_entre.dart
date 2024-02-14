@@ -24,7 +24,6 @@ class FormsEntre extends StatefulWidget {
 
 class _FormsEntreState extends State<FormsEntre> {
   final TextEditingController fullnameController = TextEditingController();
-  final TextEditingController user_addressController = TextEditingController();
   final TextEditingController store_addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -73,11 +72,10 @@ class _FormsEntreState extends State<FormsEntre> {
         context: context,
         store_id: store_id,
         name: fullnameController.text,
-        user_address: user_addressController.text,
         store_address: store_addressController.text,
         phone: phoneController.text,
         description: descriptionController.text,
-        price: priceController.text,
+        price: double.parse(priceController.text),
         contact: contactController.text,
         province: selectedProvince,
         images: images,
@@ -137,7 +135,6 @@ class _FormsEntreState extends State<FormsEntre> {
   void dispose() {
     if (mounted) {
       fullnameController.dispose();
-      user_addressController.dispose();
       store_addressController.dispose();
       phoneController.dispose();
       descriptionController.dispose();
@@ -357,25 +354,70 @@ class _FormsEntreState extends State<FormsEntre> {
                   hintText: 'เบอร์โทร',
                 ),
                 const SizedBox(height: 10),
-                CustomTextField(
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: descriptionController,
-                  hintText: 'รายละเอียด',
+                  maxLines: 7,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกรายละเอียด';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'รายละะเอียด',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
+              ),
                 const SizedBox(height: 10),
-                CustomTextField(
+                
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: priceController,
-                  hintText: 'ราคา',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกราคา';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'ราคา',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
+              ),
                 const SizedBox(height: 10),
-                CustomTextField(
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: contactController,
-                  hintText: 'ช่องทางการติดต่อ',
+                  maxLines: 4,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกช่องทางการติดต่อ';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'ช่องทางการติดต่อ',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
+              ),
                 const SizedBox(height: 10),
-                CustomTextField(
-                  controller: user_addressController,
-                  hintText: 'ที่อยู่',
-                ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: store_addressController,

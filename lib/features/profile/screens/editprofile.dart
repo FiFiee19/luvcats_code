@@ -144,7 +144,7 @@ class _EditprofileState extends State<Editprofile> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
+                      return 'Please enter a username';
                     }
                     return null;
                   },

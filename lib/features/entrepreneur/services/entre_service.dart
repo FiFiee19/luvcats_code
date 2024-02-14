@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
@@ -9,6 +10,7 @@ import 'package:luvcats_app/config/constants.dart';
 import 'package:luvcats_app/config/error.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
+import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +26,9 @@ class EntreService {
     required String store_id,
     required String name,
     required String phone,
-    required String user_address,
     required String store_address,
     required String description,
-    required String price,
+    required double price,
     required String contact,
     required String province,
     required List<File> images,
@@ -53,7 +54,6 @@ class EntreService {
         'user_id': userProvider.user.id,
         'store_id': store_id,
         'name': name,
-        'user_address': user_address,
         'store_address': store_address,
         'phone': phone,
         'description': description,
@@ -122,29 +122,95 @@ class EntreService {
       );
     }
   }
-}
 
-// Future<List<Entrepreneur>> fetchAllEntre(BuildContext context) async {
-//   final userProvider = Provider.of<UserProvider>(context, listen: false);
-//   List<Entrepreneur> entreList = [];
-//   try {
-//     http.Response res = await http.get(Uri.parse('$url/getEntre'), headers: {
-//       'Content-Type': 'application/json; charset=UTF-8',
-//       'authtoken': userProvider.user.token,
-//     });
 
-//     httpErrorHandle(
-//       response: res,
-//       context: context,
-//       onSuccess: () {
-//         res.body;
-//       },
-//     );
-//   } catch (e) {
-//     showSnackBar(context, e.toString());
-//   }
-//   return entreList;
-// }
+Future<void> editProfileEntre(
+    BuildContext context,
+    String cathotelId,
+    double price,
+    String contact,
+    String province,
+    String description,
+    List<File> images, // รูปภาพใหม่เป็น File
+  ) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    // อัปโหลดรูปภาพใหม่และรับ URL
+    try {
+      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+      List<String> imageUrls = [];
+
+      for (int i = 0; i < images.length; i++) {
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+        );
+        imageUrls.add(res.secureUrl);
+      }
+
+      final res = await http.put(
+        Uri.parse('$url/getStrayCat/edit/$cathotelId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'price': price,
+          'contact': contact,
+          'province': province,
+          'description': description,
+          'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
+        }),
+      );
+       httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Profile updated successfully!');
+          Navigator.pop(context);
+        },
+      );
+      
+    } catch (e) {
+      print('Error updating post: $e');
+    }
+  }
+
+Future<Cathotel> fetchIdCathotel(BuildContext context, String cathotelId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/getCathotel/edit/$cathotelId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+      
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+        if (data is List) {
+          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
+          final firstPost = data.first;
+          if (firstPost is Map<String, dynamic>) {
+            return Cathotel.fromMap(firstPost);
+          } else {
+            throw Exception('Data format is not correct');
+          }
+        } else if (data is Map<String, dynamic>) {
+          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
+          return Cathotel.fromMap(data);
+        } else {
+          throw Exception('Data format is not correct');
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
+  }
+
 Future<Entrepreneur?> fetchIdProfile(BuildContext context, String user_id) async {
   final userProvider = Provider.of<UserProvider>(context, listen: false);
   Entrepreneur? catprofile;
@@ -207,4 +273,5 @@ Future<List<Entrepreneur>> fetchEntreIdProfile(BuildContext context) async {
     showSnackBar(context, e.toString());
   }
   return entreIdList;
+}
 }

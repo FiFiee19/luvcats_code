@@ -155,7 +155,7 @@ class ProfileServices {
         context: context,
         onSuccess: () {
           showSnackBar(context, "Post deleted successfully.");
-          // คุณอาจต้องการอัปเดต UI ที่นี่
+          Navigator.pop(context);
         },
       );
     } catch (e) {
@@ -172,7 +172,7 @@ class ProfileServices {
     // อัปโหลดรูปภาพใหม่และรับ URL
     try {
       final res = await http.put(
-        Uri.parse('$url/editU/$user_id'),
+        Uri.parse('$url/editP/$user_id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -186,6 +186,9 @@ class ProfileServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Password updated successfully')),
         );
+        Navigator.pop(context);
+        print(res.body);
+        
       } else {
         print('Failed to update password: ${res.body}');
       }

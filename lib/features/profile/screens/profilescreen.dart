@@ -50,14 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      appBar: AppBar(
-      centerTitle: true,
-      title: const Text(
-        'LuvCats',style: TextStyle(color: Colors.white),
-      ),
-      backgroundColor: Colors.red,
-    ),
-    drawer: Hamburger(),
+      
     backgroundColor: Colors.white,
   
       body: RefreshIndicator(
