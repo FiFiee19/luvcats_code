@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
+import 'package:luvcats_app/features/cathotel/screens/detail_cathotel.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/widgets/loader.dart';
@@ -63,12 +64,12 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
             return InkWell(
               onTap: () {
                 // ทำสิ่งที่คุณต้องการเมื่อกดที่ Container
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => DetailStraycatScreen(cat: catData),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailCathotelScreen(cathotel: catData),
+                  ),
+                );
               },
               child: Container(
                 decoration: BoxDecoration(
