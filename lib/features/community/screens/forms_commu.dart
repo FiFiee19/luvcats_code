@@ -73,123 +73,125 @@ class _FormsCommuState extends State<FormsCommu> {
               ),
             ),
           )),
-      body: Form(
-          key: _postCommuFormKey,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                images.isNotEmpty
-                    ? CarouselSlider(
-                        items: images.map(
-                          (i) {
-                            return Builder(
-                              builder: (BuildContext context) => Image.file(
-                                i,
-                                fit: BoxFit.cover,
-                                height: 200,
-                              ),
-                            );
-                          },
-                        ).toList(),
-                        options: CarouselOptions(
-                          viewportFraction: 1,
-                          height: 200,
-                        ),
-                      )
-                    : GestureDetector(
-                        child: DottedBorder(
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(10),
-                          dashPattern: const [10, 4],
-                          strokeCap: StrokeCap.round,
-                          child: Container(
-                            width: double.infinity,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                
-                                const SizedBox(height: 15),
-                                Text(
-                                  'Select Images',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade400,
-                                  ),
+      body: SingleChildScrollView(
+        child: Form(
+            key: _postCommuFormKey,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  images.isNotEmpty
+                      ? CarouselSlider(
+                          items: images.map(
+                            (i) {
+                              return Builder(
+                                builder: (BuildContext context) => Image.file(
+                                  i,
+                                  fit: BoxFit.cover,
+                                  height: 200,
                                 ),
-                              ],
+                              );
+                            },
+                          ).toList(),
+                          options: CarouselOptions(
+                            viewportFraction: 1,
+                            height: 200,
+                          ),
+                        )
+                      : GestureDetector(
+                          child: DottedBorder(
+                            borderType: BorderType.RRect,
+                            radius: const Radius.circular(10),
+                            dashPattern: const [10, 4],
+                            strokeCap: StrokeCap.round,
+                            child: Container(
+                              width: double.infinity,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  
+                                  const SizedBox(height: 15),
+                                  Text(
+                                    'Select Images',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Center(
-            child: IconButton(
-              icon: const Icon(
-                Icons.upload_sharp,
+                        Center(
+              child: IconButton(
+                icon: const Icon(
+                  Icons.upload_sharp,
+                ),
+                onPressed: () => selectImages(),
               ),
-              onPressed: () => selectImages(),
             ),
-          ),
-                const SizedBox(height: 30),
-                Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: TextFormField(
-                  controller: titleController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'กรุณากรอกหัวเรื่อง';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'หัวเรื่อง',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                          color: Colors.black38,
-                        )),
+                  const SizedBox(height: 30),
+                  Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: titleController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกหัวเรื่อง';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'หัวเรื่อง',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
                   ),
                 ),
-              ),
-                const SizedBox(height: 10),
-                Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: TextFormField(
-                  controller: descriptionController,
-                  maxLines: 7,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'กรุณากรอกรายละเอียด';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'รายละเอียด',
-                    
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        
-                        borderSide: BorderSide(
-                          color: Colors.black38,
-                        )),
+                  const SizedBox(height: 10),
+                  Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: descriptionController,
+                    maxLines: 2,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกรายละเอียด';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'รายละเอียด',
+                      
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
                   ),
                 ),
+                  const SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: postcommu,
+                    child: const Text('โพสต์',style: TextStyle(color: Colors.white,)),
+                    style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50), primary: Colors.red),
+                  ),
+                ],
               ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: postcommu,
-                  child: const Text('โพสต์',style: TextStyle(color: Colors.white,)),
-                  style: ElevatedButton.styleFrom(
-          minimumSize: const Size(double.infinity, 50), primary: Colors.red),
-                ),
-              ],
             ),
           ),
-        ),
+      ),
       
     );
   }

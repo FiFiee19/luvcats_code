@@ -155,7 +155,7 @@ class ProfileServices {
         context: context,
         onSuccess: () {
           showSnackBar(context, "Post deleted successfully.");
-          Navigator.pop(context);
+
         },
       );
     } catch (e) {

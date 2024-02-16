@@ -7,7 +7,7 @@ exports.create = async (req, res) => {
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        const straycat = new Straycat({  
+        let straycat = new Straycat({  
             user: user,
             user_id: req.user,
             description,

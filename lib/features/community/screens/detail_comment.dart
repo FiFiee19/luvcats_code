@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/comment.dart';
@@ -51,39 +52,39 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
       print(e.toString());
     }
     if (mounted) {
-    setState(() {
-      isLoading = false;
-    });
-  }
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
-  void addComment() async{
-  print("Attempting to add comment"); // Debugging statement
-  if (_sendCommentFormKey.currentState?.validate() ?? false) {
-    final userId = Provider.of<UserProvider>(context, listen: false).user.id;
-    await commuServices.addComment(
-      user_id: userId,
-      context: context,
-      message: commentController.text,
-      commuId: widget.commu.id!,
-    );
-    // .then((_) {
-    //   print("Comment added successfully"); // Debugging statement
-    //   loadComments(); // Reload comments to show the new one
-    // }).catchError((error) {
-    //   print("Failed to add comment: $error"); // Debugging statement
-    // }
-    // );
+  void addComment() async {
+    print("Attempting to add comment"); // Debugging statement
+    if (_sendCommentFormKey.currentState?.validate() ?? false) {
+      final userId = Provider.of<UserProvider>(context, listen: false).user.id;
+      await commuServices.addComment(
+        user_id: userId,
+        context: context,
+        message: commentController.text,
+        commuId: widget.commu.id!,
+      );
+      // .then((_) {
+      //   print("Comment added successfully"); // Debugging statement
+      //   loadComments(); // Reload comments to show the new one
+      // }).catchError((error) {
+      //   print("Failed to add comment: $error"); // Debugging statement
+      // }
+      // );
+    }
   }
-}
-@override
+
+  @override
   void dispose() {
     if (mounted) {
       commentController.dispose();
     }
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -253,6 +254,14 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                           color: Colors.grey.shade500,
                                         ),
                                       ),
+                                      if (user == comment.user_id) // Display delete button only if the current user is the owner
+                                        IconButton(
+                                          onPressed: () {
+                                            commuServices.deleteComment(
+                                                context, comment.id!);
+                                          },
+                                          icon: Icon(Icons.delete_sharp),
+                                        )
                                     ],
                                   ),
                                   Padding(
@@ -323,11 +332,9 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                       ],
                     ),
                   ),
-
                   SizedBox(
                     height: 10,
                   ),
-                  
                 ],
               ),
             ),

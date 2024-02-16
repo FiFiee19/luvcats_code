@@ -6,6 +6,7 @@ import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/straycat/screens/forms_straycat.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 
 class StrayCatScreen extends StatefulWidget {
@@ -41,19 +42,40 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
   @override
   Widget build(BuildContext context) {
     Widget bodyContent;
-
-    if (straycatlist == null) {
+if (straycatlist == null) {
       bodyContent = const Loader();
     } else if (straycatlist!.isEmpty) {
-      bodyContent = RefreshIndicator(
-          onRefresh: fetchAllCats,
-          child: Center(
-            child: Text(
-              'No Post',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      return Scaffold(
+        backgroundColor: Colors.grey[200],
+        body: Center(
+          child: Text(
+            'No Post',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: FloatingActionButton(
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
             ),
-          ));
+            backgroundColor: Colors.red,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FormsStrayCat(),
+                ),
+              );
+            },
+            shape: const CircleBorder(),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      );
     } else {
+    
       bodyContent = RefreshIndicator(
         onRefresh: fetchAllCats,
         child: GridView.builder(
@@ -90,16 +112,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                         topRight: Radius.circular(16.0),
                       ),
                       child: Center(
-                        child: Container(
-                          width: 180,
-                          height: 180,
-                          padding: const EdgeInsets.all(10),
-                          child: Image.network(
-                            straycat.images[0],
-                            fit: BoxFit.fitHeight,
-                            width: 180,
-                          ),
-                        ),
+                        child: CustomCarouselSlider(images: straycat.images),
                       ),
                     ),
                     Padding(

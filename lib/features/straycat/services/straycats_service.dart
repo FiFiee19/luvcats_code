@@ -103,7 +103,8 @@ class CatServices {
     return catList;
   }
 
-  Future<Straycat> fetchIdStraycats(BuildContext context, String straycatsId) async {
+  Future<Straycat> fetchIdStraycats(
+      BuildContext context, String straycatsId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(
@@ -113,7 +114,7 @@ class CatServices {
           'authtoken': userProvider.user.token,
         },
       );
-      
+
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
@@ -159,10 +160,8 @@ class CatServices {
         context: context,
         onSuccess: () {
           showSnackBar(context, 'Status updated!');
-          Navigator.pop(context);
         },
       );
-      
     } catch (error) {
       print('Error updating status: $error');
     }
@@ -178,19 +177,30 @@ class CatServices {
     List<File> images, // รูปภาพใหม่เป็น File
   ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<String> imageUrls = []; // เริ่มต้นด้วยรายการว่าง
 
-    // อัปโหลดรูปภาพใหม่และรับ URL
-    try {
-      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
-      List<String> imageUrls = [];
-
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: 'a'),
-        );
-        imageUrls.add(res.secureUrl);
+    // ตรวจสอบว่ามีการเลือกรูปภาพใหม่หรือไม่
+    if (images != null && images.isNotEmpty) {
+      // อัปโหลดรูปภาพใหม่และรับ URL
+      try {
+        final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+        for (int i = 0; i < images.length; i++) {
+          CloudinaryResponse res = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+          );
+          imageUrls.add(res.secureUrl);
+        }
+      } catch (e) {
+        print('Error uploading images: $e');
       }
+    } else {
+      // ถ้าไม่มีการเลือกรูปภาพใหม่ใช้รูปภาพเดิมที่เก็บไว้ในฐานข้อมูล
+      final post = await fetchIdStraycats(context, starycatsId);
+      imageUrls = post.images;
+    }
 
+    // ส่งข้อมูลโพสต์ร่วมกับ URL รูปภาพ
+    try {
       final res = await http.put(
         Uri.parse('$url/getStrayCat/edit/$starycatsId'),
         headers: {
@@ -205,7 +215,7 @@ class CatServices {
           'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
         }),
       );
-       httpErrorHandle(
+      httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
@@ -213,10 +223,8 @@ class CatServices {
           Navigator.pop(context);
         },
       );
-      
     } catch (e) {
       print('Error updating post: $e');
     }
   }
-  
 }

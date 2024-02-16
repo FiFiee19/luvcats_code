@@ -221,6 +221,29 @@ class CommuServices {
       );
     }
   }
+  Future<void> deleteComment(BuildContext context, String commentId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.delete(
+        Uri.parse('$url/getComment/delete/$commentId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, "Comment deleted successfully.");
+          // คุณอาจต้องการอัปเดต UI ที่นี่
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
 
   Future<void> editPost(
     BuildContext context,

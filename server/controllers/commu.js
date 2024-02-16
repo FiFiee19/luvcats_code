@@ -20,7 +20,7 @@ exports.create = async (req,res) => {
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        const commu = new Commu({
+        let commu = new Commu({
             user: user,
             user_id:req.user,
             title,
@@ -160,6 +160,23 @@ exports.editPost = async(req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.deleteComment = async (req, res) => {
+    
+    try {
+        const { commentId } = req.params;
+        await Comment.findByIdAndDelete(commentId);
+        const commuId = req.params;// You may need to adjust how you get the commuId from the request body
+        await Commu.findByIdAndUpdate(commuId, {
+            $pull: { comments: commentId },
+        });
+        return res.status(200).json({message:"Comment Deleted successfully"})
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+
+}
 
 
 

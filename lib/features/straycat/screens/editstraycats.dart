@@ -27,8 +27,8 @@ class _EditStraycatsState extends State<EditStraycats> {
   late TextEditingController provinceController;
   late TextEditingController genderController;
   bool isLoading = true;
-  List<File> images = [];
-  List<String> imageUrls = [];
+  List<File> images = []; //รูปใหม่
+  List<String> imageUrls = []; //รูปเก่า
   CatServices catServices = CatServices(); // สร้าง instance ของ CommuServices
   // String selectedGender = 'ไม่ทราบ';
   // String selectedProvince = 'กรุงเทพมหานคร';
@@ -49,28 +49,36 @@ class _EditStraycatsState extends State<EditStraycats> {
     _loadPostData();
   }
 
+  void selectImages() async {
+    var res = await pickImagesFiles();
+    setState(() {
+      images = res;
+    });
+  }
+
   @override
   void dispose() {
     if (mounted) {
       breedController.dispose();
-      descriptionController.dispose();
-      provinceController.dispose();
       genderController.dispose();
+      provinceController.dispose();
+      descriptionController.dispose();
     }
     super.dispose();
   }
 
   void _submitForm() async {
     if (globalFormKey.currentState!.validate()) {
+      // ตรวจสอบว่ามีการเลือกรูปภาพใหม่หรือไม่
       await catServices.editPostCat(
-        context,
-        widget.starycatsId,
-        breedController.text,
-        descriptionController.text,
-        provinceController.text,
-        genderController.text,
-        images,
-      );
+          context,
+          widget.starycatsId,
+          breedController.text,
+          genderController.text,
+          provinceController.text,
+          descriptionController.text,
+          images // ใช้รูปใหม่ที่เลือก
+          );
     }
   }
 
@@ -81,9 +89,9 @@ class _EditStraycatsState extends State<EditStraycats> {
           await catServices.fetchIdStraycats(context, widget.starycatsId);
       // นำข้อมูลเดิมมาใส่ใน TextEditingController
       breedController.text = post.breed;
-      descriptionController.text = post.description;
-      provinceController.text = post.province;
       genderController.text = post.gender;
+      provinceController.text = post.province;
+      descriptionController.text = post.description;
       imageUrls = post.images;
     } catch (e) {
       print('Error loading post data: $e');
@@ -93,13 +101,6 @@ class _EditStraycatsState extends State<EditStraycats> {
         isLoading = false;
       });
     }
-  }
-
-  void selectImages() async {
-    var res = await pickImagesFiles();
-    setState(() {
-      images = res;
-    });
   }
 
   @override
@@ -116,70 +117,66 @@ class _EditStraycatsState extends State<EditStraycats> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                images.isNotEmpty || imageUrls.isNotEmpty
-                    ? Column(
-                        children: [
-                          CarouselSlider(
-                            items: images.isNotEmpty
-                                ? images
-                                    .map(
-                                      (file) => Builder(
-                                        builder: (BuildContext context) =>
-                                            Image.file(
-                                          file,
-                                          fit: BoxFit.cover,
-                                          height: 200,
-                                        ),
-                                      ),
-                                    )
-                                    .toList()
-                                : imageUrls
-                                    .map(
-                                      (url) => Builder(
-                                        builder: (BuildContext context) =>
-                                            Image.network(
-                                          url,
-                                          fit: BoxFit.cover,
-                                          height: 200,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                            options: CarouselOptions(
-                              viewportFraction: 1,
-                              height: 200,
-                            ),
-                          ),
-                        ],
-                      )
-                    : GestureDetector(
-                        child: DottedBorder(
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(10),
-                          dashPattern: const [10, 4],
-                          strokeCap: StrokeCap.round,
-                          child: Container(
-                            width: double.infinity,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 15),
-                                Text(
-                                  'Select Images',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade400,
-                                  ),
+                if (images != null || imageUrls != null)
+                  CarouselSlider(
+                    items: images.isNotEmpty
+                        ? images
+                            .map(
+                              (file) => Builder(
+                                builder: (BuildContext context) => Image.file(
+                                  file,
+                                  fit: BoxFit.cover,
+                                  height: 200,
                                 ),
-                              ],
+                              ),
+                            )
+                            .toList()
+                        : imageUrls
+                            .map(
+                              (url) => Builder(
+                                builder: (BuildContext context) =>
+                                    Image.network(
+                                  url,
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                    options: CarouselOptions(
+                      viewportFraction: 1,
+                      height: 200,
+                    ),
+                  )
+                else
+                  GestureDetector(
+                    child: DottedBorder(
+                      borderType: BorderType.RRect,
+                      radius: const Radius.circular(10),
+                      dashPattern: const [10, 4],
+                      strokeCap: StrokeCap.round,
+                      child: Container(
+                        width: double.infinity,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 15),
+                            Text(
+                              'Select Images',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey.shade400,
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
+                    ),
+                  ),
                 Center(
                   child: IconButton(
                     icon: const Icon(

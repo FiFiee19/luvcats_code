@@ -12,6 +12,7 @@ const {
     editPost,
     userId,
     commuId,
+    deleteComment
 
 } = require('../controllers/commu')
 
@@ -26,5 +27,5 @@ commuRouter.post('/addComment/:commuId',auth,addComment)
 commuRouter.get('/getComment/:commuId',auth,comment)
 commuRouter.delete('/getCommu/delete/:commuId',auth,deletePost)
 commuRouter.put('/getCommu/edit/:commuId',auth,editPost)
-
+commuRouter.delete('/getComment/delete/:commentId',auth,deleteComment)
 module.exports = commuRouter
