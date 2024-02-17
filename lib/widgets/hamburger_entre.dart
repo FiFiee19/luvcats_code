@@ -1,20 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/editentre.dart';
+import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/features/expense/screens/expensescreen.dart';
 import 'package:luvcats_app/features/profile/screens/editpassword.dart';
+import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/widgets/entre.dart';
 import 'package:provider/provider.dart';
 
-class Hamburger extends StatelessWidget {
-  const Hamburger({Key? key}) : super(key: key);
 
-  void _signOutUser(BuildContext context) {
-    AuthService().signOut(context);
-  }
+class HamburgerEntre extends StatefulWidget {
+  const HamburgerEntre({super.key});
 
   @override
+  State<HamburgerEntre> createState() => _HamburgerEntreState();
+}
+
+class _HamburgerEntreState extends State<HamburgerEntre> {
+  Entrepreneur? entre;
+    EntreService entreServices = EntreService();
+
+    @override
+  void initState() {
+    super.initState();
+    fetchProfile();
+
+  }
+
+    Future<void> fetchProfile() async {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      entre =
+        await entreServices.fetchIdEntre(context, userProvider.user.id);
+        if (mounted) {
+      setState(() {});
+    }
+    }
+    void _signOutUser(BuildContext context) {
+    AuthService().signOut(context);
+  }
+  @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    final user = Provider.of<UserProvider>(context, listen: false).user;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -25,16 +52,21 @@ class Hamburger extends StatelessWidget {
               ),
               child: Center(child: Text(user.email))),
           ListTile(
-            leading: Icon(Icons.notifications),
-            title: const Text('การแจ้งเตือน'),
+            leading: Icon(Icons.person),
+            title: const Text('ข้อมูลผู้ประกอบการ'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EditEntreScreen(entreId: entre!.id)),
+              );
             },
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.calculate),
-            title: const Text('บันทึกค่าใช้จ่าย'),
+            leading: Icon(Icons.star),
+            title: const Text('รีวิวของร้าน'),
             onTap: () {
               Navigator.push(
                 context,

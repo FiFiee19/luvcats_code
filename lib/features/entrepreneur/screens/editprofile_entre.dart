@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
+import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class EditProfileEntre extends StatefulWidget {
   final String CathotelId; // เพิ่มตัวแปรนี้
@@ -72,11 +74,11 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
 
   Future<void> _loadPostData() async {
     try {
-      // สมมติว่าคุณมีฟังก์ชันที่ชื่อว่า fetchPostById สำหรับดึงข้อมูลโพสต์
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
       final post =
-          await entreService.fetchIdCathotel(context, widget.CathotelId);
+          await entreService.fetchIdCathotel(context, userProvider.user.id);
       // นำข้อมูลเดิมมาใส่ใน TextEditingController
-      priceController.text = post.province;
+      priceController.text = post.price.toString();
       descriptionController.text = post.description;
       provinceController.text = post.province;
       contactController.text = post.contact;
@@ -113,42 +115,36 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 images.isNotEmpty || imageUrls.isNotEmpty
-                    ? Column(
-                        children: [
-                          CarouselSlider(
-                            items: images.isNotEmpty
-                                ? images
-                                    .map(
-                                      (file) => Builder(
-                                        builder: (BuildContext context) =>
-                                            Image.file(
-                                          file,
-                                          fit: BoxFit.cover,
-                                          height: 200,
-                                        ),
-                                      ),
-                                    )
-                                    .toList()
-                                : imageUrls
-                                    .map(
-                                      (url) => Builder(
-                                        builder: (BuildContext context) =>
-                                            Image.network(
-                                          url,
-                                          fit: BoxFit.cover,
-                                          height: 200,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                            options: CarouselOptions(
-                              viewportFraction: 1,
-                              height: 200,
-                            ),
-                          ),
-                        ],
-                      )
-                    : GestureDetector(
+              ? Column(
+                  children: [
+                    CarouselSlider(
+                      items: images.isNotEmpty 
+                          ? images.map(
+                              (file) => Builder(
+                                builder: (BuildContext context) => Image.file(
+                                  file,
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                ),
+                              ),
+                            ).toList()
+                          : imageUrls.map(
+                              (url) => Builder(
+                                builder: (BuildContext context) => Image.network(
+                                  url,
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                ),
+                              ),
+                            ).toList(),
+                      options: CarouselOptions(
+                        viewportFraction: 1,
+                        height: 200,
+                      ),
+                    ),
+                  ],
+                )
+              : GestureDetector(
                         child: DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(10),
@@ -163,6 +159,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                
                                 const SizedBox(height: 15),
                                 Text(
                                   'Select Images',

@@ -112,3 +112,15 @@ exports.updateStatus = async (req, res) => {
     }
 
 }
+
+exports.searchName =  async (req, res) => {
+    try {
+      const straycat = await Straycat.find({
+        username: { $regex: req.params.username, $options: "i" },
+      }).populate('user');
+  
+      res.json(straycat);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }

@@ -4,9 +4,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/editentre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/editprofile_entre.dart';
+import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/features/profile/screens/editprofile.dart';
 import 'package:luvcats_app/models/cathotel.dart';
+import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +24,6 @@ class _Profile_EntreState extends State<Profile_Entre> {
   Cathotel? cathotel;
   final CathotelServices cathotelServices = CathotelServices();
   final AuthService authService = AuthService();
-
   CarouselController buttonCarouselController = CarouselController();
   int _current = 0;
 
@@ -29,16 +31,19 @@ class _Profile_EntreState extends State<Profile_Entre> {
   void initState() {
     super.initState();
     fetchProfile();
+    // fetchEntre();
   }
 
   Future<void> fetchProfile() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     cathotel =
         await cathotelServices.fetchCatIdProfile(context, userProvider.user.id);
+    
     if (mounted) {
       setState(() {});
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +59,7 @@ class _Profile_EntreState extends State<Profile_Entre> {
     }
     final cathotelData = cathotel!;
     return Scaffold(
+      
       backgroundColor: Colors.grey[200],
       body: RefreshIndicator(
         onRefresh: fetchProfile,
@@ -67,7 +73,7 @@ class _Profile_EntreState extends State<Profile_Entre> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 220),
+                  padding: const EdgeInsets.only(left: 270),
                   child: ElevatedButton(
                     child: Text(
                       'แก้ไขโปรไฟล์',
@@ -86,6 +92,7 @@ class _Profile_EntreState extends State<Profile_Entre> {
                     style: ElevatedButton.styleFrom(primary: Colors.grey),
                   ),
                 ),
+                
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(

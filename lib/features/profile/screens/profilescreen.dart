@@ -5,7 +5,7 @@ import 'package:luvcats_app/features/profile/screens/twoscreen.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/hamburger.dart';
+import 'package:luvcats_app/widgets/hamburger_user.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {

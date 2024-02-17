@@ -10,7 +10,8 @@ const {
     deleteStraycats,
     editStraycats,
     updateStatus,
-    straycatsId
+    straycatsId,
+    searchName
 } = require('../controllers/straycat');
 
 straycatRouter.post("/postStrayCat", auth, create);
@@ -20,4 +21,5 @@ straycatRouter.get("/getStrayCat/:straycatsId", auth, straycatsId);
 straycatRouter.delete("/getStrayCat/delete/:id", auth, deleteStraycats);
 straycatRouter.put("/getStrayCat/edit/:id", auth, editStraycats);
 straycatRouter.post("/updateStatus/:id", auth, updateStatus);
+straycatRouter.get("/getStrayCat/search/:username", auth, searchName);
 module.exports = straycatRouter;

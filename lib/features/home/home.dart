@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/widgets/app_bar.dart';
-import 'package:luvcats_app/widgets/hamburger.dart';
+import 'package:luvcats_app/widgets/hamburger_user.dart';
 import 'package:luvcats_app/widgets/tab_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +37,6 @@ class _HomeState extends State<Home> {
       ),
       backgroundColor: Colors.red,
     ),
-    drawer: Hamburger(), body: const tab_Bar());
+    drawer: HamburgerUser(), body: const tab_Bar());
   }
 }

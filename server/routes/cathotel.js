@@ -12,6 +12,6 @@ const {
 
 cathotelRouter.get("/getCathotel", auth, list)
 cathotelRouter.get("/getCathotel/:user_id", auth, userId)
-cathotelRouter.get("/getCathotel/:id", auth, cathotelId)
+cathotelRouter.get("/getCathotel/:cathotelId", auth, cathotelId)
 cathotelRouter.put("/getCathotel/edit/:cathotelId", auth, editCathotl)
-module.exports = cathotelRouter;
+module.exports = cathotelRouter; 

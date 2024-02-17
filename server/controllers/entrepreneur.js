@@ -44,7 +44,6 @@ exports.create = async (req, res) => {
         user_id: newUser._id, // ใช้ newUser._id แทน newUser และ user_id
         store_id: cathotel._id, // ใช้ _id ที่ถูกต้องจาก Mongoose
         name: req.body.name,
-        user_address: req.body.user_address,
         store_address: req.body.store_address,
         phone: req.body.phone
     });
@@ -72,28 +71,53 @@ exports.list = async (req, res) => {
     }
 }
 
-exports.userId = async (req, res) => {
+exports.userId = async (req,res) => {
     try {
-        const entreId = await Entre.find( {user_id: req.user} ).populate('user')
-        res.json(entreId);
+        const entre = await Entre.find({ user_id: req.params.user_id }).populate('user');
+        if (!entre) {
+            return res.status(404).send('Cathotel not found');
+        }
+        res.json(entre);
+
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
+
+    }
+}
+exports.entreId = async (req,res) => {
+    try {
+        const  id = req.params
+        const entre = await Entre.find( id );
+        if (!entre) {
+            return res.status(404).send('Cathotel not found');
+        }
+        res.json(entre);
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
     }
 }
 
-// exports.editEntre = async (req, res) => {
-//     const straycatId = req.params.id;
-//     try { 
-//         const newPost = await Straycat.findByIdAndUpdate(
-//             straycatId, 
-//             req.body, 
-//             { new: true } // ตัวเลือกนี้จะทำให้ method คืนค่าเอกสารหลังจากอัปเดต
-//         );
-//         return res.status(200).json({data:newPost , message:"Updated successfully "});
-//     } catch (e) {
-//         console.log(e)
-//         res.status(500).send('Server Error')
-//     }
 
-// }
+exports.editEntre = async (req, res) => {
+    const id = req.params.id;
+    try { 
+        const updatedEntre = await Entre.findByIdAndUpdate(
+            id, 
+            req.body, 
+            { new: true, runValidators: true } // Ensures the return of the updated document and runs schema validations
+        );
+
+        if (!updatedEntre) {
+            return res.status(404).json({ message: "Entrepreneur not found" });
+        }
+
+        res.status(200).json({ data: updatedEntre, message: "Updated successfully" });
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Server Error');
+    }
+}
+

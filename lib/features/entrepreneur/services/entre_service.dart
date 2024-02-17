@@ -134,21 +134,31 @@ Future<void> editProfileEntre(
     List<File> images, // รูปภาพใหม่เป็น File
   ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    List<String> imageUrls = [];
     // อัปโหลดรูปภาพใหม่และรับ URL
-    try {
-      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
-      List<String> imageUrls = [];
-
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: 'a'),
-        );
-        imageUrls.add(res.secureUrl);
+    if (images != null && images.isNotEmpty) {
+      // อัปโหลดรูปภาพใหม่และรับ URL
+      try {
+        final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+        for (int i = 0; i < images.length; i++) {
+          CloudinaryResponse res = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+          );
+          imageUrls.add(res.secureUrl);
+        }
+      } catch (e) {
+        print('Error uploading images: $e');
       }
+    } else {
+      // ถ้าไม่มีการเลือกรูปภาพใหม่ใช้รูปภาพเดิมที่เก็บไว้ในฐานข้อมูล
+      final post = await fetchIdCathotel(context, userProvider.user.id);
+      imageUrls = post.images;
+    }
 
+    // ส่งข้อมูลโพสต์ร่วมกับ URL รูปภาพ
+    try {
       final res = await http.put(
-        Uri.parse('$url/getStrayCat/edit/$cathotelId'),
+        Uri.parse('$url/getCathotel/edit/$cathotelId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -161,25 +171,25 @@ Future<void> editProfileEntre(
           'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
         }),
       );
-       httpErrorHandle(
+      httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Profile updated successfully!');
+          showSnackBar(context, 'Post updated successfully!');
           Navigator.pop(context);
         },
       );
-      
     } catch (e) {
       print('Error updating post: $e');
     }
   }
 
-Future<Cathotel> fetchIdCathotel(BuildContext context, String cathotelId) async {
+
+Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(
-        Uri.parse('$url/getCathotel/edit/$cathotelId'),
+        Uri.parse('$url/getCathotel/$user_id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -211,67 +221,75 @@ Future<Cathotel> fetchIdCathotel(BuildContext context, String cathotelId) async 
     }
   }
 
-Future<Entrepreneur?> fetchIdProfile(BuildContext context, String user_id) async {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
-  Entrepreneur? catprofile;
+  Future<void> editEntre(
+    BuildContext context,
+    String entreId,
+    String name,
+    String store_address,
+    String phone,
+  ) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-  try {
-    final http.Response res = await http.get(
-      Uri.parse('$url/getEntre/$user_id'), // Ensure $url is correctly defined
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authtoken': userProvider.user.token,
-      },
-    );
+    try {
+      final res = await http.put(
+        Uri.parse('$url/getEntre/edit/$entreId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'name': name,
+          'store_address': store_address,
+          'phone': phone,
 
-    if (res.statusCode == 200) {
-      final List<dynamic> body = jsonDecode(res.body);
-      if (body.isNotEmpty) {
-        // Assuming you want the first Cathotel object from the list
-        catprofile = Entrepreneur.fromMap(body.first);
-      } else {
-        showSnackBar(context, 'No Cathotel data found for the user.');
-      }
-    } else {
-      showSnackBar(context, 'Error: ${res.statusCode}');
+        }),
+      );
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Post updated successfully!');
+          Navigator.pop(context);
+        },
+      );
+    } catch (e) {
+      print('Error updating post: $e');
     }
-  } catch (e) {
-    showSnackBar(context, e.toString());
   }
 
-  return catprofile;
-}
-
-
-Future<List<Entrepreneur>> fetchEntreIdProfile(BuildContext context) async {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
-  final user = userProvider.user.id;
-  List<Entrepreneur> entreIdList = [];
-  try {
-    http.Response res =
-        await http.get(Uri.parse('$url/getEntre/$user'), headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'authtoken': userProvider.user.token,
-    });
-
-    httpErrorHandle(
-      response: res,
-      context: context,
-      onSuccess: () {
-        for (int i = 0; i < jsonDecode(res.body).length; i++) {
-          entreIdList.add(
-            Entrepreneur.fromJson(
-              jsonEncode(
-                jsonDecode(res.body)[i],
-              ),
-            ),
-          );
+Future<Entrepreneur> fetchIdEntre(BuildContext context, String user_id) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/getEntre/$user_id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+      
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+        if (data is List) {
+          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
+          final firstPost = data.first;
+          if (firstPost is Map<String, dynamic>) {
+            return Entrepreneur.fromMap(firstPost);
+          } else {
+            throw Exception('Data format is not correct');
+          }
+        } else if (data is Map<String, dynamic>) {
+          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
+          return Entrepreneur.fromMap(data);
+        } else {
+          throw Exception('Data format is not correct');
         }
-      },
-    );
-  } catch (e) {
-    showSnackBar(context, e.toString());
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
   }
-  return entreIdList;
-}
 }

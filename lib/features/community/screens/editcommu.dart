@@ -23,8 +23,8 @@ class _EditCommuState extends State<EditCommu> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   bool isLoading = true;
-  List<File> images = []; 
-  List<String> imageUrls = []; 
+  List<File> images = [];
+  List<String> imageUrls = [];
   CommuServices commuServices =
       CommuServices(); // สร้าง instance ของ CommuServices
 
@@ -71,11 +71,10 @@ class _EditCommuState extends State<EditCommu> {
       print('Error loading post data: $e');
     }
     if (mounted) {
-    setState(() {
-      isLoading = false;
-    });
-  }
-    
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void selectImages() async {
@@ -99,13 +98,11 @@ class _EditCommuState extends State<EditCommu> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-               
-                images.isNotEmpty || imageUrls.isNotEmpty
-              ? Column(
-                  children: [
-                    CarouselSlider(
-                      items: images.isNotEmpty 
-                          ? images.map(
+                if (images != null || imageUrls != null)
+                  CarouselSlider(
+                    items: images.isNotEmpty
+                        ? images
+                            .map(
                               (file) => Builder(
                                 builder: (BuildContext context) => Image.file(
                                   file,
@@ -113,60 +110,62 @@ class _EditCommuState extends State<EditCommu> {
                                   height: 200,
                                 ),
                               ),
-                            ).toList()
-                          : imageUrls.map(
+                            )
+                            .toList()
+                        : imageUrls
+                            .map(
                               (url) => Builder(
-                                builder: (BuildContext context) => Image.network(
+                                builder: (BuildContext context) =>
+                                    Image.network(
                                   url,
                                   fit: BoxFit.cover,
                                   height: 200,
                                 ),
                               ),
-                            ).toList(),
-                      options: CarouselOptions(
-                        viewportFraction: 1,
-                        height: 200,
-                      ),
+                            )
+                            .toList(),
+                    options: CarouselOptions(
+                      viewportFraction: 1,
+                      height: 200,
                     ),
-                  ],
-                )
-              : GestureDetector(
-                        child: DottedBorder(
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(10),
-                          dashPattern: const [10, 4],
-                          strokeCap: StrokeCap.round,
-                          child: Container(
-                            width: double.infinity,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
+                  )
+                else
+                  GestureDetector(
+                    child: DottedBorder(
+                      borderType: BorderType.RRect,
+                      radius: const Radius.circular(10),
+                      dashPattern: const [10, 4],
+                      strokeCap: StrokeCap.round,
+                      child: Container(
+                        width: double.infinity,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 15),
+                            Text(
+                              'Select Images',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey.shade400,
+                              ),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                
-                                const SizedBox(height: 15),
-                                Text(
-                                  'Select Images',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         ),
                       ),
-                    Center(
-            child: IconButton(
-              icon: const Icon(
-                Icons.upload_sharp,
-              ),
-              onPressed: () => selectImages(),
-            ),
-          ),
+                    ),
+                  ),
+                Center(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.upload_sharp,
+                    ),
+                    onPressed: () => selectImages(),
+                  ),
+                ),
                 TextFormField(
                   controller: _titleController,
                   decoration: const InputDecoration(
@@ -195,9 +194,13 @@ class _EditCommuState extends State<EditCommu> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Submit',style: TextStyle(color: Colors.white,)),
+                  child: const Text('Submit',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )),
                   style: ElevatedButton.styleFrom(
-          minimumSize: const Size(double.infinity, 50), primary: Colors.red),
+                      minimumSize: const Size(double.infinity, 50),
+                      primary: Colors.red),
                 ),
               ],
             ),

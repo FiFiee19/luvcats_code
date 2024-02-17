@@ -112,7 +112,16 @@ if (straycatlist == null) {
                         topRight: Radius.circular(16.0),
                       ),
                       child: Center(
-                        child: CustomCarouselSlider(images: straycat.images),
+                        child: Container(
+                          width: 180,
+                          height: 180,
+                          padding: const EdgeInsets.all(10),
+                          child: Image.network(
+                            straycat.images[0],
+                            fit: BoxFit.fitHeight,
+                            width: 180,
+                          ),
+                        ),
                       ),
                     ),
                     Padding(

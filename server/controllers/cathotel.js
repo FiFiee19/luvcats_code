@@ -28,18 +28,23 @@ exports.userId = async (req,res) => {
     }
 }
 
-exports.cathotelId = async (req,res) => {
+exports.cathotelId = async (req, res) => {
+    const cathotelId = req.params.id;
     try {
-        const id = req.params.id;
-        const cathotelId = await Cathotel.findById(id).populate('user');
-        res.json(cathotelId);
+        const catHotel = await Cathotel.find( cathotelId ).populate('user');
+        
+        // ถ้าไม่พบ catHotel, ส่งคืน response ว่าง
+        if (!catHotel) {
+            return res.status(404).json({ msg: 'Cat hotel not found' });
+        }
 
+        res.json(catHotel);
     } catch (e) {
-        console.log(e)
-        res.status(500).send('Server Error')
-
+        console.error(e);
+        res.status(500).send('Server Error');
     }
 }
+
 
 exports.editCathotl = async (req, res) => {
     const cathotelId = req.params.id;

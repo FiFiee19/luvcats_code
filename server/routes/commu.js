@@ -5,7 +5,6 @@ const {
     create,
     list,
     likes,
-    id,
     addComment,
     comment,
     deletePost,
