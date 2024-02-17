@@ -96,7 +96,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
           title: Center(
             child: Padding(
                 padding: const EdgeInsets.only(left: 220),
-                child: ReportScreen()),
+                child: ReportScreen(commu: widget.commu,)),
           ),
         ),
       ),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
 import 'package:luvcats_app/config/utils.dart';
-import 'package:luvcats_app/features/admin/screens/home_admin.dart';
+import 'package:luvcats_app/features/admin/screens/adminscreen.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/entrescreen.dart';
 import 'package:luvcats_app/features/home/home.dart';
@@ -114,14 +114,14 @@ class AuthService {
         if (userData['user']['type'] == 'admin') {
           navigator.pushAndRemoveUntil(
             CupertinoPageRoute(
-              builder: (context) => const AdminScreen(),
+              builder: (context) => const HomeSreenAdmin(),
             ),
             (route) => false,
           );
         } else if (userData['user']['type'] == 'entrepreneur') {
           navigator.pushAndRemoveUntil(
             CupertinoPageRoute(
-              builder: (context) => const HomeScreen_Entre(),
+              builder: (context) => const HomeScreenEntre(),
             ),
             (route) => false,
           );

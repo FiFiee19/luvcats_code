@@ -10,9 +10,10 @@ const reportSchema = mongoose.Schema({
         required: true,
         type: String,
     },
-    commu_id:{
-        required: true,
-        type: String,
+    commu:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Commu',
+        required: true
     },
     message:{
         required: true,

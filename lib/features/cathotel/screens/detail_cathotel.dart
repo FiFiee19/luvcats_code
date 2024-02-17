@@ -20,16 +20,16 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBar(
-          title: Center(
-            child: Padding(
-                padding: const EdgeInsets.only(left: 220),
-                child: ReportScreen()),
-          ),
-        ),
-      ),
+      // appBar: PreferredSize(
+      //   preferredSize: const Size.fromHeight(50),
+      //   child: AppBar(
+      //     title: Center(
+      //       child: Padding(
+      //           padding: const EdgeInsets.only(left: 220),
+      //           child: ReportScreen()),
+      //     ),
+      //   ),
+      // ),
       body: SingleChildScrollView(
           child: Column(
         children: [

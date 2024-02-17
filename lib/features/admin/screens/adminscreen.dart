@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/widgets/tab_bar_entre.dart';
-import 'package:luvcats_app/widgets/hamburger_entre.dart';
+import 'package:luvcats_app/widgets/tab_bar_admin.dart';
 
 
-
-class HomeScreenEntre extends StatelessWidget {
-  const HomeScreenEntre({super.key});
+class HomeSreenAdmin extends StatelessWidget {
+  const HomeSreenAdmin({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +15,8 @@ class HomeScreenEntre extends StatelessWidget {
       ),
       backgroundColor: Colors.red,
     ),
-    drawer: HamburgerEntre(),
-      body: TabBar_entre(),
+    // drawer: HamburgerEntre(),
+      body: TabBar_admin()
     );
   }
 }

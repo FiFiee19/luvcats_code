@@ -34,6 +34,12 @@ const commuSchema = mongoose.Schema({
             ref:"User",
         }
     ],
+    reports:[
+      {
+          type:mongoose.Schema.Types.ObjectId,
+          ref:"Report",
+      }
+  ],
 },
 { timestamps: true },    
 )

@@ -9,6 +9,7 @@ import 'package:luvcats_app/config/error.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/models/comment.dart';
 import 'package:luvcats_app/models/postcommu.dart';
+import 'package:luvcats_app/models/report.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -298,6 +299,73 @@ class CommuServices {
       );
     } catch (e) {
       print('Error updating post: $e');
+    }
+  }
+  Future<void> report({
+    required BuildContext context,
+    required String user_id,
+    required String message,
+    required String commuId, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      final res = await http.post(
+        Uri.parse('$url/postReport/$commuId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'user_id': user_id,
+          'message': message,
+        }),
+      );
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Add Report Success')),
+        );
+        Navigator.pop(context);
+      } else {
+        print(res.body);
+        throw Exception('Failed to add report');
+        
+      }
+      print(res.body);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      
+    }
+  }
+  Future<List<Report>> fetchReport(
+      BuildContext context, String commuId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/getReport/$commuId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+
+      if (res.statusCode == 200) {
+        List<dynamic> reportData = jsonDecode(res.body);
+        print(reportData);
+        return reportData.map((data) {
+          return Report.fromMap(data as Map<String, dynamic>);
+        }).toList();
+      } else {
+        throw Exception('Failed to load reports');
+      }
+    } catch (e) {
+      throw Exception('Error fetching reports: $e');
     }
   }
 }

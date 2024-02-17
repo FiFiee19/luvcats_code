@@ -6,6 +6,7 @@ const straycatRouter = require("./routes/straycat");
 const commuRouter = require("./routes/commu");
 const entrepreneurRouter = require("./routes/entrepreneur");
 const cathotelRouter = require("./routes/cathotel");
+const reportRouter = require("./routes/report");
 const PORT = process.env.PORT || 5000;
 const app = express();
 const connectDB = require('./config/db');
@@ -18,6 +19,7 @@ app.use(straycatRouter);
 app.use(commuRouter);
 app.use(entrepreneurRouter);
 app.use(cathotelRouter);
+app.use(reportRouter);
 
 
 //connect database

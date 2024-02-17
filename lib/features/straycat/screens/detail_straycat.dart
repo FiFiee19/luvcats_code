@@ -22,11 +22,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
         child: AppBar(
-          title: Center(
-            child: Padding(
-                padding: const EdgeInsets.only(left: 220),
-                child: ReportScreen()),
-          ),
+          title: Text('')
         ),
       ),
       body: SingleChildScrollView(

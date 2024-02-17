@@ -123,7 +123,9 @@ class ProfileServices {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
-        },
+        },body: jsonEncode({
+          'commuId': commuId,
+        }),
       );
 
       httpErrorHandle(
@@ -139,15 +141,18 @@ class ProfileServices {
     }
   }
 
-  Future<void> deleteCatStrayCat(BuildContext context, String commuId) async {
+  Future<void> deleteCatStrayCat(BuildContext context, String straycatId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
-        Uri.parse('$url/getStrayCat/delete/$commuId'),
+        Uri.parse('$url/getStrayCat/delete/$straycatId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
+         body: jsonEncode({
+          'straycatId': straycatId,
+        }),
       );
 
       httpErrorHandle(
