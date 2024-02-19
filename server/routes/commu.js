@@ -11,7 +11,8 @@ const {
     editPost,
     userId,
     commuId,
-    deleteComment
+    deleteComment,
+    user_Id
 
 } = require('../controllers/commu')
 
@@ -21,6 +22,7 @@ commuRouter.get('/getCommu',auth,list)
 commuRouter.post('/postCommu',auth,create)
 commuRouter.put('/likesCommu/:commuId',auth,likes)
 commuRouter.get('/getCommu/:user_id',auth,userId)
+commuRouter.get('/getCommu/id/:user_id',auth,user_Id)
 commuRouter.get('/getCommu/:commuId',auth,commuId)
 commuRouter.post('/addComment/:commuId',auth,addComment)
 commuRouter.get('/getComment/:commuId',auth,comment)

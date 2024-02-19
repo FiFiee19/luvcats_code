@@ -53,6 +53,19 @@ exports.userId = async (req,res) => {
     }
 }
 
+exports.user_Id = async (req,res) => {
+    try {
+        const { user_id } = req.params;
+        const findUserId = await Straycat.find({ user_id}).populate('user')
+        res.json(findUserId);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
+
 exports.straycatsId = async (req,res) => {
     try {
         const { straycatsId } = req.params;
@@ -124,3 +137,20 @@ exports.searchName =  async (req, res) => {
       res.status(500).json({ error: e.message });
     }
   }
+
+//   exports.filterProvince =  async (req, res) => {
+//     const match = {}
+//     if (req.query.province) {
+//         match.province = req
+//     }
+//     try {
+
+//       const straycat = await Straycat.find({
+//         username: { $regex: req.params.username, $options: "i" },
+//       }).populate('user');
+  
+//       res.json(straycat);
+//     } catch (e) {
+//       res.status(500).json({ error: e.message });
+//     }
+//   }

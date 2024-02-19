@@ -45,6 +45,37 @@ class ProfileServices {
     }
     return commuList;
   }
+  Future<List<Commu>> fetchCommuId(BuildContext context,String user_id) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
+    List<Commu> commuList = [];
+    try {
+      http.Response res =
+          await http.get(Uri.parse('$url/getCommu/id/$user_id'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token,
+      });
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            commuList.add(
+              Commu.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return commuList;
+  }
 
   Future<List<Straycat>> fetchStrayCatProfile(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -53,6 +84,38 @@ class ProfileServices {
     try {
       http.Response res =
           await http.get(Uri.parse('$url/getStrayCat/$user'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token,
+      });
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            straycatList.add(
+              Straycat.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return straycatList;
+  }
+
+  Future<List<Straycat>> fetchStrayCatId(BuildContext context,String user_id) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    
+    List<Straycat> straycatList = [];
+    try {
+      http.Response res =
+          await http.get(Uri.parse('$url/getStrayCat/id/$user_id'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'authtoken': userProvider.user.token,
       });
@@ -245,4 +308,31 @@ class ProfileServices {
     }
     return null; // Return null if the update was not successful
   }
+
+Future<List<User>?> searchName(BuildContext context, String username) async {
+  try {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final response = await http.get(
+      Uri.parse('$url/search/$username'), // แก้ไขตรงนี้เป็น URL ที่ถูกต้องของคุณ
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token, // อาจต้องเปลี่ยนเป็น 'Authorization' ถ้า API คุณใช้ Bearer token
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> dataList = jsonDecode(response.body);
+      final List<User> users = dataList.map((data) => User.fromMap(data)).toList();
+      return users;
+    } else {
+      print('Failed to search for users. Status code: ${response.statusCode}');
+      return null;
+    }
+  } catch (e) {
+    print('Error occurred while searching for users: $e');
+    return null;
+  }
+}
+
+
 }

@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/profile/screens/editprofile.dart';
-import 'package:luvcats_app/features/profile/screens/onescreen.dart';
-import 'package:luvcats_app/features/profile/screens/twoscreen.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
+import 'package:luvcats_app/features/profileofuser/screens/onescreenofuser.dart';
+import 'package:luvcats_app/features/profileofuser/screens/twosreenofuser.dart';
 import 'package:luvcats_app/models/user.dart';
-import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/hamburger_user.dart';
-import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ProfileOfUser extends StatefulWidget {
+
+  final User user;
+  const ProfileOfUser({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileOfUser> createState() => _ProfileOfUserState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  User? user;
+class _ProfileOfUserState extends State<ProfileOfUser> {
+  User? users;
   ProfileServices profileServices = ProfileServices();
   bool isLoading = true;
   int _selectedIndex = 0;
-  final List<Widget> _pages = [
-    OneScreen1(),
-    TwoScreen2(),
-  ];
+  late final List<Widget> _pages;
   void onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -33,46 +31,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     fetchProfile();
+    _pages = [
+      OneScreen1(user: widget.user), // Use widget.user instead of user
+      TwoScreen2(user: widget.user), // Use widget.user
+    ];
+    print('User ID: $widget.user');
     super.initState();
   }
 
   Future<void> fetchProfile() async {
-    user = await profileServices.fetchIdUser(context);
-
-    if (mounted) {
+  try {
+    User? fetchedUser = await profileServices.fetchIdUser(context);
+    if (fetchedUser != null && mounted) {
       setState(() {
+        users = fetchedUser;
         isLoading = false;
       });
     }
+  } catch (e) {
+    // Handle error
   }
+}
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    
     return Scaffold(
-      
-      appBar: AppBar(backgroundColor: Colors.white,actions: [Padding(
-              padding: const EdgeInsets.only(left: 100),
-              child: ElevatedButton(
-                child: Text(
-                  'แก้ไขโปรไฟล์',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                onPressed: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Editprofile()),
-                  );
-                  if (result != null) {
-                    await fetchProfile(); // รีเฟรชข้อมูลผู้ใช้
-                    setState(() {}); // บังคับให้ UI รีเฟรช
-                  }
-                },
-                style: ElevatedButton.styleFrom(primary: Colors.grey),
-              ),
-            ),],),
+      appBar: AppBar(),
       
     backgroundColor: Colors.white,
   
@@ -91,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     backgroundColor: Colors.grey,
                     backgroundImage: NetworkImage(
-                      user.imagesP,
+                      widget.user.imagesP,
                     ),
                     radius: 50,
                   ),
@@ -99,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: 30,
                   ),
                   Text(
-                    user.username,
+                     widget.user.username,
                     style: Theme.of(context).textTheme.subtitle1!.merge(
                           const TextStyle(
                               fontSize: 20,
@@ -141,15 +126,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class OneScreen1 extends StatelessWidget {
+  final User user;
+
+  const OneScreen1({Key? key, required this.user}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return OneScreen();
+    return OneScreenOfUser(user: user);
   }
 }
 
 class TwoScreen2 extends StatelessWidget {
+  final User user;
+
+  const TwoScreen2({Key? key, required this.user}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return TwoScreen();
+    return TwoSreenOfUser(user: user);
   }
 }
+

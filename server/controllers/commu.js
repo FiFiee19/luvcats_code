@@ -70,6 +70,21 @@ exports.userId = async (req,res) => {
     }
 }
 
+exports.user_Id = async (req,res) => {
+    try {
+        const { user_id } = req.params;
+        const findUserId = await Commu.find({ user_id }).populate('user')
+        res.json(findUserId);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
+
+
+
 exports.commuId = async (req,res) => {
     try {
         const { commuId } = req.params;
