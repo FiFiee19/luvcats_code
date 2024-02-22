@@ -805,6 +805,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  range_slider_dialog:
+    dependency: "direct main"
+    description:
+      name: range_slider_dialog
+      sha256: "896632a89afa0ed787edd219e2f3edffd1fbc960319f4c844bcdce6060e8743b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   rikulo_commons:
     dependency: transitive
     description:

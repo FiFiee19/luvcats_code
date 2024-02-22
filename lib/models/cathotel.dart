@@ -11,6 +11,7 @@ class Cathotel {
   final String contact;
   final String province;
   final List<String> images;
+  final reviews;
   Cathotel({
     this.user,
     required this.id,
@@ -20,6 +21,7 @@ class Cathotel {
     required this.contact,
     required this.province,
     required this.images,
+    required this.reviews,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +34,7 @@ class Cathotel {
       'contact': contact,
       'province': province,
       'images': images,
+      'reviews': reviews,
     };
   }
 
@@ -48,6 +51,7 @@ class Cathotel {
       contact: map['contact'] ?? '',
       province: map['province'] ?? '',
       images: List<String>.from(map['images'] ?? []),
+      reviews: map['reviews'] ?? [],
     );
   }
 

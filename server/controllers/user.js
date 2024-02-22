@@ -76,13 +76,32 @@ exports.userId = async (req,res) => {
     }
 }
 
-exports.search =  async (req,res) => {
+exports.searchUser =  async (req,res) => {
     try {
         const user = await User.find(
             {
                 $and: [
                     { username: { $regex: req.params.username, $options: 'i' } }, // ใช้ $options: 'i' เพื่อค้นหาแบบ case-insensitive
                     { type: 'user' } // เพิ่มเงื่อนไขนี้เพื่อจำกัดเฉพาะ user
+                ]
+            }
+        )
+        res.json(user);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
+
+exports.searchEntre =  async (req,res) => {
+    try {
+        const user = await User.find(
+            {
+                $and: [
+                    { username: { $regex: req.params.username, $options: 'i' } }, // ใช้ $options: 'i' เพื่อค้นหาแบบ case-insensitive
+                    { type: 'entrepreneur' } // เพิ่มเงื่อนไขนี้เพื่อจำกัดเฉพาะ user
                 ]
             }
         )

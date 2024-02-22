@@ -210,12 +210,6 @@ class CustomSearchDelegate extends SearchDelegate<User?> {
                     }
                   }
 
-                  // onTap: () =>  Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) => ProfileOfUser(user: user),
-                  //         ),
-                  //       )
 
                   ))
               .toList(),
@@ -226,7 +220,7 @@ class CustomSearchDelegate extends SearchDelegate<User?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // สามารถเพิ่มโลจิกสำหรับข้อเสนอแนะได้ที่นี่
+
     return Container();
   }
 }

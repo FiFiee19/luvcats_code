@@ -7,6 +7,7 @@ const commuRouter = require("./routes/commu");
 const entrepreneurRouter = require("./routes/entrepreneur");
 const cathotelRouter = require("./routes/cathotel");
 const reportRouter = require("./routes/report");
+const reviewRouter = require("./routes/review");
 const PORT = process.env.PORT || 5000;
 const app = express();
 const connectDB = require('./config/db');
@@ -20,6 +21,7 @@ app.use(commuRouter);
 app.use(entrepreneurRouter);
 app.use(cathotelRouter);
 app.use(reportRouter);
+app.use(reviewRouter);
 
 
 //connect database

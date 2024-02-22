@@ -35,6 +35,10 @@ const cathotelSchema = mongoose.Schema({
             required: false,
         },
     ],
+    reviews:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Review"
+    }], 
 
 });
 

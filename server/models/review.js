@@ -1,13 +1,19 @@
 const mongoose = require("mongoose");
 
 const reviewSchema = mongoose.Schema({
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     user_id: {
         required: true,
         type: String,
           },
     store_id:{
-        required: true,
-        type: String, 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cathotel',
+        required: true 
     },
     message:{
         required: false,
@@ -15,7 +21,7 @@ const reviewSchema = mongoose.Schema({
     },
     rating:{
         required: true,
-        type: String,
+        type: Number,
     }
 },
 { timestamps: true },  

@@ -1,34 +1,81 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/screens/detail_cathotel.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
+import 'package:luvcats_app/models/review.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 
 class CatHotelScreen extends StatefulWidget {
-  const CatHotelScreen({super.key});
+  // final Cathotel cathotel;
+  const CatHotelScreen({
+    Key? key,
+    // required this.cathotel,
+  }) : super(key: key);
 
   @override
   State<CatHotelScreen> createState() => _CatHotelScreenState();
 }
 
 class _CatHotelScreenState extends State<CatHotelScreen> {
-  List<Cathotel>? cathotel;
+  List<Cathotel>? cathotellist;
+   Cathotel? cathotel;
   final CathotelServices cathotelServices = CathotelServices();
   final AuthService authService = AuthService();
+  String? selectedProvince;
+  String? selectedPrice;
+  double _currentRangeStart = 0.0;
+  double _currentRangeEnd = 100000.0;
+  String startPrice = '';
+  String endPrice = '';
+  bool isLoading = true;
+  List<Review> reviews = [];
 
   @override
   void initState() {
     super.initState();
     fetchAllCathotel();
+    loadReviews();
+    
   }
 
   Future<void> fetchAllCathotel() async {
-    cathotel = await cathotelServices.fetchAllCathotel(context);
+    List<Cathotel>? allcathotel =
+        await cathotelServices.fetchAllCathotel(context);
+    if (allcathotel != null && mounted) {
+      setState(() {
+        cathotellist = allcathotel.where((cathotel) {
+          final bool matchProvince =
+              selectedProvince == null || cathotel.province == selectedProvince;
+          final bool matchPrice = cathotel.price >= _currentRangeStart &&
+              cathotel.price <= _currentRangeEnd;
+          return matchProvince && matchPrice;
+        }).toList();
+      });
+    }
+  }
+  Future<void> loadReviews() async {
+    
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      if (cathotel!.id != null) {
+        reviews = await cathotelServices.fetchReviews(context, cathotel!.id);
+        // print(comments);
+      } else {
+        print("Post ID is null");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
     if (mounted) {
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -36,9 +83,9 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
   Widget build(BuildContext context) {
     Widget bodyContent;
 
-    if (cathotel == null) {
+    if (cathotellist == null) {
       bodyContent = const Loader();
-    } else if (cathotel!.isEmpty) {
+    } else if (cathotellist!.isEmpty) {
       bodyContent = RefreshIndicator(
           onRefresh: fetchAllCathotel,
           child: Center(
@@ -51,7 +98,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
       bodyContent = RefreshIndicator(
         onRefresh: fetchAllCathotel,
         child: GridView.builder(
-          itemCount: cathotel!.length,
+          itemCount: cathotellist!.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 12.0,
@@ -59,7 +106,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
             mainAxisExtent: 330,
           ),
           itemBuilder: (context, index) {
-            final catData = cathotel![index];
+            final catData = cathotellist![index];
 
             return InkWell(
               onTap: () {
@@ -67,7 +114,8 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailCathotelScreen(cathotel: catData),
+                    builder: (context) =>
+                        DetailCathotelScreen(cathotel: catData),
                   ),
                 );
               },
@@ -144,6 +192,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                         ],
                       ),
                     ),
+                    
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomLeft,
@@ -167,8 +216,8 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                   Text(
                                     catData.province.length > 10
-                                ? "${catData.province.substring(0, 10)}..."
-                                : catData.province,
+                                        ? "${catData.province.substring(0, 10)}..."
+                                        : catData.province,
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2!
@@ -213,8 +262,190 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
       );
     }
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: CathotelSearchDelegate(cathotels: cathotellist ?? []),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            onPressed: () async {
+              final result = await showDialog<Map<String, String?>>(
+                context: context,
+                builder: (context) {
+                  String? tempSelectedProvince = selectedProvince;
+                  return StatefulBuilder(
+                    builder: (context, setState) {
+                      return AlertDialog(
+                        title: Text("กรองข้อมูล"),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              DropdownButtonFormField<String>(
+                                value: tempSelectedProvince,
+                                hint: Text("เลือกจังหวัด"),
+                                items: province.map<DropdownMenuItem<String>>(
+                                    (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    tempSelectedProvince = value;
+                                  });
+                                },
+                              ),
+                              SizedBox(height: 10),
+                              Text('เลือกช่วงราคา'),
+                              TextField(
+                                decoration:
+                                    InputDecoration(hintText: "ราคาเริ่มต้น"),
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  startPrice = value;
+                                },
+                              ),
+                              TextField(
+                                decoration:
+                                    InputDecoration(hintText: "ราคาสิ้นสุด"),
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  endPrice = value;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text("ยกเลิก"),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop({
+                              'province': tempSelectedProvince,
+                              'startPrice': startPrice,
+                              'endPrice': endPrice,
+                            }),
+                            child: Text("ตกลง"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+
+              if (result != null) {
+                // คอนเวิร์ตค่าราคาเป็น double
+                double start = result['startPrice']?.isNotEmpty ?? false
+                    ? double.tryParse(result['startPrice']!) ?? 0.0
+                    : 0.0;
+                double end = result['endPrice']?.isNotEmpty ?? false
+                    ? double.tryParse(result['endPrice']!) ?? 100000.0
+                    : 100000.0;
+
+                // double start = double.tryParse(result['startPrice'] ?? '') ?? 0.0;
+                // double end = double.tryParse(result['endPrice'] ?? '') ?? 100000.0;
+
+                // อัปเดต State ด้วยค่าราคาใหม่
+                setState(() {
+                  _currentRangeStart = start;
+                  _currentRangeEnd = end;
+                  selectedProvince = result['province'];
+                  selectedPrice = result['price'];
+                  // คุณอาจต้องเรียกใช้ฟังก์ชันในการกรองข้อมูลอีกครั้งที่นี่
+                  fetchAllCathotel();
+                });
+              }
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.restart_alt_rounded),
+            onPressed: () {
+              setState(() {
+                fetchAllCathotel();
+                _currentRangeStart = 0.0; // รีเซ็ตค่าช่วงราคาเริ่มต้น
+                _currentRangeEnd = 100000.0; // รีเซ็ตค่าช่วงราคาสิ้นสุด
+                selectedProvince = null; // รีเซ็ตค่าจังหวัดที่เลือก
+                startPrice = ''; // รีเซ็ตค่าราคาเริ่มต้นที่ผู้ใช้ป้อน
+                endPrice = ''; // รีเซ็ตค่าราคาสิ้นสุดที่ผู้ใช้ป้อน
+                fetchAllCathotel();
+                selectedPrice = null; // Reset ค่า selectedProvince
+              });
+            },
+          ),
+        ],
+      ),
       backgroundColor: Colors.grey[200],
       body: bodyContent,
     );
+  }
+}
+
+class CathotelSearchDelegate extends SearchDelegate<Cathotel?> {
+  final List<Cathotel> cathotels;
+
+  CathotelSearchDelegate({required this.cathotels});
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () => query = '',
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final results = cathotels.where((cathotel) {
+      return cathotel.user!.username
+          .toLowerCase()
+          .contains(query.toLowerCase());
+    }).toList();
+
+    return ListView.builder(
+      itemCount: results.length,
+      itemBuilder: (context, index) {
+        final result = results[index];
+        return ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(result.user!.imagesP),
+          ),
+          title: Text(result.user!.username),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailCathotelScreen(cathotel: result),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // Add search suggestions here if necessary
+    return Container();
   }
 }

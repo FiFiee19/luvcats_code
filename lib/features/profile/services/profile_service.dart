@@ -313,7 +313,32 @@ Future<List<User>?> searchName(BuildContext context, String username) async {
   try {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final response = await http.get(
-      Uri.parse('$url/search/$username'), // แก้ไขตรงนี้เป็น URL ที่ถูกต้องของคุณ
+      Uri.parse('$url/searchU/$username'), // แก้ไขตรงนี้เป็น URL ที่ถูกต้องของคุณ
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token, // อาจต้องเปลี่ยนเป็น 'Authorization' ถ้า API คุณใช้ Bearer token
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> dataList = jsonDecode(response.body);
+      final List<User> users = dataList.map((data) => User.fromMap(data)).toList();
+      return users;
+    } else {
+      print('Failed to search for users. Status code: ${response.statusCode}');
+      return null;
+    }
+  } catch (e) {
+    print('Error occurred while searching for users: $e');
+    return null;
+  }
+}
+
+Future<List<User>?> searchEntre(BuildContext context, String username) async {
+  try {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final response = await http.get(
+      Uri.parse('$url/searchE/$username'), // แก้ไขตรงนี้เป็น URL ที่ถูกต้องของคุณ
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'authtoken': userProvider.user.token, // อาจต้องเปลี่ยนเป็น 'Authorization' ถ้า API คุณใช้ Bearer token

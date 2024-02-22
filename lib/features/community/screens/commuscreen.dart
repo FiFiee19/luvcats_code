@@ -20,10 +20,12 @@ class CommuScreen extends StatefulWidget {
 
 class _CommuScreenState extends State<CommuScreen> {
   List<Commu>? commu;
+  List<Commu>? filteredCommu;
   final CommuServices commuServices = CommuServices();
   final AuthService authService = AuthService();
   CarouselController buttonCarouselController = CarouselController();
   bool isLiked = false;
+  String searchtitle = "";
 
   @override
   void initState() {
@@ -31,17 +33,12 @@ class _CommuScreenState extends State<CommuScreen> {
     fetchAllCommu();
   }
 
-  fetchAllCommu() async {
+  Future<void> fetchAllCommu() async {
     commu = await commuServices.fetchAllCommu(context);
+
     if (mounted) {
       setState(() {});
     }
-  }
-
-  Future<void> _getData() async {
-    setState(() {
-      fetchAllCommu();
-    });
   }
 
   @override
@@ -81,9 +78,10 @@ class _CommuScreenState extends State<CommuScreen> {
       );
     } else {
       return Scaffold(
+        
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
-          onRefresh: _getData,
+          onRefresh: fetchAllCommu,
           child: ListView.builder(
             itemCount: commu!.length,
             itemBuilder: (context, index) {
@@ -94,7 +92,8 @@ class _CommuScreenState extends State<CommuScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailCommentScreen(commu: commuData),
+                      builder: (context) =>
+                          DetailCommentScreen(commu: commuData),
                     ),
                   );
                 },
@@ -216,7 +215,8 @@ class _CommuScreenState extends State<CommuScreen> {
                                     ),
                                     onPressed: () => Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => DetailCommentScreen(
+                                        builder: (context) =>
+                                            DetailCommentScreen(
                                           commu: commuData,
                                         ),
                                       ),

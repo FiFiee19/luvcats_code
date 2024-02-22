@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
+import 'package:luvcats_app/features/dashborad/screens/dashboard_straycat.dart';
 import 'package:luvcats_app/features/expense/screens/expensescreen.dart';
 import 'package:luvcats_app/features/profile/screens/editpassword.dart';
+import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
+
 
 class HamburgerUser extends StatelessWidget {
   
@@ -15,6 +19,11 @@ class HamburgerUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int totalCats = 3000;
+    final int adoptedCats = 3000;
+    final int waitingCats = 3000;
+    final CatServices catServices = CatServices();
+
     final user = Provider.of<UserProvider>(context).user;
     return Drawer(
       child: ListView(
@@ -58,15 +67,27 @@ class HamburgerUser extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.logout),
             title: Text(
-              'Sign Out',
+              'ออกจากระบบ',
             ),
             onTap: () {
               _signOutUser(context);
               Navigator.pop(context);
             },
           ),
+          SizedBox(height: 20,),
+          Center(child: Text('สถิติ',style: TextStyle(fontSize: 20),)),
+          DashboardWidget(
+            catData: catServices.fetchAllCats(context), // This is the future being passed
+          ),
         ],
       ),
     );
   }
 }
+
+
+
+
+
+
+
