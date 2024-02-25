@@ -25,40 +25,9 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
   double totalRating = 0.0;
 
   List<Review> reviews = [];
-  @override
-  void initState() {
-    super.initState();
-    loadReviews();
-    print(widget.cathotel.id);
-    print(widget.cathotel.id.runtimeType);
-  }
+ 
 
-  Future<void> loadReviews() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      if (widget.cathotel.id != null) {
-        var fetchedReviews =
-            await cathotelServices.fetchReviews(context, widget.cathotel.id);
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-            reviews = fetchedReviews;
-          });
-        }
-      } else {
-        print("Cathotel ID is null");
-      }
-    } catch (e) {
-      print("Error: $e");
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
+  
 
   var selectedItem = '';
   @override

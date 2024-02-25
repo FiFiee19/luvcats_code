@@ -110,7 +110,7 @@ exports.addComment = async (req, res) => {
             message,
             user_id: req.user,
             user: user,
-            post: commu
+            commu_id: commu
         })
         await newComment.save();
         var addComment = await Commu.findById(commuId);

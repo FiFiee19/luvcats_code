@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/editentre.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/review_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/features/expense/screens/expensescreen.dart';
 import 'package:luvcats_app/features/profile/screens/editpassword.dart';
@@ -70,7 +71,7 @@ class _HamburgerEntreState extends State<HamburgerEntre> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ExpenseScreen()),
+                MaterialPageRoute(builder: (context) => ReviewEntre( cathotel: entre!.store_id)),
               );
             },
           ),

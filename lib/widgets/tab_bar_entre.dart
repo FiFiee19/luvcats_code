@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/features/dashborad/screens/dashboard_entrer.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/report_entre.dart';
@@ -59,7 +60,7 @@ class _TabBar_entreState extends State<TabBar_entre> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'Report'),
+          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'Review'),
         ],
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.black,

@@ -19,9 +19,6 @@ class HamburgerUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int totalCats = 3000;
-    final int adoptedCats = 3000;
-    final int waitingCats = 3000;
     final CatServices catServices = CatServices();
 
     final user = Provider.of<UserProvider>(context).user;
@@ -76,7 +73,7 @@ class HamburgerUser extends StatelessWidget {
           ),
           SizedBox(height: 20,),
           Center(child: Text('สถิติ',style: TextStyle(fontSize: 20),)),
-          DashboardWidget(
+          DashboardStraycat(
             catData: catServices.fetchAllCats(context), // This is the future being passed
           ),
         ],

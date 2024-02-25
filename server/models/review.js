@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const reviewSchema = mongoose.Schema({
-    user:{
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -9,22 +9,21 @@ const reviewSchema = mongoose.Schema({
     user_id: {
         required: true,
         type: String,
-          },
-    store_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cathotel',
-        required: true 
     },
-    message:{
+    cathotelId: {
+        required: true,
+        type: String,
+    },
+    message: {
         required: false,
         type: String,
     },
-    rating:{
+    rating: {
         required: true,
         type: Number,
     }
 },
-{ timestamps: true },  
+    { timestamps: true },
 )
 const Review = mongoose.model("Review", reviewSchema)
 module.exports = Review;

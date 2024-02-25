@@ -5,6 +5,7 @@ import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/comment.dart';
 import 'package:luvcats_app/models/postcommu.dart';
+import 'package:luvcats_app/models/report.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
@@ -29,13 +30,14 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
   var selectedItem = '';
   bool isLoading = true;
   List<Comment> comments = [];
+
   final _sendCommentFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     loadComments();
-  }
+    }
 
   Future<void> loadComments() async {
     setState(() {
@@ -57,6 +59,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
       });
     }
   }
+  
 
   void addComment() async {
     print("Attempting to add comment"); // Debugging statement
@@ -66,7 +69,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
         user_id: userId,
         context: context,
         message: commentController.text,
-        commuId: widget.commu.id!,
+        commu_id: widget.commu.id!,
       );
       // .then((_) {
       //   print("Comment added successfully"); // Debugging statement

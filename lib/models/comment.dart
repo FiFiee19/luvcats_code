@@ -5,7 +5,7 @@ import 'package:luvcats_app/models/user.dart';
 
 class Comment {
   User? user;
-  Commu? post_id;
+  final String commu_id;
   final String user_id;
   final String? id;
   final String message;
@@ -14,7 +14,7 @@ class Comment {
   Comment({
     this.user,
     required this.user_id,
-    this.post_id,
+    required this.commu_id,
     this.id,
     required this.message,
     this.createdAt,
@@ -22,7 +22,7 @@ class Comment {
   Map<String, dynamic> toMap() {
     return {
       'user': user?.toMap(),
-      'post_id': post_id?.toMap(),
+      'commu_id': commu_id,
       'message': message,
       'user_id': user_id,
       'id': id,
@@ -36,7 +36,7 @@ class Comment {
     }
     return Comment(
       user: map['user'] != null ? User.fromMap(map['user']) : null,
-      post_id: map['post_id'] != null ? Commu.fromMap(map['post_id']) : null,
+      commu_id: map['commu_id'] ?? '',
       message: map['message'] ?? '',
       user_id: map['user_id'] ?? '',
       id: map['_id'],

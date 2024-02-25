@@ -188,13 +188,13 @@ class CommuServices {
     required BuildContext context,
     required String user_id,
     required String message,
-    required String commuId, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+    required String commu_id, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
       final res = await http.post(
-        Uri.parse('$url/addComment/$commuId'),
+        Uri.parse('$url/addComment/$commu_id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -202,6 +202,8 @@ class CommuServices {
         body: jsonEncode({
           'user_id': user_id,
           'message': message,
+          'commu_id':commu_id
+          
         }),
       );
 
@@ -305,13 +307,13 @@ class CommuServices {
     required BuildContext context,
     required String user_id,
     required String message,
-    required String commuId, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+    required String commu_id, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
       final res = await http.post(
-        Uri.parse('$url/postReport/$commuId'),
+        Uri.parse('$url/postReport/$commu_id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -319,6 +321,7 @@ class CommuServices {
         body: jsonEncode({
           'user_id': user_id,
           'message': message,
+          'commu_id':commu_id
         }),
       );
 

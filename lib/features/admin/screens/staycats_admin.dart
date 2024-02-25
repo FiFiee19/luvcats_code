@@ -256,7 +256,7 @@ if (straycatlist == null) {
     }
 
     return Scaffold(
-      appBar: AppBar(actions: [SearchBar()]),
+      appBar: AppBar(actions: []),
       backgroundColor: Colors.grey[200],
       body: bodyContent,
       floatingActionButton: Padding(

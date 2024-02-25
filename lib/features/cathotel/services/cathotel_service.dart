@@ -75,35 +75,60 @@ class CathotelServices {
     return catprofile;
   }
 
-  Future<List<Review>> fetchReviews(BuildContext context, String cathotelId) async {
+  Future<List<Review>> fetchReviews(
+      BuildContext context, String cathotelId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/getReview/$cathotelId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+
+      // Check the response status code
+      if (res.statusCode == 200) {
+        List<dynamic> commentsData = jsonDecode(res.body);
+        print(commentsData);
+        return commentsData.map((data) {
+          return Review.fromMap(data as Map<String, dynamic>);
+        }).toList();
+      } else {
+        throw Exception('Failed to load Review');
+      }
+    } catch (e) {
+      // Handle any errors that occur during the fetch operation
+      print('Error fetching reviews: $e');
+      throw Exception('Error fetching reviews: $e');
+    }
+  }
+
+  Future<List<Review>> fetchReviewsUser(BuildContext context, String userId) async {
   final userProvider = Provider.of<UserProvider>(context, listen: false);
   try {
-    final http.Response res = await http.get(
-      Uri.parse('$url/getReview/$cathotelId'),
+    http.Response res = await http.get(
+      Uri.parse('$url/getReviewU/$userId'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'authtoken': userProvider.user.token,
       },
     );
 
-    print('Response body: ${res.body}');
-
     if (res.statusCode == 200) {
-      final List<dynamic> commentsData = jsonDecode(res.body);
-      print('Response data: $commentsData');
-
-      return commentsData.map((data) {
-        if (data is! Map<String, dynamic>) {
-          print('Data is not a Map: $data');
-          throw Exception('Data format error');
-        }
-
-        return Review.fromMap(data);
-      }).toList();
+      // Assuming that the response is a list of Cathotel objects
+      List<dynamic> cathotelsData = jsonDecode(res.body);
+      List<Review> reviews = [];
+      for (var cathotelData in cathotelsData) {
+        var cathotelReviews = List<Map<String, dynamic>>.from(cathotelData['reviews']);
+        reviews.addAll(cathotelReviews.map((reviewData) => Review.fromMap(reviewData)));
+      }
+      return reviews;
     } else {
       throw Exception('Failed to load reviews');
     }
   } catch (e) {
+    print('Error fetching reviews: $e');
     throw Exception('Error fetching reviews: $e');
   }
 }
@@ -125,8 +150,12 @@ class CathotelServices {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
-        body: jsonEncode(
-            {'user_id': user_id, 'message': message, 'rating': rating}),
+        body: jsonEncode({
+          'user_id': user_id,
+          'message': message,
+          'rating': rating,
+          'cathotelId': cathotelId
+        }),
       );
 
       if (res.statusCode == 200) {

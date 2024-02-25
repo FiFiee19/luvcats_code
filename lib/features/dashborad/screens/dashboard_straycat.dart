@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 
-class DashboardWidget extends StatelessWidget {
+class DashboardStraycat extends StatelessWidget {
   final Future<List<Straycat>> catData;
 
-  DashboardWidget({
+  DashboardStraycat({
     Key? key,
     required this.catData,
   }) : super(key: key);
@@ -14,14 +14,14 @@ class DashboardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Straycat>>(
       future: catData,
-      builder: (context, index) {
-        if (index.connectionState == ConnectionState.waiting) {
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Show loading indicator while waiting for data
-        } else if (index.hasError) {
-          return Text('Error: ${index.error}'); // Show error message if any
-        } else if (index.hasData) {
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}'); // Show error message if any
+        } else if (snapshot.hasData) {
           // Extract data from snapshot
-          final cats = index.data ?? [];
+          final cats = snapshot.data ?? [];
           final totalCats = cats.length;
           final adoptedCats = cats.where((cat) => cat.status == 'yes').length;
           final waitingCats = totalCats - adoptedCats;

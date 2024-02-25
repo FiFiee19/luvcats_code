@@ -4,8 +4,8 @@ const Review = require('../models/review');
 
 exports.addReview = async (req, res) => {
     try {
-        const{message,rating} = req.body;
-        const {cathotelId} = req.params;
+        const { message, rating } = req.body;
+        const { cathotelId } = req.params;
         const user = await User.findById(req.user);
         const cathotel = await Cathotel.findById(cathotelId);
         const newReview = new Review({
@@ -13,7 +13,7 @@ exports.addReview = async (req, res) => {
             rating,
             user_id: req.user,
             user: user,
-            store_id: cathotel
+            cathotelId: cathotel
         })
         await newReview.save();
         var addReview = await Cathotel.findById(cathotelId);
@@ -22,10 +22,10 @@ exports.addReview = async (req, res) => {
             { $push: { reviews: newReview } },
             { new: true }
         );
-        
+
         return res.status(200).json(await addReview.populate('user_id'));
-    
-    }catch (e){
+
+    } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
 
@@ -34,13 +34,13 @@ exports.addReview = async (req, res) => {
 
 exports.review = async (req, res) => {
     try {
-        
-        const { cathotelId } = req.params;   
+
+        const { cathotelId } = req.params;
         const review = await Cathotel.findById(cathotelId)
             .populate({
                 path: 'reviews',
                 populate: { path: 'user' }
-            });  
+            });
         if (!review) {
             return res.status(404).json({ msg: 'Review not found' });
         }
@@ -51,3 +51,24 @@ exports.review = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.userId = async (req,res) => {
+    try {
+        const cathotel = await Cathotel.find({ user_id: req.params.user_id }).populate({
+            path: 'reviews',
+            populate: { path: 'user' }
+        });
+        if (!cathotel) {
+            return res.status(404).send('Cathotel not found');
+        }
+        res.json(cathotel);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
+
+
+

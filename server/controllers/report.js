@@ -12,7 +12,7 @@ exports.create = async (req,res) => {
             message,
             user_id: req.user,
             user: user,
-            commu: commu
+            commu_id: commu
         })
         await newReport.save();
         var report = await Commu.findById(commuId);
