@@ -144,6 +144,7 @@ class _FormsEntreState extends State<FormsEntre> {
       _emailController.dispose();
       _passwordController.dispose();
       _nameController.dispose();
+       _cpasswordController.dispose();
     }
     super.dispose();
   }
@@ -343,15 +344,47 @@ class _FormsEntreState extends State<FormsEntre> {
                         ),
                       ),
                 const SizedBox(height: 30),
-                CustomTextField(
-                  controller: fullnameController,
-                  hintText: 'ชื่อ-นามสกุล',
+                
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: fullnameController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกชื่อ-นามสกุล';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'ชื่อ-นามสกุล',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
-                CustomTextField(
-                  controller: phoneController,
-                  hintText: 'เบอร์โทร',
+                
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: phoneController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกเบอร์โทร';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'เบอร์โทร',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Padding(
@@ -419,10 +452,27 @@ class _FormsEntreState extends State<FormsEntre> {
               ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
-                CustomTextField(
+                
+                Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
                   controller: store_addressController,
-                  hintText: 'ที่อยู่ของร้าน',
+                  maxLines: 4,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'กรุณากรอกที่อยู่ของร้าน';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'ที่อยู่ของร้าน',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
                 ),
+              ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
@@ -460,13 +510,12 @@ class _FormsEntreState extends State<FormsEntre> {
                   },
                   // ตัวเลือกอื่นๆ...
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 CustomButton(
                   text: 'ลงทะเบียน',
                   onTap: formsentre,
                 ),
+                
               ],
             ),
           ),

@@ -34,7 +34,6 @@ class DashboardEntre extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          // Extract data from snapshot
           final reviews = snapshot.data ?? [];
 
           final double avgRating = reviews.isNotEmpty

@@ -7,14 +7,15 @@ import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileEntre extends StatefulWidget {
-  final String CathotelId; // เพิ่มตัวแปรนี้
+  final String CathotelId; 
 
   const EditProfileEntre({
     Key? key,
-    required this.CathotelId, // เพิ่มตัวแปรนี้
+    required this.CathotelId,
   }) : super(key: key);
 
   @override
@@ -263,18 +264,11 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     });
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('บันทึก',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      primary: Colors.red),
+                CustomButton(
+                  text: 'ลงทะเบียน',
+                  onTap: _submitForm,
                 ),
               ],
             ),

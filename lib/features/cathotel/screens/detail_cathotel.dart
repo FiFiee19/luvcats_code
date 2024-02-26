@@ -27,7 +27,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
   double totalRating = 0.0;
 
   List<Review> reviews = [];
-   @override
+  @override
   void initState() {
     super.initState();
     loadReviews();
@@ -39,7 +39,8 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
       isLoading = true;
     });
     try {
-      reviews = await cathotelServices.fetchReviews(context, widget.cathotel.id);
+      reviews =
+          await cathotelServices.fetchReviews(context, widget.cathotel.id);
       print(reviews);
     } catch (e) {
       print(e.toString());
@@ -50,6 +51,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
       });
     }
   }
+
   double calculateAverageRating() {
     if (reviews.isEmpty) {
       setState(() {
@@ -62,11 +64,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
     }
     return sum / reviews.length;
   }
- 
 
-  
-
-  var selectedItem = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,7 +155,9 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
             ),
           ),
           Divider(),
-          SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 30, bottom: 20),
             child: Row(
@@ -182,7 +182,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                    widget.cathotel.price.toString() + "/คืน",
+                  widget.cathotel.price.toString() + "/คืน",
                   style: Theme.of(context).textTheme.subtitle2!.merge(
                         TextStyle(
                           fontWeight: FontWeight.w700,
@@ -193,9 +193,10 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               ],
             ),
           ),
-       
           Divider(),
-          SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 30, bottom: 20),
             child: Row(
@@ -220,7 +221,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                   widget.cathotel.province,
+                  widget.cathotel.province,
                   style: Theme.of(context).textTheme.subtitle2!.merge(
                         TextStyle(
                           fontWeight: FontWeight.w700,
@@ -232,7 +233,9 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
             ),
           ),
           Divider(),
-          SizedBox(height: 15,),
+          SizedBox(
+            height: 15,
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 30, bottom: 20),
             child: Row(
@@ -271,53 +274,33 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
           Divider(),
           
           Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${widget.cathotel.reviews.length} ความคิดเห็น",
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                ),
-                SizedBox(height: 10),
-              ],
+            padding: EdgeInsets.only(right: 2),
+            child: Text(
+              calculateAverageRating()
+                  .toStringAsFixed(1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
-          
-          Padding(
-                    padding: EdgeInsets.only(right: 2),
-                    child: Text(
-                      calculateAverageRating().toStringAsFixed(
-                          1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  RatingBar.builder(
-                    initialRating: calculateAverageRating(),
-                    ignoreGestures: true,
-                    // minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemSize: 20.0,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {},
-                  ),
-                  ElevatedButton(
+          RatingBar.builder(
+            initialRating: calculateAverageRating(),
+            ignoreGestures: true,
+            // minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemSize: 20.0,
+            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {},
+          ),
+          ElevatedButton(
             child: Text(
               'ดูรีวิว',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             onPressed: () async {
@@ -325,15 +308,14 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ReviewScreen(cathotel: widget.cathotel.id)),
+                        ReviewScreen(cathotel: widget.cathotel)),
               );
               if (result != null) {
                 setState(() {}); // บังคับให้ UI รีเฟรช
               }
             },
-            style: ElevatedButton.styleFrom(primary: Colors.grey),
+            style: ElevatedButton.styleFrom(primary: Colors.red),
           ),
-         
         ],
       )),
     );

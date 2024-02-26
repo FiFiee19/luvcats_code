@@ -76,11 +76,10 @@ class EntreService {
           ),
           (route) => false,
         );
-        // กรณีลงทะเบียนสำเร็จแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Account has been successfully created'),
-            backgroundColor: Colors.grey,
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
           ),
@@ -88,10 +87,9 @@ class EntreService {
       }
 
       if (res.statusCode == 400) {
-        // กรณีมีบัญชีผู้ใช้ด้วยอีเมลที่ซ้ำกันแสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Account with this email already exists'),
+            content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -102,7 +100,7 @@ class EntreService {
         // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Please enter a valid email address'),
+            content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -150,12 +148,11 @@ Future<void> editProfileEntre(
         print('Error uploading images: $e');
       }
     } else {
-      // ถ้าไม่มีการเลือกรูปภาพใหม่ใช้รูปภาพเดิมที่เก็บไว้ในฐานข้อมูล
       final post = await fetchIdCathotel(context, userProvider.user.id);
       imageUrls = post.images;
     }
 
-    // ส่งข้อมูลโพสต์ร่วมกับ URL รูปภาพ
+
     try {
       final res = await http.put(
         Uri.parse('$url/getCathotel/edit/$cathotelId'),
@@ -168,17 +165,42 @@ Future<void> editProfileEntre(
           'contact': contact,
           'province': province,
           'description': description,
-          'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
+          'images': imageUrls,
         }),
       );
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, 'Post updated successfully!');
-          Navigator.pop(context);
-        },
-      );
+      if (res.statusCode == 200) {
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+
+      if (res.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+      if (res.statusCode == 500) {
+        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
     } catch (e) {
       print('Error updating post: $e');
     }
@@ -244,14 +266,39 @@ Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
 
         }),
       );
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, 'Post updated successfully!');
-          Navigator.pop(context);
-        },
-      );
+      if (res.statusCode == 200) {
+       
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+
+      if (res.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+      if (res.statusCode == 500) {
+        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
     } catch (e) {
       print('Error updating post: $e');
     }

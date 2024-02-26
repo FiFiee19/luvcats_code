@@ -20,52 +20,51 @@ class EditCommu extends StatefulWidget {
 
 class _EditCommuState extends State<EditCommu> {
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController _titleController;
-  late TextEditingController _descriptionController;
+  late TextEditingController titleController ;
+  late TextEditingController descriptionController;
   bool isLoading = true;
   List<File> images = [];
   List<String> imageUrls = [];
   CommuServices commuServices =
-      CommuServices(); // สร้าง instance ของ CommuServices
+      CommuServices();
 
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController();
-    _descriptionController = TextEditingController();
-
-    // ทำการโหลดข้อมูลโพสต์เดิม
-    _loadPostData();
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+    _loadCommu();
   }
 
   @override
   void dispose() {
     if (mounted) {
-      _titleController.dispose();
-      _descriptionController.dispose();
+      titleController.dispose();
+      descriptionController.dispose();
     }
     super.dispose();
   }
-
+  //แก้ไขข้อมูล
   void _submitForm() async {
     if (globalFormKey.currentState!.validate()) {
       await commuServices.editPost(
         context,
         widget.commuId,
-        _titleController.text,
-        _descriptionController.text,
+        titleController.text,
+        descriptionController.text,
         images,
       );
     }
   }
-
-  Future<void> _loadPostData() async {
+  
+  //เรียกข้อมูลCommuจากcommuServices
+  Future<void> _loadCommu() async {
     try {
-      // สมมติว่าคุณมีฟังก์ชันที่ชื่อว่า fetchPostById สำหรับดึงข้อมูลโพสต์
+      
       final post = await commuServices.fetchIdCommu(context, widget.commuId);
       // นำข้อมูลเดิมมาใส่ใน TextEditingController
-      _titleController.text = post.title;
-      _descriptionController.text = post.description;
+      titleController.text = post.title;
+      descriptionController.text = post.description;
       imageUrls = post.images;
     } catch (e) {
       print('Error loading post data: $e');
@@ -88,7 +87,8 @@ class _EditCommuState extends State<EditCommu> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Community Post'),
+         centerTitle: true,
+        title: const Text('แก้ไขโพสต์'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -161,32 +161,32 @@ class _EditCommuState extends State<EditCommu> {
                 Center(
                   child: IconButton(
                     icon: const Icon(
-                      Icons.upload_sharp,
+                      Icons.image,
                     ),
                     onPressed: () => selectImages(),
                   ),
                 ),
                 TextFormField(
-                  controller: _titleController,
+                  controller: titleController,
                   decoration: const InputDecoration(
-                    labelText: 'Title',
+                    labelText: 'หัวข้อ',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
+                      return 'กรุณากรอกหัวข้อ';
                     }
                     return null;
                   },
                 ),
                 TextFormField(
-                  controller: _descriptionController,
+                  controller: descriptionController,
                   decoration: const InputDecoration(
-                    labelText: 'Description',
+                    labelText: 'รายละเอียด',
                   ),
-                  maxLines: 5,
+                  maxLines: 7,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
+                      return 'กรุณากรอกรายละเอียด';
                     }
                     return null;
                   },
@@ -194,7 +194,7 @@ class _EditCommuState extends State<EditCommu> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Submit',
+                  child: const Text('บันทึก',
                       style: TextStyle(
                         color: Colors.white,
                       )),
@@ -202,6 +202,7 @@ class _EditCommuState extends State<EditCommu> {
                       minimumSize: const Size(double.infinity, 50),
                       primary: Colors.red),
                 ),
+                
               ],
             ),
           ),

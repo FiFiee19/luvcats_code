@@ -9,7 +9,7 @@ import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class FormsReview extends StatefulWidget {
-  final String cathotel;
+  final Cathotel cathotel;
   const FormsReview({
     Key? key,
     required this.cathotel,
@@ -30,31 +30,10 @@ class _FormsReviewState extends State<FormsReview> {
   @override
   void initState() {
     super.initState();
-    loadReviews();
     print(widget.cathotel);
   }
 
-  Future<void> loadReviews() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      if (widget.cathotel != null) {
-        reviews =
-            await cathotelServices.fetchReviews(context, widget.cathotel);
-        print(reviews);
-      } else {
-        print("Post ID is null");
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+
 
   void addReview() async {
     print("Attempting to add comment"); // Debugging statement
@@ -65,7 +44,7 @@ class _FormsReviewState extends State<FormsReview> {
         context: context,
         message: messageController.text,
         rating: double.parse(ratingController.text),
-        cathotelId: widget.cathotel,
+        cathotelId: widget.cathotel.id,
       );
     }
   }

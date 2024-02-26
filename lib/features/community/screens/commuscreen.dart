@@ -20,11 +20,7 @@ class CommuScreen extends StatefulWidget {
 
 class _CommuScreenState extends State<CommuScreen> {
   List<Commu>? commu;
-  List<Commu>? filteredCommu;
   final CommuServices commuServices = CommuServices();
-  final AuthService authService = AuthService();
-  CarouselController buttonCarouselController = CarouselController();
-  bool isLiked = false;
   String searchtitle = "";
 
   @override
@@ -32,7 +28,7 @@ class _CommuScreenState extends State<CommuScreen> {
     super.initState();
     fetchAllCommu();
   }
-
+  //เรียกข้อมูลAllCommuจากcommuServices
   Future<void> fetchAllCommu() async {
     commu = await commuServices.fetchAllCommu(context);
 

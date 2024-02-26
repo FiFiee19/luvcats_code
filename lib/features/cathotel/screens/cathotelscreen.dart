@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/screens/detail_cathotel.dart';
@@ -32,13 +33,14 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
   String startPrice = '';
   String endPrice = '';
   bool isLoading = true;
-  List<Review> reviews = [];
 
   @override
   void initState() {
     super.initState();
     fetchAllCathotel();
-    loadReviews();
+    
+    
+    
   }
 
   //เรียกข้อมูลAllCathotelในcathotelServices
@@ -58,25 +60,8 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
     }
   }
 
-  Future<void> loadReviews() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      if (cathotel!.id != null) {
-        reviews = await cathotelServices.fetchReviews(context, cathotel!.id);
-      } else {
-        print("cathotelId is null");
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+ 
+  
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +92,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
 
             return InkWell(
               onTap: () {
-                // ทำสิ่งที่คุณต้องการเมื่อกดที่ Container
+               
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -186,9 +171,12 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                 ),
                           ),
+                          
                         ],
                       ),
                     ),
+                    
+                    
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomLeft,
@@ -199,6 +187,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                             mainAxisAlignment: MainAxisAlignment
                                 .spaceBetween, 
                             children: [
+                              
                               
                               Row(
                                 children: [
@@ -367,13 +356,13 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
             onPressed: () {
               setState(() {
                 fetchAllCathotel();
-                _currentRangeStart = 0.0; // รีเซ็ตค่าช่วงราคาเริ่มต้น
-                _currentRangeEnd = 100000.0; // รีเซ็ตค่าช่วงราคาสิ้นสุด
-                selectedProvince = null; // รีเซ็ตค่าจังหวัดที่เลือก
-                startPrice = ''; // รีเซ็ตค่าราคาเริ่มต้นที่ผู้ใช้ป้อน
-                endPrice = ''; // รีเซ็ตค่าราคาสิ้นสุดที่ผู้ใช้ป้อน
+                _currentRangeStart = 0.0;
+                _currentRangeEnd = 100000.0; 
+                selectedProvince = null; 
+                startPrice = '';
+                endPrice = ''; 
                 fetchAllCathotel();
-                selectedPrice = null; // Reset ค่า selectedProvince
+                selectedPrice = null; 
               });
             },
           ),
@@ -438,7 +427,6 @@ class CathotelSearchDelegate extends SearchDelegate<Cathotel?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // Add search suggestions here if necessary
     return Container();
   }
 }

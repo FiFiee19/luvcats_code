@@ -37,7 +37,14 @@ class CathotelServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return cathotelList;
   }
@@ -69,7 +76,14 @@ class CathotelServices {
         showSnackBar(context, 'Error: ${res.statusCode}');
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+     ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
 
     return catprofile;
@@ -87,7 +101,6 @@ class CathotelServices {
         },
       );
 
-      // Check the response status code
       if (res.statusCode == 200) {
         List<dynamic> commentsData = jsonDecode(res.body);
         print(commentsData);
@@ -98,8 +111,7 @@ class CathotelServices {
         throw Exception('Failed to load Review');
       }
     } catch (e) {
-      // Handle any errors that occur during the fetch operation
-      print('Error fetching reviews: $e');
+      
       throw Exception('Error fetching reviews: $e');
     }
   }
@@ -129,7 +141,9 @@ class CathotelServices {
     }
   } catch (e) {
     print('Error fetching reviews: $e');
+    
     throw Exception('Error fetching reviews: $e');
+    
   }
 }
 
@@ -171,6 +185,8 @@ class CathotelServices {
         SnackBar(
           content: Text(e.toString()),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
         ),
       );
     }

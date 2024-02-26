@@ -10,11 +10,9 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class ReviewScreen extends StatefulWidget {
-  // final Cathotel cathotel;
-  final String cathotel;
+  final Cathotel cathotel;
   const ReviewScreen({
     Key? key,
-    // required this.cathotel,
     required this.cathotel,
   }) : super(key: key);
 
@@ -39,7 +37,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
       isLoading = true;
     });
     try {
-      reviews = await cathotelServices.fetchReviews(context, widget.cathotel);
+      reviews = await cathotelServices.fetchReviews(context, widget.cathotel.id);
       print(reviews);
     } catch (e) {
       print(e.toString());
@@ -83,7 +81,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     padding: EdgeInsets.all(8),
                     child: Text(
                       calculateAverageRating().toStringAsFixed(
-                          1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                          1), // แสดงทศนิยมหนึ่งตำแหน่ง
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
@@ -91,7 +89,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   RatingBar.builder(
                     initialRating: calculateAverageRating(),
                     ignoreGestures: true,
-                    // minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     itemCount: 5,

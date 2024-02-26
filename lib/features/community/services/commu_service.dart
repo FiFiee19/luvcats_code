@@ -56,12 +56,12 @@ class CommuServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Post Added Successfully!');
+          showSnackBar(context, 'โพสต์สำเร็จ!');
           Navigator.pop(context);
         },
       );
     } catch (e) {
-      // showSnackBar(context, e.toString());
+     
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
@@ -98,7 +98,14 @@ class CommuServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return commuList;
   }
@@ -118,7 +125,14 @@ class CommuServices {
         onSuccess: () {},
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 
@@ -220,6 +234,8 @@ class CommuServices {
         SnackBar(
           content: Text(e.toString()),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
         ),
       );
     }
@@ -245,7 +261,14 @@ class CommuServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 
@@ -288,26 +311,33 @@ class CommuServices {
         body: jsonEncode({
           'title': title,
           'description': description,
-          'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
+          'images': imageUrls, 
         }),
       );
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Post updated successfully!');
+          showSnackBar(context, 'แก้ไขสำเร็จ!');
           Navigator.pop(context);
         },
       );
     } catch (e) {
-      print('Error updating post: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
   Future<void> report({
     required BuildContext context,
     required String user_id,
     required String message,
-    required String commu_id, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+    required String commu_id, 
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -327,12 +357,12 @@ class CommuServices {
 
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Add Report Success')),
+          SnackBar(content: Text('รายงานสำเร็จ!')),
         );
         Navigator.pop(context);
       } else {
         print(res.body);
-        throw Exception('Failed to add report');
+        throw Exception('รายงานไม่สำเร็จ!');
         
       }
       print(res.body);
@@ -341,6 +371,8 @@ class CommuServices {
         SnackBar(
           content: Text(e.toString()),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
         ),
       );
       
@@ -365,7 +397,7 @@ class CommuServices {
           return Report.fromMap(data as Map<String, dynamic>);
         }).toList();
       } else {
-        throw Exception('Failed to load reports');
+        throw Exception('โหลดข้อมูลรายงานไม่สำเร็จ');
       }
     } catch (e) {
       throw Exception('Error fetching reports: $e');

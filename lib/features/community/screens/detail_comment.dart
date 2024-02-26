@@ -27,7 +27,6 @@ class DetailCommentScreen extends StatefulWidget {
 class _DetailCommentScreenState extends State<DetailCommentScreen> {
   final TextEditingController commentController = TextEditingController();
   final CommuServices commuServices = CommuServices();
-  var selectedItem = '';
   bool isLoading = true;
   List<Comment> comments = [];
 
@@ -38,7 +37,8 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
     super.initState();
     loadComments();
     }
-
+  
+  //เรียกข้อมูลCommentsจากcommuServices
   Future<void> loadComments() async {
     setState(() {
       isLoading = true;
@@ -48,7 +48,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
         comments = await commuServices.fetchComment(context, widget.commu.id!);
         // print(comments);
       } else {
-        print("Post ID is null");
+        print("CommuId is null");
       }
     } catch (e) {
       print(e.toString());
@@ -60,9 +60,8 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
     }
   }
   
-
+  //แสดงความคิดเห็น
   void addComment() async {
-    print("Attempting to add comment"); // Debugging statement
     if (_sendCommentFormKey.currentState?.validate() ?? false) {
       final userId = Provider.of<UserProvider>(context, listen: false).user.id;
       await commuServices.addComment(
@@ -71,13 +70,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
         message: commentController.text,
         commu_id: widget.commu.id!,
       );
-      // .then((_) {
-      //   print("Comment added successfully"); // Debugging statement
-      //   loadComments(); // Reload comments to show the new one
-      // }).catchError((error) {
-      //   print("Failed to add comment: $error"); // Debugging statement
-      // }
-      // );
+     
     }
   }
 
@@ -318,7 +311,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                             if (val == null || val.trim().isEmpty) {
                               return 'กรุณาแสดงความคิดเห็น';
                             }
-                            return null; // Return null if the input is valid
+                            return null;
                           },
                         ),
                         SizedBox(height: 10),
@@ -326,9 +319,9 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                           text: 'ส่ง',
                           onTap: () {
                             if (_sendCommentFormKey.currentState!.validate()) {
-                              addComment(); // Call addComment only if the form is valid
+                              addComment(); 
                               commentController
-                                  .clear(); // Clear the text field after sending the comment
+                                  .clear(); 
                             }
                           },
                         ),

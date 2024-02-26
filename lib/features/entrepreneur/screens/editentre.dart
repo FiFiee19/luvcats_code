@@ -7,14 +7,15 @@ import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class EditEntreScreen extends StatefulWidget {
-  final String entreId; // เพิ่มตัวแปรนี้
+  final String entreId; 
 
   const EditEntreScreen({
     Key? key,
-    required this.entreId, // เพิ่มตัวแปรนี้
+    required this.entreId,
   }) : super(key: key);
 
   @override
@@ -23,15 +24,14 @@ class EditEntreScreen extends StatefulWidget {
 
 class _EditEntreScreenState extends State<EditEntreScreen> {
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController nameController;
-  late TextEditingController addressController;
-  late TextEditingController phoneController;
+  late TextEditingController nameController = TextEditingController();
+  late TextEditingController addressController = TextEditingController();
+  late TextEditingController phoneController = TextEditingController();
   bool isLoading = true;
 
   EntreService entreService =
-      EntreService(); // สร้าง instance ของ CommuServices
-  // String selectedGender = 'ไม่ทราบ';
-  // String selectedProvince = 'กรุงเทพมหานคร';
+      EntreService();
+  
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
       );
     }
   }
-
+  //โหลดข้อมูลผู้ประกอบการ
   Future<void> _loadPostData() async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -89,7 +89,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Entreprenuer Post'),
+        title: const Text('แก้ไขข้อมูลผู้ประกอบการ'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -106,7 +106,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a name';
+                      return 'กรุณากรอกชื่อ-นามสกุล';
                     }
                     return null;
                   },
@@ -119,7 +119,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a address';
+                      return 'กรุณากรอกที่อยู่ของร้าน';
                     }
                     return null;
                   },
@@ -132,22 +132,17 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a phone';
+                      return 'กรุณากรอกเบอร์โทร';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('บันทึก',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      primary: Colors.red),
+                
+                CustomButton(
+                  text: 'ลงทะเบียน',
+                  onTap: _submitForm,
                 ),
               ],
             ),
