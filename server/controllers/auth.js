@@ -6,16 +6,23 @@ exports.signup = async (req, res) => {
   try {
     const { username, email, password, type, imagesP } = req.body;
 
-    // Check if user exists in UserSchema
-    var user = await User.findOne({ email });
-    if (user) {
-      return res.send('User Already Exists!!!').status(400);
+    // Check if username exists
+    const existingUserByUsername = await User.findOne({ username });
+    if (existingUserByUsername) {
+      return res.status(400).send('ชื่อนี้มีผู้ใช้แล้ว');
     }
 
-    const salt = await bcrypt.genSalt(8);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    
+    // Check if email exists
+    const existingUserByEmail = await User.findOne({ email });
+    if (existingUserByEmail) {
+      return res.status(400).send('อีเมลนี้เคยลงทะเบียนแล้ว');
+    }
 
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user object
     const newUser = new User({
       username,
       email,
@@ -23,16 +30,18 @@ exports.signup = async (req, res) => {
       type,
       imagesP
     });
+
+    // Save the new user
     await newUser.save();
-    
-    res.send('Register Success!!');
 
-
+    // Send success message
+    res.status(201).send('ลงทะเบียนสำเร็จ');
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send('Server Error');
   }
-}
+};
+
 
 
 exports.signin = async (req, res) => {
@@ -46,7 +55,7 @@ exports.signin = async (req, res) => {
       const isMatch = await bcrypt.compare(password, user.password)
 
       if (!isMatch) {
-        return res.status(400).send('Password Invalid!!!')
+        return res.status(400).send('รหัสผ่านผิด')
       }
       // 3. Generate  { expiresIn: 2000 },
       jwt.sign({ user: { id: user._id } }, 'jwtsecret', (err, token) => {
@@ -56,7 +65,7 @@ exports.signin = async (req, res) => {
       })
 
     } else {
-      return res.status(400).send('User not found!!!')
+      return res.status(400).send('ไม่พบผู้ใช้')
     }
 
   } catch (err) {

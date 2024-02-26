@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
@@ -23,8 +22,6 @@ class _CommuAdminState extends State<CommuAdmin> {
   List<Commu>? commu;
   final CommuServices commuServices = CommuServices();
   final ProfileServices profileService = ProfileServices();
-  final AuthService authService = AuthService();
-  CarouselController buttonCarouselController = CarouselController();
   bool isLiked = false;
 
   @override
@@ -32,13 +29,15 @@ class _CommuAdminState extends State<CommuAdmin> {
     super.initState();
     fetchAllCommu();
   }
-
+  //เรียกข้อมูลAllCommuจากcommuServices
   Future<void> fetchAllCommu() async {
     commu = await commuServices.fetchAllCommu(context);
     if (mounted) {
       setState(() {});
     }
   }
+
+  //ลบCommu
   void delete(String commu) {
     profileService.deleteCatCommu(context, commu);
   }

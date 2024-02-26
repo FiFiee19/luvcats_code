@@ -20,7 +20,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _cpasswordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  // final TextEditingController _imageController = TextEditingController();
   final AuthService authService = AuthService();
   final _signupFormKey = GlobalKey<FormState>();
   File? file;
@@ -29,15 +28,12 @@ class _SignupScreenState extends State<SignupScreen> {
   var user = User;
   File? _image;
 
-  
   void _pickImage() async {
     var res = await pickImageGallery();
     setState(() {
       _image = res;
     });
   }
-
-  
 
   void signupUser() async {
     if (_signupFormKey.currentState!.validate() &&
@@ -94,6 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _cpasswordController.dispose();
     super.dispose();
   }
 
@@ -160,7 +157,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       color: Colors.black,
                     ),
                   )),
-              SizedBox(height: 60),
+              SizedBox(height: 80),
               Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: TextFormField(
@@ -250,16 +247,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
+              const SizedBox(height: 30),
               CustomButton(
                 text: 'ลงทะเบียน',
                 onTap: signupUser,
               ),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
+              const SizedBox(height: 30),
             ],
           ),
         ),

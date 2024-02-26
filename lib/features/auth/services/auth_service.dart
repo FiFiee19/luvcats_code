@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
+import 'package:luvcats_app/config/error.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/admin/screens/adminscreen.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
@@ -36,7 +37,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-
+     
       if (res.statusCode == 200) {
         await navigator.pushAndRemoveUntil(
           CupertinoPageRoute(
@@ -44,22 +45,20 @@ class AuthService {
           ),
           (route) => false,
         );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
       }
 
       if (res.statusCode == 400) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Account with this email already exists'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
-      if (res.statusCode == 500) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Error'),
+            content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -67,9 +66,18 @@ class AuthService {
         );
       }
 
+      if (res.statusCode == 500) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
       print(res.statusCode);
       print(res.body);
-      print(username);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -99,7 +107,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      if (res.statusCode == 200) { 
+      if (res.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         Provider.of<UserProvider>(context, listen: false).setUser(res.body);
         final userData = jsonDecode(res.body);
@@ -138,23 +146,14 @@ class AuthService {
       if (res.statusCode == 400) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('User with this email does not exists'),
+            content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
           ),
         );
       }
-      if (res.statusCode == 401) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Incorrect password'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
+
       if (res.statusCode == 500) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

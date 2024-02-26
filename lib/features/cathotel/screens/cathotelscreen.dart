@@ -22,7 +22,7 @@ class CatHotelScreen extends StatefulWidget {
 
 class _CatHotelScreenState extends State<CatHotelScreen> {
   List<Cathotel>? cathotellist;
-   Cathotel? cathotel;
+  Cathotel? cathotel;
   final CathotelServices cathotelServices = CathotelServices();
   final AuthService authService = AuthService();
   String? selectedProvince;
@@ -39,9 +39,9 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
     super.initState();
     fetchAllCathotel();
     loadReviews();
-    
   }
 
+  //เรียกข้อมูลAllCathotelในcathotelServices
   Future<void> fetchAllCathotel() async {
     List<Cathotel>? allcathotel =
         await cathotelServices.fetchAllCathotel(context);
@@ -57,17 +57,16 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
       });
     }
   }
+
   Future<void> loadReviews() async {
-    
     setState(() {
       isLoading = true;
     });
     try {
       if (cathotel!.id != null) {
         reviews = await cathotelServices.fetchReviews(context, cathotel!.id);
-        // print(comments);
       } else {
-        print("Post ID is null");
+        print("cathotelId is null");
       }
     } catch (e) {
       print(e.toString());
@@ -86,14 +85,12 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
     if (cathotellist == null) {
       bodyContent = const Loader();
     } else if (cathotellist!.isEmpty) {
-      bodyContent = RefreshIndicator(
-          onRefresh: fetchAllCathotel,
-          child: Center(
-            child: Text(
-              'No Post',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ));
+      bodyContent = Center(
+        child: Text(
+          'No Post',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      );
     } else {
       bodyContent = RefreshIndicator(
         onRefresh: fetchAllCathotel,
@@ -163,7 +160,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                 width: 10,
                               ),
                               Text(
-                                "${catData.user?.username}",
+                                catData.user!.username,
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle1!
@@ -192,7 +189,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                         ],
                       ),
                     ),
-                    
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomLeft,
@@ -201,9 +197,9 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                               const EdgeInsets.only(left: 8.0, bottom: 8.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // ใช้ spaceBetween ที่นี่
+                                .spaceBetween, 
                             children: [
-                              // วิดเจ็ตสำหรับแสดง province
+                              
                               Row(
                                 children: [
                                   Icon(
@@ -231,7 +227,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                 ],
                               ),
-                              // วิดเจ็ตสำหรับแสดง price
+                              
                               Text(
                                 "${catData.price}/คืน",
                                 style: Theme.of(context)
@@ -327,10 +323,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                         ),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text("ยกเลิก"),
-                          ),
-                          TextButton(
                             onPressed: () => Navigator.of(context).pop({
                               'province': tempSelectedProvince,
                               'startPrice': startPrice,
@@ -338,6 +330,11 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                             }),
                             child: Text("ตกลง"),
                           ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text("ยกเลิก"),
+                          ),
+                          
                         ],
                       );
                     },
@@ -346,7 +343,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
               );
 
               if (result != null) {
-                // คอนเวิร์ตค่าราคาเป็น double
+               
                 double start = result['startPrice']?.isNotEmpty ?? false
                     ? double.tryParse(result['startPrice']!) ?? 0.0
                     : 0.0;
@@ -354,16 +351,12 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                     ? double.tryParse(result['endPrice']!) ?? 100000.0
                     : 100000.0;
 
-                // double start = double.tryParse(result['startPrice'] ?? '') ?? 0.0;
-                // double end = double.tryParse(result['endPrice'] ?? '') ?? 100000.0;
-
-                // อัปเดต State ด้วยค่าราคาใหม่
+               
                 setState(() {
                   _currentRangeStart = start;
                   _currentRangeEnd = end;
                   selectedProvince = result['province'];
                   selectedPrice = result['price'];
-                  // คุณอาจต้องเรียกใช้ฟังก์ชันในการกรองข้อมูลอีกครั้งที่นี่
                   fetchAllCathotel();
                 });
               }

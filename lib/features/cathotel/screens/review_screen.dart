@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:luvcats_app/features/cathotel/screens/forms_review.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
+import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/review.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class ReviewScreen extends StatefulWidget {
-  final Cathotel cathotel;
+  // final Cathotel cathotel;
+  final String cathotel;
   const ReviewScreen({
     Key? key,
+    // required this.cathotel,
     required this.cathotel,
   }) : super(key: key);
 
@@ -20,18 +23,15 @@ class ReviewScreen extends StatefulWidget {
 }
 
 class _ReviewScreenState extends State<ReviewScreen> {
-  final _sendReviewFormKey = GlobalKey<FormState>();
-  final TextEditingController messageController = TextEditingController();
-  final TextEditingController ratingController = TextEditingController();
-  final cathotelServices = CathotelServices();
+  final CathotelServices cathotelServices = CathotelServices();
   bool isLoading = true;
-
   List<Review> reviews = [];
+
   @override
   void initState() {
     super.initState();
     loadReviews();
-    print(widget.cathotel.id);
+    calculateAverageRating();
   }
 
   Future<void> loadReviews() async {
@@ -39,13 +39,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
       isLoading = true;
     });
     try {
-      if (widget.cathotel.id != null) {
-        reviews =
-            await cathotelServices.fetchReviews(context, widget.cathotel.id);
-        print(reviews);
-      } else {
-        print("Post ID is null");
-      }
+      reviews = await cathotelServices.fetchReviews(context, widget.cathotel);
+      print(reviews);
     } catch (e) {
       print(e.toString());
     }
@@ -56,110 +51,170 @@ class _ReviewScreenState extends State<ReviewScreen> {
     }
   }
 
-  void addReview() async {
-    print("Attempting to add comment"); // Debugging statement
-    if (_sendReviewFormKey.currentState?.validate() ?? false) {
-      final userId = Provider.of<UserProvider>(context, listen: false).user.id;
-      await cathotelServices.addReview(
-        user_id: userId,
-        context: context,
-        message: messageController.text,
-        rating: double.parse(ratingController.text),
-        cathotelId: widget.cathotel.id,
-      );
+  double calculateAverageRating() {
+    if (reviews.isEmpty) {
+      setState(() {
+        isLoading = true;
+      });
     }
-  }
-
-  @override
-  void dispose() {
-    if (mounted) {
-      messageController.dispose();
-      ratingController.dispose();
+    double sum = 0;
+    for (var review in reviews) {
+      sum += double.parse(review.rating.toString());
     }
-    super.dispose();
+    return sum / reviews.length;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      centerTitle: true,
-      title: const Text(
-        'ให้คะแนน',style: TextStyle(color: Colors.black),
-      ),
-      
-    ),
-      body: Column(
-        children: [
-          Form(
-            key: _sendReviewFormKey,
-            child: Column(
-              children: [
-                 SizedBox(height: 50,),
-                RatingBar.builder(
-                  initialRating: 0,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  onRatingUpdate: (rating) {
-                    ratingController.text =
-                        rating.toString(); // อัปเดตค่าใน ratingController
-                  },
-                ),
-                SizedBox(height: 50,),
-                Divider(),
-                SizedBox(height: 50,),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                    controller: messageController,
-                    scrollPadding: const EdgeInsets.all(20.0),
-                    maxLines: 7,
-                    decoration: InputDecoration(
-                      hintText: "เขียนรีวิว",
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        borderSide: BorderSide(color: Colors.black38),
-                      ),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black38),
-                      ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'รีวิว',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        body: RefreshIndicator(
+            onRefresh: loadReviews,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      calculateAverageRating().toStringAsFixed(
+                          1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    validator: (val) {
-                      if (val == null || val.trim().isEmpty) {
-                        return 'กรุณาเขียนรีวิว';
-                      }
-                      return null; // Return null if the input is valid
-                    },
                   ),
-                ),
-                
-                SizedBox(height: 20),
-                CustomButton(
-                  text: 'ส่ง',
-                  onTap: () {
-                    if (_sendReviewFormKey.currentState!.validate()) {
-                      addReview(); // Call addComment only if the form is valid
-                      messageController.clear();
-                      ratingController
-                          .clear(); // Clear the text field after sending the comment
-                    }
-                  },
-                ),
-              ],
+                  RatingBar.builder(
+                    initialRating: calculateAverageRating(),
+                    ignoreGestures: true,
+                    // minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {},
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "( ${reviews.length} )",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Divider(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: reviews
+                        .map(
+                          (review) => Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Column(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                              backgroundColor: Colors.grey,
+                                              backgroundImage: NetworkImage(
+                                                review.user!.imagesP,
+                                              ),
+                                              radius: 15),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            review.user!.username,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 16,
+                                              color: Colors.grey.shade500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 30),
+                                        child: RatingBar.builder(
+                                          initialRating: review.rating,
+                                          ignoreGestures: true,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 20.0,
+                                          itemPadding: EdgeInsets.symmetric(
+                                              horizontal:2.0),
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {},
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 40, bottom: 10),
+                                        child: Text(
+                                          review.message,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 6, bottom: 10),
+                                        child: Text(
+                                          review.createdAt != null
+                                              ? DateFormat('yyyy-MM-dd')
+                                                  .format(DateTime.parse(
+                                                      review.createdAt!))
+                                              : 'ไม่ทราบวันที่',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+              ),
+            )),floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: FloatingActionButton(
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
             ),
+            backgroundColor: Colors.red,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FormsReview(cathotel: widget.cathotel),
+                ),
+              );
+            },
+            shape: const CircleBorder(),
           ),
-          SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-    );
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,);
   }
 }

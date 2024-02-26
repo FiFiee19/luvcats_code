@@ -15,7 +15,6 @@ class StrayCatAdmin extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   State<StrayCatAdmin> createState() => _StrayCatAdminState();
 }
@@ -24,9 +23,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
   List<Straycat>? straycatlist;
   Straycat? straycat;
   final CatServices catServices = CatServices();
-  final AuthService authService = AuthService();
-  String? finalEmail;
-  
+
   ProfileServices profileService = ProfileServices();
 
   @override
@@ -35,32 +32,27 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
     fetchAllCats();
   }
 
+  //เรียกข้อมูลAllCatsจากcatServices
   Future<void> fetchAllCats() async {
     straycatlist = await catServices.fetchAllCats(context);
     if (straycatlist != null) {
-      // กรองเฉพาะ cats ที่มีสถานะเป็น "no"
+      // กรองเฉพาะแมวที่ยังไม่ได้บ้าน
       straycatlist = straycatlist!.where((cat) => cat.status == 'no').toList();
     }
     if (mounted) {
       setState(() {});
     }
   }
+
+  //ลบStrayCat
   void delete(String straycat) {
     profileService.deleteCatStrayCat(context, straycat);
   }
-  // Future<void> fetchIdStraycats(Straycat straycat) async {
-  
-  //         await profileService.deleteCatStrayCat(context, );
-    
-  //   if (mounted) {
-  //     setState(() {});
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     Widget bodyContent;
-if (straycatlist == null) {
+    if (straycatlist == null) {
       bodyContent = const Loader();
     } else if (straycatlist!.isEmpty) {
       return Scaffold(
@@ -93,7 +85,6 @@ if (straycatlist == null) {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       );
     } else {
-    
       bodyContent = RefreshIndicator(
         onRefresh: fetchAllCats,
         child: GridView.builder(
@@ -112,7 +103,8 @@ if (straycatlist == null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailStraycatScreen(straycat: straycat),
+                    builder: (context) =>
+                        DetailStraycatScreen(straycat: straycat),
                   ),
                 );
               },
@@ -160,7 +152,7 @@ if (straycatlist == null) {
                                 width: 10,
                               ),
                               Text(
-                                "${straycat.user?.username}",
+                                straycat.user!.username,
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle1!
@@ -177,7 +169,12 @@ if (straycatlist == null) {
                           ),
                           Row(
                             children: [
-                              Text("สายพันธุ์:  "),
+                              Text("สายพันธุ์:  ",style: Theme.of(context).textTheme.subtitle2!.merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                    ),),
                               Text(
                                 straycat.breed.length > 10
                                     ? "${straycat.breed.substring(0, 10)}..."
@@ -194,14 +191,25 @@ if (straycatlist == null) {
                               ),
                             ],
                           ),
-                          Text(
-                            "เพศ:  ${straycat.gender}",
-                            style: Theme.of(context).textTheme.subtitle2!.merge(
-                                  TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.grey.shade900,
-                                  ),
-                                ),
+                          
+                          Row(
+                            children: [
+                              Text("เพศ:  ",style: Theme.of(context).textTheme.subtitle2!.merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                    ),),
+                              Text(
+                                straycat.gender,
+                                style: Theme.of(context).textTheme.subtitle2!.merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                    ),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 20.0,
@@ -226,7 +234,7 @@ if (straycatlist == null) {
                                 width: 5.0,
                               ),
                               Text(
-                                "${straycat.province}",
+                                straycat.province,
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle2!
@@ -236,11 +244,12 @@ if (straycatlist == null) {
                                         color: Colors.grey.shade500,
                                       ),
                                     ),
-                              ),IconButton(
-                                      onPressed: () {
-                                        delete(straycat.id!);
-                                      },
-                                      icon: Icon(Icons.delete_sharp)),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    delete(straycat.id!);
+                                  },
+                                  icon: Icon(Icons.delete_sharp)),
                             ],
                           ),
                         ),

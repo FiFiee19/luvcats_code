@@ -14,22 +14,25 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(
-              color: Colors.black38,
-            )),
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide(
+                color: Colors.black38,
+              )),
+        ),
+        validator: (val) {
+          if (val == null || val.isEmpty) {
+            return 'กรุณากรอก$hintText';
+          }
+        },
+        maxLines: maxLines,
       ),
-      validator: (val) {
-        if (val == null || val.isEmpty) {
-          return 'กรุณากรอก$hintText';
-        }
-      },
-      maxLines: maxLines,
     );
   }
 }
