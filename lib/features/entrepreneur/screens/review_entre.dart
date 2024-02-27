@@ -90,7 +90,6 @@ class _ReviewEntreState extends State<ReviewEntre> {
                   RatingBar.builder(
                     initialRating: calculateAverageRating(),
                     ignoreGestures: true,
-                    // minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     itemCount: 5,

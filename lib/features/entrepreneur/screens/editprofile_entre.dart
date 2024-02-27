@@ -105,7 +105,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Community Post'),
+        title: const Text('แก้ไขโปรไฟล์'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -163,7 +163,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                                 
                                 const SizedBox(height: 15),
                                 Text(
-                                  'Select Images',
+                                  'เลือกรูปภาพ',
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.grey.shade400,
@@ -190,7 +190,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
+                      return 'กรุณากรอกรายละเอียด';
                     }
                     return null;
                   },
@@ -204,7 +204,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a price';
+                      return 'กรุณากรอกราคา';
                     }
                     return null;
                   },
@@ -217,7 +217,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a contact';
+                      return 'กรุณากรอกช่องทางการติดต่อ';
                     }
                     return null;
                   },
@@ -234,7 +234,6 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    // การตกแต่งอื่นๆ...
                   ),
                   hint: const Text(
                     'จังหวัด',

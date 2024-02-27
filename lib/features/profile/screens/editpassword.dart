@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
@@ -32,7 +33,6 @@ class _EditPasswordState extends State<EditPassword> {
 
   void _submitForm() async {
     if (globalFormKey.currentState!.validate()) {
-      
       await profileServices.editPassword(context, newPasswordController.text);
     }
   }
@@ -41,7 +41,7 @@ class _EditPasswordState extends State<EditPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Password'),
+        title: const Text('แก้ไขรหัสผ่าน'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -51,16 +51,15 @@ class _EditPasswordState extends State<EditPassword> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                
                 TextFormField(
                   controller: newPasswordController,
                   obscureText: true, // Hides the text being edited
                   decoration: const InputDecoration(
-                    labelText: 'New Password',
+                    labelText: 'รหัสผ่านใหม่',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a new password';
+                      return 'กรุณากรอกรหัสผ่านใหม่';
                     }
                     return null;
                   },
@@ -69,23 +68,22 @@ class _EditPasswordState extends State<EditPassword> {
                   controller: confirmPasswordController,
                   obscureText: true, // Hides the text being edited
                   decoration: const InputDecoration(
-                    labelText: 'Confirm New Password',
+                    labelText: 'ยืนยันรหัสผ่านใหม่',
                   ),
                   validator: (value) {
                     if (value != newPasswordController.text) {
-                      return 'Confirmation password does not match the new password';
+                      return 'รหัสผ่านไม่ตรงกัน';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('Submit'),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      primary: Colors.red),
-                ),
+                CustomButton(
+                  text: 'บันทึก',
+                  onTap: () {
+                    _submitForm();
+                  },
+                )
               ],
             ),
           ),

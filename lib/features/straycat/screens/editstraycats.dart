@@ -107,7 +107,7 @@ class _EditStraycatsState extends State<EditStraycats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Community Post'),
+        title: const Text('แก้ไขโพสต์'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -166,7 +166,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                           children: [
                             const SizedBox(height: 15),
                             Text(
-                              'Select Images',
+                              'เลือกรูปภาพ',
                               style: TextStyle(
                                 fontSize: 15,
                                 color: Colors.grey.shade400,
@@ -193,7 +193,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a breed';
+                      return 'กรุณากรอกสายพันธุ์';
                     }
                     return null;
                   },
@@ -286,7 +286,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                   maxLines: 5,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
+                      return 'กรุณากรอกรายละเอียด';
                     }
                     return null;
                   },
@@ -294,7 +294,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Submit',
+                  child: const Text('บันทึก',
                       style: TextStyle(
                         color: Colors.white,
                       )),

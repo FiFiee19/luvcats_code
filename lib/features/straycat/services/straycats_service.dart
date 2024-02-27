@@ -108,7 +108,7 @@ class CatServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(
-        Uri.parse('$url/getStrayCat/$straycatsId'),
+        Uri.parse('$url/getStrayCat/stray/$straycatsId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,

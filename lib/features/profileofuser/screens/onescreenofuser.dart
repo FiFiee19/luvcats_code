@@ -13,8 +13,7 @@ import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
 class OneScreenOfUser extends StatefulWidget {
-
-final User user;
+  final User user;
   const OneScreenOfUser({
     Key? key,
     required this.user,
@@ -25,7 +24,6 @@ final User user;
 }
 
 class _OneScreenOfUserState extends State<OneScreenOfUser> {
-  
   List<Commu>? commu;
   final CommuServices commuServices = CommuServices();
   // final AuthService authService = AuthService();
@@ -43,23 +41,20 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
     print("Fetching data for user ID: ${widget.user.id}");
     final userss = Provider.of<UserProvider>(context, listen: false).user.id;
     print(userss);
-
   }
 
   Future<void> fetchCommuId() async {
     commu = await profileService.fetchCommuId(context, widget.user.id);
-
     if (mounted) {
       setState(() {});
     }
   }
+
   @override
   Widget build(BuildContext context) {
-  
     if (commu == null) {
-      return const Loader(); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
+      return const Loader();
     } else if (commu!.isEmpty) {
-      // แสดงข้อความ No Post ถ้าไม่มีโพสต์
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Center(
@@ -84,7 +79,8 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailCommentScreen(commu: commuData),
+                      builder: (context) =>
+                          DetailCommentScreen(commu: commuData),
                     ),
                   );
                 },
@@ -149,7 +145,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                           enableInfiniteScroll: false,
                           onPageChanged: (index, reason) {
                             setState(() {
-                              _current = index; // อัปเดตตำแหน่งสไลด์ปัจจุบัน
+                              _current = index; 
                             });
                           },
                         ),
@@ -215,20 +211,23 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   LikeAnimation(
-                                    isAnimating: commuData.likes.contains(widget.user),
+                                    isAnimating:
+                                        commuData.likes.contains(widget.user),
                                     smallLike: true,
                                     child: IconButton(
-                                      icon: commuData.likes.contains(widget.user)
-                                          ? const Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
-                                            )
-                                          : const Icon(
-                                              Icons.favorite_border,
-                                            ),
+                                      icon:
+                                          commuData.likes.contains(widget.user)
+                                              ? const Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                )
+                                              : const Icon(
+                                                  Icons.favorite_border,
+                                                ),
                                       onPressed: () async {
                                         setState(() {
-                                          if (commuData.likes.contains(widget.user)) {
+                                          if (commuData.likes
+                                              .contains(widget.user)) {
                                             commuData.likes.remove(widget.user);
                                           } else {
                                             commuData.likes.add(widget.user);
@@ -249,7 +248,8 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                     ),
                                     onPressed: () => Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => DetailCommentScreen(
+                                        builder: (context) =>
+                                            DetailCommentScreen(
                                           commu: commuData,
                                         ),
                                       ),
@@ -261,7 +261,6 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                   ),
                                 ],
                               ),
-                              
                             ]),
                       ),
                     ],

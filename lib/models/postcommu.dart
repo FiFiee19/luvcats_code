@@ -11,6 +11,7 @@ class Commu {
   final likes;
   final comments;
   final List<String> images;
+  final String? createdAt;
 
   Commu({
     this.user,
@@ -21,6 +22,7 @@ class Commu {
     required this.comments,
     this.id,
     required this.images,
+    this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,6 +35,7 @@ class Commu {
       'likes': likes,
       'comments': comments,
       'images': images,
+      'createdAt': createdAt,
     };
   }
 
@@ -49,6 +52,7 @@ class Commu {
       likes: map['likes'] ?? [],
       comments: map['comments'] ?? [],
       images: List<String>.from(map['images'] ?? []),
+       createdAt: map['createdAt'],
     );
   }
 

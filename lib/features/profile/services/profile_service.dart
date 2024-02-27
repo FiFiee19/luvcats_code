@@ -45,9 +45,10 @@ class ProfileServices {
     }
     return commuList;
   }
-  Future<List<Commu>> fetchCommuId(BuildContext context,String user_id) async {
+
+  Future<List<Commu>> fetchCommuId(BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    
+
     List<Commu> commuList = [];
     try {
       http.Response res =
@@ -109,9 +110,10 @@ class ProfileServices {
     return straycatList;
   }
 
-  Future<List<Straycat>> fetchStrayCatId(BuildContext context,String user_id) async {
+  Future<List<Straycat>> fetchStrayCatId(
+      BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    
+
     List<Straycat> straycatList = [];
     try {
       http.Response res =
@@ -186,7 +188,8 @@ class ProfileServices {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
-        },body: jsonEncode({
+        },
+        body: jsonEncode({
           'commuId': commuId,
         }),
       );
@@ -195,7 +198,7 @@ class ProfileServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, "Post deleted successfully.");
+          showSnackBar(context, "ลบสำเร็จ!");
           // คุณอาจต้องการอัปเดต UI ที่นี่
         },
       );
@@ -204,7 +207,8 @@ class ProfileServices {
     }
   }
 
-  Future<void> deleteCatStrayCat(BuildContext context, String straycatId) async {
+  Future<void> deleteCatStrayCat(
+      BuildContext context, String straycatId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
@@ -213,19 +217,39 @@ class ProfileServices {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
-         body: jsonEncode({
+        body: jsonEncode({
           'straycatId': straycatId,
         }),
       );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, "Post deleted successfully.");
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ลบสำเร็จ!')),
+        );
+        Navigator.pop(context);
+      }
 
-        },
-      );
+      if (res.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+      if (res.statusCode == 500) {
+        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
@@ -252,11 +276,10 @@ class ProfileServices {
 
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Password updated successfully')),
+          SnackBar(content: Text('แก้ไขรหัสผ่านสำเร็จ!')),
         );
         Navigator.pop(context);
         print(res.body);
-        
       } else {
         print('Failed to update password: ${res.body}');
       }
@@ -294,70 +317,71 @@ class ProfileServices {
       );
 
       if (response.statusCode == 200) {
-        showSnackBar(context, 'Profile updated successfully!');
+        showSnackBar(context, 'แก้ไขสำเร็จ!');
         Navigator.pop(context);
 
-        // Assuming you have a function to parse the updated user data from the response
         User updatedUser = User.fromJson(json.decode(response.body));
-        return updatedUser; // Return the updated user
+        return updatedUser;
       } else {
         print('Failed to update profile: ${response.body}');
       }
     } catch (e) {
       print('Error updating profile: $e');
     }
-    return null; // Return null if the update was not successful
-  }
-
-Future<List<User>?> searchName(BuildContext context, String username) async {
-  try {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final response = await http.get(
-      Uri.parse('$url/searchU/$username'), // แก้ไขตรงนี้เป็น URL ที่ถูกต้องของคุณ
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authtoken': userProvider.user.token, // อาจต้องเปลี่ยนเป็น 'Authorization' ถ้า API คุณใช้ Bearer token
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> dataList = jsonDecode(response.body);
-      final List<User> users = dataList.map((data) => User.fromMap(data)).toList();
-      return users;
-    } else {
-      print('Failed to search for users. Status code: ${response.statusCode}');
-      return null;
-    }
-  } catch (e) {
-    print('Error occurred while searching for users: $e');
     return null;
   }
-}
 
-Future<List<User>?> searchEntre(BuildContext context, String username) async {
-  try {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final response = await http.get(
-      Uri.parse('$url/searchE/$username'), // แก้ไขตรงนี้เป็น URL ที่ถูกต้องของคุณ
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authtoken': userProvider.user.token, // อาจต้องเปลี่ยนเป็น 'Authorization' ถ้า API คุณใช้ Bearer token
-      },
-    );
+  Future<List<User>?> searchName(BuildContext context, String username) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final response = await http.get(
+        Uri.parse('$url/searchU/$username'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final List<dynamic> dataList = jsonDecode(response.body);
-      final List<User> users = dataList.map((data) => User.fromMap(data)).toList();
-      return users;
-    } else {
-      print('Failed to search for users. Status code: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final List<dynamic> dataList = jsonDecode(response.body);
+        final List<User> users =
+            dataList.map((data) => User.fromMap(data)).toList();
+        return users;
+      } else {
+        print(
+            'Failed to search for users. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error occurred while searching for users: $e');
       return null;
     }
-  } catch (e) {
-    print('Error occurred while searching for users: $e');
-    return null;
   }
-}
 
+  Future<List<User>?> searchEntre(BuildContext context, String username) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final response = await http.get(
+        Uri.parse('$url/searchE/$username'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
 
+      if (response.statusCode == 200) {
+        final List<dynamic> dataList = jsonDecode(response.body);
+        final List<User> users =
+            dataList.map((data) => User.fromMap(data)).toList();
+        return users;
+      } else {
+        print(
+            'Failed to search for users. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error occurred while searching for users: $e');
+      return null;
+    }
+  }
 }

@@ -139,7 +139,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
                               children: [
                                 const SizedBox(height: 15),
                                 Text(
-                                  'Select Images',
+                                  'เลือกรูปภาพ',
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.grey.shade400,
@@ -279,7 +279,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
                 const SizedBox(height: 10),
                 const SizedBox(height: 10),
                 CustomButton(
-                  text: 'Post',
+                  text: 'โพสต์',
                   onTap: postcat,
                 ),
                 const SizedBox(height: 20),

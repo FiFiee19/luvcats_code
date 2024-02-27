@@ -20,20 +20,20 @@ class EditCommu extends StatefulWidget {
 
 class _EditCommuState extends State<EditCommu> {
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController titleController ;
+  late TextEditingController titleController;
   late TextEditingController descriptionController;
   bool isLoading = true;
   List<File> images = [];
   List<String> imageUrls = [];
-  CommuServices commuServices =
-      CommuServices();
+  CommuServices commuServices = CommuServices();
 
   @override
   void initState() {
     super.initState();
+    _loadCommu();
     titleController = TextEditingController();
     descriptionController = TextEditingController();
-    _loadCommu();
+    print(widget.commuId);
   }
 
   @override
@@ -44,6 +44,7 @@ class _EditCommuState extends State<EditCommu> {
     }
     super.dispose();
   }
+
   //แก้ไขข้อมูล
   void _submitForm() async {
     if (globalFormKey.currentState!.validate()) {
@@ -56,13 +57,14 @@ class _EditCommuState extends State<EditCommu> {
       );
     }
   }
-  
+
   //เรียกข้อมูลCommuจากcommuServices
   Future<void> _loadCommu() async {
     try {
-      
+      // ในฟังก์ชัน _loadCommu
       final post = await commuServices.fetchIdCommu(context, widget.commuId);
-      // นำข้อมูลเดิมมาใส่ใน TextEditingController
+      print('Loading data for commuId: ${widget.commuId}, got post: $post');
+// ทำการตั้งค่าเข้าไปใน controller
       titleController.text = post.title;
       descriptionController.text = post.description;
       imageUrls = post.images;
@@ -87,7 +89,7 @@ class _EditCommuState extends State<EditCommu> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         centerTitle: true,
+        centerTitle: true,
         title: const Text('แก้ไขโพสต์'),
       ),
       body: SingleChildScrollView(
@@ -202,7 +204,6 @@ class _EditCommuState extends State<EditCommu> {
                       minimumSize: const Size(double.infinity, 50),
                       primary: Colors.red),
                 ),
-                
               ],
             ),
           ),

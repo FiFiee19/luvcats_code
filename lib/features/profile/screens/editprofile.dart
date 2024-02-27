@@ -44,13 +44,11 @@ class _EditprofileState extends State<Editprofile> {
   void _submitForm() async {
   if (globalFormKey.currentState!.validate()) {
     User? updatedUser = await profileServices.editUser(context, usernameController.text, imagesP);
-    if (updatedUser != null) {
-      // Update the UserProvider with the updated user data
+    if (updatedUser != null) {  
       Provider.of<UserProvider>(context, listen: false).updateUser(updatedUser);
-      // Optionally pop back to the previous screen or refresh the UI as needed
       Navigator.pop(context, true);
     } else {
-      // Handle the case where the user update was not successful
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update the profile')),
       );
@@ -65,7 +63,6 @@ class _EditprofileState extends State<Editprofile> {
       final profile = await profileServices.fetchIdUser(
         context,
       );
-      // นำข้อมูลเดิมมาใส่ใน TextEditingController
       usernameController.text = profile.username;
       imageUrl = profile.imagesP;
     } catch (e) {
@@ -89,7 +86,8 @@ class _EditprofileState extends State<Editprofile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        centerTitle: true,
+        title: const Text('แก้ไขโปรไฟล์'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -140,11 +138,11 @@ class _EditprofileState extends State<Editprofile> {
                 TextFormField(
                   controller: usernameController,
                   decoration: const InputDecoration(
-                    labelText: 'Username',
+                    labelText: 'ชื่อ',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a username';
+                      return 'กรุณากรอกชื่อ';
                     }
                     return null;
                   },
@@ -152,7 +150,7 @@ class _EditprofileState extends State<Editprofile> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Submit',
+                  child: const Text('บันทึก',
                       style: TextStyle(
                         color: Colors.white,
                       )),

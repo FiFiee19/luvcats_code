@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
@@ -36,8 +37,8 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
   void initState() {
     super.initState();
     loadComments();
-    }
-  
+  }
+
   //เรียกข้อมูลCommentsจากcommuServices
   Future<void> loadComments() async {
     setState(() {
@@ -59,7 +60,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
       });
     }
   }
-  
+
   //แสดงความคิดเห็น
   void addComment() async {
     if (_sendCommentFormKey.currentState?.validate() ?? false) {
@@ -70,7 +71,6 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
         message: commentController.text,
         commu_id: widget.commu.id!,
       );
-     
     }
   }
 
@@ -92,7 +92,9 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
           title: Center(
             child: Padding(
                 padding: const EdgeInsets.only(left: 220),
-                child: ReportScreen(commu: widget.commu,)),
+                child: ReportScreen(
+                  commu: widget.commu,
+                )),
           ),
         ),
       ),
@@ -127,21 +129,16 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                               color: Colors.black),
                         ),
                   ),
-                  const SizedBox(
-                    width: 96.0,
-                  ),
+                  
                 ],
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            CustomCarouselSlider(
-              images: widget.commu.images,
-            ),
-            SizedBox(
-              height: 20,
-            ),
+            
+            if (widget.commu.images.isNotEmpty)
+              CustomCarouselSlider(
+                images: widget.commu.images,
+              ),
+            
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
@@ -167,8 +164,19 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    // mainAxisAlignment: MainAxisAlignment.start, // You can use this to explicitly align to the start
                     children: [
+                      Text(
+                        formatDateTime(widget.commu.createdAt),
+                        style: Theme.of(context).textTheme.subtitle2!.merge(
+                              TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                      ),
+
+                      Spacer(), // This will take all available space pushing the following widgets to the end
                       LikeAnimation(
                         isAnimating: widget.commu.likes.contains(user),
                         smallLike: true,
@@ -204,7 +212,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    padding: const EdgeInsets.only( bottom: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -250,7 +258,9 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                           color: Colors.grey.shade500,
                                         ),
                                       ),
-                                      if (user == comment.user_id) // Display delete button only if the current user is the owner
+                                      if (user ==
+                                          comment
+                                              .user_id) // Display delete button only if the current user is the owner
                                         IconButton(
                                           onPressed: () {
                                             commuServices.deleteComment(
@@ -273,13 +283,18 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 40, bottom: 10),
+                                        left: 5, bottom: 10),
                                     child: Text(
-                                      comment.createdAt != null
-                                          ? DateFormat('yyyy-MM-dd – kk:mm')
-                                              .format(DateTime.parse(
-                                                  comment.createdAt!))
-                                          : 'ไม่ทราบวันที่',
+                                      formatDateTime(comment.createdAt),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2!
+                                          .merge(
+                                            TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey.shade600,
+                                            ),
+                                          ),
                                     ),
                                   ),
                                 ],
@@ -319,9 +334,8 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                           text: 'ส่ง',
                           onTap: () {
                             if (_sendCommentFormKey.currentState!.validate()) {
-                              addComment(); 
-                              commentController
-                                  .clear(); 
+                              addComment();
+                              commentController.clear();
                             }
                           },
                         ),

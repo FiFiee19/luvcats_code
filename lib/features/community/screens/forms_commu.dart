@@ -172,28 +172,15 @@ class _FormsCommuState extends State<FormsCommu> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: postcommu,
-                  child: const Text('โพสต์',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      primary: Colors.red),
-                ),
+                const SizedBox(height: 20),
                 CustomButton(
-                          text: 'ส่ง',
-                          onTap: () {
-                            if (_postCommuFormKey.currentState!.validate()) {
-                              postcommu(); 
-                              
-                                   
-                            }
-                          },
-                        ),
+                  text: 'โพสต์',
+                  onTap: () {
+                    if (_postCommuFormKey.currentState!.validate()) {
+                      postcommu();
+                    }
+                  },
+                ),
               ],
             ),
           ),

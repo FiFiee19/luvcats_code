@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
@@ -21,9 +22,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
-        child: AppBar(
-          title: Text('')
-        ),
+        child: AppBar(title: Text('')),
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -111,23 +110,6 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "จังหวัด:  " + widget.straycat.province,
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
-                        ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
                   "ข้อมูลเพิ่มเติม: ",
                   style: Theme.of(context).textTheme.subtitle2!.merge(
                         TextStyle(
@@ -156,6 +138,40 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                           ),
                         ),
                   ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "จังหวัด:  " + widget.straycat.province,
+                  style: Theme.of(context).textTheme.subtitle2!.merge(
+                        TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey.shade900,
+                        ),
+                      ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  formatDateTime(widget.straycat.createdAt),
+                  style: Theme.of(context).textTheme.subtitle2!.merge(
+                        TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
                 ),
               ],
             ),

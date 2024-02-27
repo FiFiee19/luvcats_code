@@ -154,7 +154,7 @@ exports.deletePost = async (req, res) => {
     try {
         const { commuId } = req.params;
         await Commu.findByIdAndDelete(commuId);
-        return res.status(200).json({message:"Post Deleted successfully"})
+        return res.status(200).json({message:"ลบสำเร็จ!"})
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -169,7 +169,7 @@ exports.editPost = async(req, res) => {
         const commu = await Commu.findById(commuId)
         const newPost = await Commu.findOneAndUpdate(commu , req.body , {new:true});
 
-        return res.status(200).json({data:newPost , message:"updated successfully "});
+        return res.status(200).json({data:newPost , message:"แก้ไขสำเร็จ!"});
     } catch (e) {
         console.log(e);
         res.status(500).send('Server Error');
@@ -185,7 +185,7 @@ exports.deleteComment = async (req, res) => {
         await Commu.findByIdAndUpdate(commuId, {
             $pull: { comments: commentId },
         });
-        return res.status(200).json({message:"Comment Deleted successfully"})
+        return res.status(200).json({message:"ลบสำเร็จ!"})
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')

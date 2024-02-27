@@ -77,12 +77,7 @@ class EntreService {
           (route) => false,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
+          SnackBar(content: Text(res.body.toString())),
         );
       }
 
@@ -170,14 +165,10 @@ Future<void> editProfileEntre(
       );
       if (res.statusCode == 200) {
         
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
+       ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('สำเร็จ!')),
         );
+        Navigator.pop(context);
       }
 
       if (res.statusCode == 400) {
@@ -269,13 +260,9 @@ Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
       if (res.statusCode == 200) {
        
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
+          SnackBar(content: Text('สำเร็จ!')),
         );
+        Navigator.pop(context);
       }
 
       if (res.statusCode == 400) {

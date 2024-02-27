@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
@@ -39,6 +40,7 @@ class _TwoScreenState extends State<TwoScreen> {
         newstatusCats[c.id!] = c.status == 'yes';
       }
       if (mounted) {
+        straycats!.sort((a, b) => DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
       setState(() {statusCats = newstatusCats;});
     }
       
@@ -285,7 +287,21 @@ class _TwoScreenState extends State<TwoScreen> {
                                     ),
                                   ],
                                 ),
+                              ),Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 28),
+                              child: Text(
+                                formatDateTime(catData.createdAt),style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .merge(
+                                              TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey.shade600,
+                                              ),
+                                            ),
                               ),
+                            ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [

@@ -332,7 +332,7 @@ class _FormsEntreState extends State<FormsEntre> {
                                 ),
                                 const SizedBox(height: 15),
                                 Text(
-                                  'Select Images',
+                                  'เลือกรูปภาพ',
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.grey.shade400,

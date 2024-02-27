@@ -11,7 +11,7 @@ class Straycat {
   final String? id;
   final List<String> images;
   final String? status;
-
+final String? createdAt;
   Straycat({
     this.user,
     required this.user_id,
@@ -22,6 +22,7 @@ class Straycat {
     this.id,
     required this.images,
     this.status,
+     this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +36,7 @@ class Straycat {
       'id': id,
       'images': images,
       'status': status,
+      'createdAt': createdAt,
     };
   }
 
@@ -52,6 +54,7 @@ class Straycat {
       status: map['status'],
       id: map['_id'],
       images: List<String>.from(map['images'] ?? []),
+      createdAt: map['createdAt'],
     );
   }
 
@@ -59,23 +62,5 @@ class Straycat {
 
   factory Straycat.fromJson(String source) => Straycat.fromMap(json.decode(source));
 
-  // Cat copyWith({
-  //   String? user_id,
-  //   String? breed,
-  //   String? gender,
-  //   String? age,
-  //   String? description,
-  //   String? id,
-  //   List<String>? images,
-  // }) {
-  //   return Cat(
-  //     user_id: user_id ?? this.user_id,
-  //     breed: breed ?? this.breed,
-  //     gender: gender ?? this.gender,
-  //     age: age ?? this.age,
-  //     description: description ?? this.description,
-  //     id: id ?? this.id,
-  //     images: images ?? this.images,
-  //   );
-  // }
+  
 }
