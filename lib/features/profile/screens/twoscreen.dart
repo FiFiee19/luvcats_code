@@ -40,10 +40,12 @@ class _TwoScreenState extends State<TwoScreen> {
         newstatusCats[c.id!] = c.status == 'yes';
       }
       if (mounted) {
-        straycats!.sort((a, b) => DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
-      setState(() {statusCats = newstatusCats;});
-    }
-      
+        straycats!.sort((a, b) => DateTime.parse(b.createdAt!)
+            .compareTo(DateTime.parse(a.createdAt!)));
+        setState(() {
+          statusCats = newstatusCats;
+        });
+      }
     }
   }
 
@@ -78,7 +80,8 @@ class _TwoScreenState extends State<TwoScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailStraycatScreen(straycat: catData),
+                      builder: (context) =>
+                          DetailStraycatScreen(straycat: catData),
                     ),
                   );
                 },
@@ -165,7 +168,6 @@ class _TwoScreenState extends State<TwoScreen> {
                                             color: Colors.black),
                                       ),
                             ),
-                            
                           ],
                         ),
                       ),
@@ -287,27 +289,27 @@ class _TwoScreenState extends State<TwoScreen> {
                                     ),
                                   ],
                                 ),
-                              ),Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 28),
-                              child: Text(
-                                formatDateTime(catData.createdAt),style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2!
-                                            .merge(
-                                              TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade600,
-                                              ),
-                                            ),
                               ),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 28),
+                                child: Text(
+                                  formatDateTime(catData.createdAt),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .merge(
+                                        TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                ),
+                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      
                                       if (catData.id != null) {
                                         Navigator.push(
                                           context,
@@ -317,18 +319,17 @@ class _TwoScreenState extends State<TwoScreen> {
                                             ),
                                           ),
                                         );
-                                      } else {
-                                        
-                                      }
+                                      } else {}
                                     },
                                     icon: Icon(Icons.edit),
                                   ),
                                   IconButton(
-                                      onPressed: () {
-                                        profileService.deleteCatStrayCat(
-                                            context, catData.id!);
-                                      },
-                                      icon: Icon(Icons.delete_sharp)),
+                                    onPressed: () {
+                                      profileService.deleteCatStrayCat(
+                                          context, catData.id!);
+                                    },
+                                    icon: Icon(Icons.delete_sharp),
+                                  )
                                 ],
                               ),
                               const SizedBox(

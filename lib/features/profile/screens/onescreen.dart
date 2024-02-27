@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
@@ -25,6 +26,7 @@ class _OneScreenState extends State<OneScreen> {
   final CommuServices commuServices = CommuServices();
   final AuthService authService = AuthService();
   final ProfileServices profileService = ProfileServices();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   CarouselController buttonCarouselController = CarouselController();
   int _current = 0;
@@ -40,10 +42,17 @@ class _OneScreenState extends State<OneScreen> {
     commu = await profileService.fetchCommuProfile(context);
 
     if (mounted) {
-      commu!.sort((a, b) => DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
+      commu!.sort((a, b) =>
+          DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
       setState(() {});
     }
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +72,7 @@ class _OneScreenState extends State<OneScreen> {
       );
     } else {
       return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
           onRefresh: fetchCommuProfile,
@@ -197,15 +207,16 @@ class _OneScreenState extends State<OneScreen> {
                               padding:
                                   const EdgeInsets.only(left: 5, bottom: 10),
                               child: Text(
-                                formatDateTime(commuData.createdAt),style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2!
-                                            .merge(
-                                              TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade600,
-                                              ),
-                                            ),
+                                formatDateTime(commuData.createdAt),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
                               ),
                             ),
                           ],
@@ -232,12 +243,16 @@ class _OneScreenState extends State<OneScreen> {
                             },
                             icon: Icon(Icons.edit),
                           ),
+                          
                           IconButton(
-                              onPressed: () {
-                                profileService.deleteCatCommu(
-                                    context, commuData.id!);
-                              },
-                              icon: Icon(Icons.delete_sharp)),
+                            onPressed: () {
+                            
+                                          profileService.deleteCatCommu(
+                                              context, commuData.id!);
+                             
+                            },
+                            icon: Icon(Icons.delete_sharp),
+                          )
                         ],
                       ),
                     ],

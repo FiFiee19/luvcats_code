@@ -23,7 +23,7 @@ class HomeSreenAdmin extends StatelessWidget {
       actions: [ElevatedButton.icon(onPressed: (){_signOutUser(context);
               Navigator.pop(context);}, icon: Icon(Icons.logout), label: Text(''))],
     ),
-      body: TabBar_admin()
+      body: TabBar_admin() 
     );
   }
 }

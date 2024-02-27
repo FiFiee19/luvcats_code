@@ -180,15 +180,17 @@ exports.deleteComment = async (req, res) => {
     
     try {
         const { commentId } = req.params;
+        const commuId = req.params.commu_id;
         await Comment.findByIdAndDelete(commentId);
-        const commuId = req.params;// You may need to adjust how you get the commuId from the request body
+        // You may need to adjust how you get the commuId from the request body
         await Commu.findByIdAndUpdate(commuId, {
             $pull: { comments: commentId },
         });
         return res.status(200).json({message:"ลบสำเร็จ!"})
     } catch (e) {
         console.log(e)
-        res.status(500).send('Server Error')
+        res.status(500).json({ error: 'Server Error' });
+
     }
 
 }

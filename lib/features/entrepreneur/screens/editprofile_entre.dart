@@ -11,7 +11,7 @@ import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileEntre extends StatefulWidget {
-  final String CathotelId; 
+  final String CathotelId;
 
   const EditProfileEntre({
     Key? key,
@@ -24,36 +24,34 @@ class EditProfileEntre extends StatefulWidget {
 
 class _EditProfileEntreState extends State<EditProfileEntre> {
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController descriptionController;
-  late TextEditingController priceController;
-  late TextEditingController provinceController;
-  late TextEditingController contactController;
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController provinceController = TextEditingController();
+  final TextEditingController contactController = TextEditingController();
   bool isLoading = true;
   List<File> images = [];
   List<String> imageUrls = [];
-  EntreService entreService = EntreService(); // สร้าง instance ของ CommuServices
-  // String selectedGender = 'ไม่ทราบ';
-  // String selectedProvince = 'กรุงเทพมหานคร';
-  
+  EntreService entreService =
+      EntreService(); // สร้าง instance ของ CommuServices
+  // String? selectedProvince;
 
   @override
   void initState() {
     super.initState();
-    priceController = TextEditingController();
-    descriptionController = TextEditingController();
-    provinceController = TextEditingController();
-    contactController = TextEditingController();
-    // ทำการโหลดข้อมูลโพสต์เดิม
+    descriptionController;
+    priceController;
+    contactController;
+    provinceController;
     _loadPostData();
   }
 
   @override
   void dispose() {
     if (mounted) {
-      priceController.dispose();
       descriptionController.dispose();
-      provinceController.dispose();
+      priceController.dispose();
       contactController.dispose();
+      provinceController.dispose();
     }
     super.dispose();
   }
@@ -67,7 +65,6 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
         contactController.text,
         descriptionController.text,
         provinceController.text,
-        
         images,
       );
     }
@@ -81,8 +78,8 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
       // นำข้อมูลเดิมมาใส่ใน TextEditingController
       priceController.text = post.price.toString();
       descriptionController.text = post.description;
-      provinceController.text = post.province;
       contactController.text = post.contact;
+      provinceController.text = post.province;
       imageUrls = post.images;
     } catch (e) {
       print('Error loading post data: $e');
@@ -116,36 +113,42 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 images.isNotEmpty || imageUrls.isNotEmpty
-              ? Column(
-                  children: [
-                    CarouselSlider(
-                      items: images.isNotEmpty 
-                          ? images.map(
-                              (file) => Builder(
-                                builder: (BuildContext context) => Image.file(
-                                  file,
-                                  fit: BoxFit.cover,
-                                  height: 200,
-                                ),
-                              ),
-                            ).toList()
-                          : imageUrls.map(
-                              (url) => Builder(
-                                builder: (BuildContext context) => Image.network(
-                                  url,
-                                  fit: BoxFit.cover,
-                                  height: 200,
-                                ),
-                              ),
-                            ).toList(),
-                      options: CarouselOptions(
-                        viewportFraction: 1,
-                        height: 200,
-                      ),
-                    ),
-                  ],
-                )
-              : GestureDetector(
+                    ? Column(
+                        children: [
+                          CarouselSlider(
+                            items: images.isNotEmpty
+                                ? images
+                                    .map(
+                                      (file) => Builder(
+                                        builder: (BuildContext context) =>
+                                            Image.file(
+                                          file,
+                                          fit: BoxFit.cover,
+                                          height: 200,
+                                        ),
+                                      ),
+                                    )
+                                    .toList()
+                                : imageUrls
+                                    .map(
+                                      (url) => Builder(
+                                        builder: (BuildContext context) =>
+                                            Image.network(
+                                          url,
+                                          fit: BoxFit.cover,
+                                          height: 200,
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                            options: CarouselOptions(
+                              viewportFraction: 1,
+                              height: 200,
+                            ),
+                          ),
+                        ],
+                      )
+                    : GestureDetector(
                         child: DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(10),
@@ -160,7 +163,6 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                
                                 const SizedBox(height: 15),
                                 Text(
                                   'เลือกรูปภาพ',
@@ -177,7 +179,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                 Center(
                   child: IconButton(
                     icon: const Icon(
-                      Icons.upload_sharp,
+                      Icons.image,
                     ),
                     onPressed: () => selectImages(),
                   ),
@@ -188,6 +190,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                   decoration: const InputDecoration(
                     labelText: 'รายละเอียด',
                   ),
+                  maxLines: 5,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'กรุณากรอกรายละเอียด';
@@ -222,10 +225,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10),
-                
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   decoration: InputDecoration(
@@ -234,6 +234,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
+                    // การตกแต่งอื่นๆ...
                   ),
                   hint: const Text(
                     'จังหวัด',
@@ -259,12 +260,11 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      provinceController.text = value!;
+                      provinceController.text = value ?? '';
                     });
                   },
                 ),
                 const SizedBox(height: 30),
-                
                 CustomButton(
                   text: 'ลงทะเบียน',
                   onTap: _submitForm,

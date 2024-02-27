@@ -31,7 +31,6 @@ class _Profile_EntreState extends State<Profile_Entre> {
   void initState() {
     super.initState();
     fetchProfile();
-    // fetchEntre();
   }
 
   Future<void> fetchProfile() async {

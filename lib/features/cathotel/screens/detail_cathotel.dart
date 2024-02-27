@@ -9,6 +9,7 @@ import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/review.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
+import 'package:luvcats_app/widgets/loader.dart';
 
 class DetailCathotelScreen extends StatefulWidget {
   final Cathotel cathotel;
@@ -54,9 +55,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
 
   double calculateAverageRating() {
     if (reviews.isEmpty) {
-      setState(() {
-        isLoading = true;
-      });
+      return 0.0; // ถ้าไม่มีรีวิวให้คืนค่า 0.0 แทน
     }
     double sum = 0;
     for (var review in reviews) {
@@ -69,7 +68,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body:RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: loadReviews,
         child: SingleChildScrollView(
             child: Column(
@@ -275,77 +274,78 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
             ),
             Divider(),
             if (widget.cathotel.reviews.isEmpty)
-            Padding(
-              padding: EdgeInsets.only(right: 2),
-              child: Text(
-                'ยังไม่มีการให้คะแนน',// แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            if (widget.cathotel.reviews.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(right: 2),
-              child: Text(
-                calculateAverageRating()
-                    .toStringAsFixed(1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-            ),
-            if (widget.cathotel.reviews.isNotEmpty)
-            RatingBar.builder(
-              initialRating: calculateAverageRating(),
-              ignoreGestures: true,
-              // minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemSize: 20.0,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              onRatingUpdate: (rating) {},
-            ),
-            if (widget.cathotel.reviews.isNotEmpty)
-            ElevatedButton(
-              child: Text(
-                'ดูรีวิว',
-                style: TextStyle(
-                  color: Colors.white,
+              Padding(
+                padding: EdgeInsets.only(right: 2),
+                child: Text(
+                  'ยังไม่มีการให้คะแนน', // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ReviewScreen(cathotel: widget.cathotel)),
-                );
-                if (result != null) {
-                  setState(() {}); // บังคับให้ UI รีเฟรช
-                }
-              },
-              style: ElevatedButton.styleFrom(primary: Colors.red),
-            ),
-            if (widget.cathotel.reviews.isEmpty)
-            ElevatedButton(
-              child: Text(
-                'เริ่มรีวิว!',
-                style: TextStyle(
-                  color: Colors.white,
+            if (widget.cathotel.reviews.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.only(right: 2),
+                child: Text(
+                  calculateAverageRating()
+                      .toStringAsFixed(1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FormsReview(cathotel: widget.cathotel),
+            if (widget.cathotel.reviews.isNotEmpty)
+              RatingBar.builder(
+                initialRating: calculateAverageRating(),
+                ignoreGestures: true,
+                // minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 20.0,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {},
+              ),
+            if (widget.cathotel.reviews.isNotEmpty)
+              ElevatedButton(
+                child: Text(
+                  'ดูรีวิว',
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(primary: Colors.red),
-            ),
+                ),
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ReviewScreen(cathotel: widget.cathotel)),
+                  );
+                  if (result != null) {
+                    setState(() {}); // บังคับให้ UI รีเฟรช
+                  }
+                },
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+              ),
+            if (widget.cathotel.reviews.isEmpty)
+              ElevatedButton(
+                child: Text(
+                  'เริ่มรีวิว!',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          FormsReview(cathotel: widget.cathotel),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+              ),
           ],
         )),
       ),

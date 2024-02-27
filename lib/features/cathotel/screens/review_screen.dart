@@ -51,9 +51,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
   double calculateAverageRating() {
     if (reviews.isEmpty) {
-      setState(() {
-        isLoading = true;
-      });
+      return 0.0; // ถ้าไม่มีรีวิวให้คืนค่า 0.0 แทน
     }
     double sum = 0;
     for (var review in reviews) {
@@ -64,7 +62,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return 
+    Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const Text(

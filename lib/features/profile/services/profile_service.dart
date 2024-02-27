@@ -198,12 +198,19 @@ class ProfileServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, "ลบสำเร็จ!");
-          // คุณอาจต้องการอัปเดต UI ที่นี่
+          showSnackBar(context, "deleted successfully.");
+         
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 

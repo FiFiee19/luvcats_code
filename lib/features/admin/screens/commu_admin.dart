@@ -54,7 +54,7 @@ class _CommuAdminState extends State<CommuAdmin> {
         backgroundColor: Colors.grey[200],
         body: Center(
           child: Text(
-            'No Post',
+            'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
@@ -181,7 +181,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  LikeAnimation(
+                                  LikeAnimation( //กดlike
                                     isAnimating: commuData.likes.contains(user),
                                     smallLike: true,
                                     child: IconButton(

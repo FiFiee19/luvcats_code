@@ -116,8 +116,7 @@ class EntreService {
     }
   }
 
-
-Future<void> editProfileEntre(
+  Future<void> editProfileEntre(
     BuildContext context,
     String cathotelId,
     double price,
@@ -147,25 +146,23 @@ Future<void> editProfileEntre(
       imageUrls = post.images;
     }
 
-
+    final requestBody = jsonEncode({
+      'price': price,
+      'contact': contact,
+      'province': province,
+      'description': description,
+      'images': imageUrls,
+    });
+    print(requestBody);
     try {
-      final res = await http.put(
-        Uri.parse('$url/getCathotel/edit/$cathotelId'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'authtoken': userProvider.user.token,
-        },
-        body: jsonEncode({
-          'price': price,
-          'contact': contact,
-          'province': province,
-          'description': description,
-          'images': imageUrls,
-        }),
-      );
+      final res = await http.put(Uri.parse('$url/getCathotel/edit/$cathotelId'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'authtoken': userProvider.user.token,
+          },
+          body: requestBody);
       if (res.statusCode == 200) {
-        
-       ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('สำเร็จ!')),
         );
         Navigator.pop(context);
@@ -197,8 +194,7 @@ Future<void> editProfileEntre(
     }
   }
 
-
-Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
+  Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(
@@ -208,7 +204,7 @@ Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
           'authtoken': userProvider.user.token,
         },
       );
-      
+
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
@@ -254,11 +250,9 @@ Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
           'name': name,
           'store_address': store_address,
           'phone': phone,
-
         }),
       );
       if (res.statusCode == 200) {
-       
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('สำเร็จ!')),
         );
@@ -291,7 +285,8 @@ Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
     }
   }
 
-Future<Entrepreneur> fetchIdEntre(BuildContext context, String user_id) async {
+  Future<Entrepreneur> fetchIdEntre(
+      BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(
@@ -301,7 +296,7 @@ Future<Entrepreneur> fetchIdEntre(BuildContext context, String user_id) async {
           'authtoken': userProvider.user.token,
         },
       );
-      
+
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
