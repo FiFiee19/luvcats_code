@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/screens/detail_cathotel.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
-import 'package:luvcats_app/models/review.dart';
 import 'package:luvcats_app/widgets/loader.dart';
+import 'package:luvcats_app/widgets/search_cathotel.dart';
 
 class CatHotelScreen extends StatefulWidget {
   // final Cathotel cathotel;
@@ -38,9 +37,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
   void initState() {
     super.initState();
     fetchAllCathotel();
-    
-    
-    
   }
 
   //เรียกข้อมูลAllCathotelในcathotelServices
@@ -59,9 +55,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
       });
     }
   }
-
- 
-  
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +85,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
 
             return InkWell(
               onTap: () {
-               
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -171,12 +163,9 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                 ),
                           ),
-                          
                         ],
                       ),
                     ),
-                    
-                    
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomLeft,
@@ -184,11 +173,8 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                           padding:
                               const EdgeInsets.only(left: 8.0, bottom: 8.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, 
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              
-                              
                               Row(
                                 children: [
                                   Icon(
@@ -216,7 +202,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                 ],
                               ),
-                              
                               Text(
                                 "${catData.price}/คืน",
                                 style: Theme.of(context)
@@ -323,7 +308,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                             onPressed: () => Navigator.of(context).pop(),
                             child: Text("ยกเลิก"),
                           ),
-                          
                         ],
                       );
                     },
@@ -332,7 +316,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
               );
 
               if (result != null) {
-               
                 double start = result['startPrice']?.isNotEmpty ?? false
                     ? double.tryParse(result['startPrice']!) ?? 0.0
                     : 0.0;
@@ -340,7 +323,6 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                     ? double.tryParse(result['endPrice']!) ?? 100000.0
                     : 100000.0;
 
-               
                 setState(() {
                   _currentRangeStart = start;
                   _currentRangeEnd = end;
@@ -357,12 +339,12 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
               setState(() {
                 fetchAllCathotel();
                 _currentRangeStart = 0.0;
-                _currentRangeEnd = 100000.0; 
-                selectedProvince = null; 
+                _currentRangeEnd = 100000.0;
+                selectedProvince = null;
                 startPrice = '';
-                endPrice = ''; 
+                endPrice = '';
                 fetchAllCathotel();
-                selectedPrice = null; 
+                selectedPrice = null;
               });
             },
           ),
@@ -371,62 +353,5 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
       backgroundColor: Colors.grey[200],
       body: bodyContent,
     );
-  }
-}
-
-class CathotelSearchDelegate extends SearchDelegate<Cathotel?> {
-  final List<Cathotel> cathotels;
-
-  CathotelSearchDelegate({required this.cathotels});
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () => query = '',
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () => close(context, null),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    final results = cathotels.where((cathotel) {
-      return cathotel.user!.username
-          .toLowerCase()
-          .contains(query.toLowerCase());
-    }).toList();
-
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final result = results[index];
-        return ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(result.user!.imagesP),
-          ),
-          title: Text(result.user!.username),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailCathotelScreen(cathotel: result),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
   }
 }

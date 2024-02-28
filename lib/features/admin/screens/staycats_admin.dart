@@ -169,12 +169,18 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                           ),
                           Row(
                             children: [
-                              Text("สายพันธุ์:  ",style: Theme.of(context).textTheme.subtitle2!.merge(
+                              Text(
+                                "สายพันธุ์:  ",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Colors.grey.shade900,
                                       ),
-                                    ),),
+                                    ),
+                              ),
                               Text(
                                 straycat.breed.length > 10
                                     ? "${straycat.breed.substring(0, 10)}..."
@@ -191,18 +197,26 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                               ),
                             ],
                           ),
-                          
                           Row(
                             children: [
-                              Text("เพศ:  ",style: Theme.of(context).textTheme.subtitle2!.merge(
+                              Text(
+                                "เพศ:  ",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Colors.grey.shade900,
                                       ),
-                                    ),),
+                                    ),
+                              ),
                               Text(
                                 straycat.gender,
-                                style: Theme.of(context).textTheme.subtitle2!.merge(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Colors.grey.shade900,
