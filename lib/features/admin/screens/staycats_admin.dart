@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
@@ -9,6 +10,7 @@ import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/loader.dart';
+import 'package:luvcats_app/widgets/search_profile.dart';
 
 class StrayCatAdmin extends StatefulWidget {
   const StrayCatAdmin({
@@ -25,7 +27,13 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
   final CatServices catServices = CatServices();
 
   ProfileServices profileService = ProfileServices();
-
+  String? selectedProvince;
+  String? selectedGender;
+  final List<String> listgender = [
+    'ผู้',
+    'เมีย',
+    'ไม่ทราบ',
+  ];
   @override
   void initState() {
     super.initState();
@@ -34,13 +42,21 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
 
   //เรียกข้อมูลAllCatsจากcatServices
   Future<void> fetchAllCats() async {
-    straycatlist = await catServices.fetchAllCats(context);
-    if (straycatlist != null) {
-      // กรองเฉพาะแมวที่ยังไม่ได้บ้าน
-      straycatlist = straycatlist!.where((cat) => cat.status == 'no').toList();
-    }
-    if (mounted) {
-      setState(() {});
+    List<Straycat>? allCats = await catServices.fetchAllCats(context);
+
+    if (allCats != null && mounted) {
+      allCats.sort((a, b) =>
+          DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
+
+      setState(() {
+        straycatlist = allCats.where((cat) {
+          final bool matchProvince =
+              selectedProvince == null || cat.province == selectedProvince;
+          final bool matchGender =
+              selectedGender == null || cat.gender == selectedGender;
+          return cat.status == 'no' && matchProvince && matchGender;
+        }).toList();
+      });
     }
   }
 
@@ -259,6 +275,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                                       ),
                                     ),
                               ),
+                              Spacer(),
                               IconButton(
                                   onPressed: () {
                                     delete(straycat.id!);
@@ -279,7 +296,99 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
     }
 
     return Scaffold(
-      appBar: AppBar(actions: []),
+      appBar: AppBar(actions: [
+        SearchProfile(),
+        IconButton(
+          icon: Icon(Icons.filter_list),
+          onPressed: () async {
+            final result = await showDialog<Map<String, String?>>(
+              context: context,
+              builder: (context) {
+                String? tempSelectedProvince = selectedProvince;
+                String? tempSelectedGender = selectedGender;
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return AlertDialog(
+                      title: Text("กรองข้อมูล"),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            DropdownButtonFormField<String>(
+                              value: tempSelectedProvince,
+                              hint: Text("เลือกจังหวัด"),
+                              items: province.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  tempSelectedProvince = value;
+                                });
+                              },
+                            ),
+                            SizedBox(height: 10),
+                            DropdownButtonFormField<String>(
+                              value: tempSelectedGender,
+                              hint: Text("เลือกเพศ"),
+                              items: listgender.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  tempSelectedGender = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text("ยกเลิก"),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop({
+                            'province': tempSelectedProvince,
+                            'gender': tempSelectedGender,
+                          }),
+                          child: Text("ตกลง"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            );
+
+            if (result != null) {
+              setState(() {
+                selectedProvince = result['province'];
+                selectedGender = result['gender'];
+                fetchAllCats(); // Refetch cats with new filters
+              });
+            }
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.restart_alt_rounded),
+          onPressed: () {
+            setState(() {
+              selectedProvince = null;
+              selectedGender = null; // Reset ค่า selectedProvince
+              fetchAllCats(); // โหลดข้อมูลทั้งหมดอีกครั้ง
+            });
+          },
+        ),
+      ]),
       backgroundColor: Colors.grey[200],
       body: bodyContent,
       floatingActionButton: Padding(

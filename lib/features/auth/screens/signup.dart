@@ -27,18 +27,22 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isImageSelected = false;
   var user = User;
   File? _image;
-
+  
+  //เลือกรูปภาพ
   void _pickImage() async {
     var res = await pickImageGallery();
     setState(() {
       _image = res;
     });
   }
-
+  
+  //สมัครสมาชิก
   void signupUser() async {
     if (_signupFormKey.currentState!.validate() &&
         passwordConfirmed() &&
         _image != null) {
+          
+      //บันทึกภาพลงCloudinary
       final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
       CloudinaryResponse resimg = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(_image!.path, folder: "a"),

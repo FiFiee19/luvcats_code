@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/screens/detail_cathotel.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
+
 import 'package:luvcats_app/widgets/loader.dart';
 import 'package:luvcats_app/widgets/search_cathotel.dart';
 

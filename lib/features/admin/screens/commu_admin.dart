@@ -9,6 +9,7 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:luvcats_app/widgets/loader.dart';
+import 'package:luvcats_app/widgets/search_commu.dart';
 import 'package:provider/provider.dart';
 
 class CommuAdmin extends StatefulWidget {
@@ -81,6 +82,15 @@ class _CommuAdminState extends State<CommuAdmin> {
       );
     } else {
       return Scaffold(
+        appBar:AppBar(actions: [IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: CommuSearchDelegate(commulist: commu ?? []),
+              );
+            },
+          ),]),
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
           onRefresh: fetchAllCommu,
@@ -143,7 +153,8 @@ class _CommuAdminState extends State<CommuAdmin> {
                       SizedBox(
                         height: 20,
                       ),
-                      CustomCarouselSlider(images: commuData.images),
+                      if (commuData.images.isNotEmpty)
+                        CustomCarouselSlider(images: commuData.images),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -200,6 +211,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                                           } else {
                                             commuData.likes.add(user);
                                           }
+                                          
                                         });
                                         await commuServices.likesCommu(
                                             context, commuData.id!);
@@ -227,11 +239,16 @@ class _CommuAdminState extends State<CommuAdmin> {
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                 ],
-                              ),IconButton(
-                                      onPressed: () {
-                                        delete(commuData.id!);
-                                      },
-                                      icon: Icon(Icons.delete_sharp)),
+                              ),Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                          onPressed: () {
+                                            delete(commuData.id!);
+                                          },
+                                          icon: Icon(Icons.delete_sharp)),
+                                ],
+                              ),
                             ]),
                       ),
                     ],

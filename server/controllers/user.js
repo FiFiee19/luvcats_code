@@ -60,9 +60,9 @@ exports.editUser = async (req, res) => {
     }
 };
 
-exports.userId = async (req,res) => {
+exports.userId = async (req, res) => {
     try {
-        const user_id  = req.params.id;
+        const user_id = req.params.id;
         const user = await User.findById(user_id)
         if (!user) {
             return res.status(404).send('user not found');
@@ -76,7 +76,7 @@ exports.userId = async (req,res) => {
     }
 }
 
-exports.searchUser =  async (req,res) => {
+exports.searchUser = async (req, res) => {
     try {
         const user = await User.find(
             {
@@ -95,7 +95,7 @@ exports.searchUser =  async (req,res) => {
     }
 }
 
-exports.searchEntre =  async (req,res) => {
+exports.searchEntre = async (req, res) => {
     try {
         const user = await User.find(
             {
@@ -113,3 +113,5 @@ exports.searchEntre =  async (req,res) => {
 
     }
 }
+
+

@@ -194,14 +194,34 @@ class ProfileServices {
         }),
       );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, "deleted successfully.");
-         
-        },
-      );
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ลบสำเร็จ!')),
+        );
+      
+      }
+
+      if (res.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
+      if (res.statusCode == 500) {
+        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.body.toString()),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -233,7 +253,7 @@ class ProfileServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('ลบสำเร็จ!')),
         );
-        Navigator.pop(context);
+      
       }
 
       if (res.statusCode == 400) {

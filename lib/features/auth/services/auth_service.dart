@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
+  //สมัครสมาชิก
   void signUpUser({
     required BuildContext context,
     required String email,
@@ -89,7 +90,8 @@ class AuthService {
       );
     }
   }
-
+  
+  //เข้าสู่ระบบ
   void signInUser({
     required BuildContext context,
     required String email,
@@ -178,7 +180,7 @@ class AuthService {
       );
     }
   }
-
+  
   void getUserData(BuildContext context, String user_id) async {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -222,7 +224,8 @@ class AuthService {
       );
     }
   }
-
+  
+  //ออกจากระบบ
   void signOut(BuildContext context) async {
     final navigator = Navigator.of(context);
     SharedPreferences prefs = await SharedPreferences.getInstance();
