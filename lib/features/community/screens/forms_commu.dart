@@ -1,6 +1,7 @@
 import 'dart:io';
-
+import 'package:uuid/uuid.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,17 +38,39 @@ class _FormsCommuState extends State<FormsCommu> {
   }
 
   //โพสต์Commu
-  void postcommu() {
+  void postcommu() async {
     if (_postCommuFormKey.currentState!.validate()) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
+      
+      List<String> imageUrls = [];
+
+      String uniqueFileName(String userId, int index) {
+        var uuid = Uuid();
+        return "${userId}/${uuid.v4()}/${index + 1}";
+      }
+
+      if (images.isNotEmpty) {
+        final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+        for (int i = 0; i < images.length; i++) {
+          CloudinaryResponse res = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(images[i].path,
+                folder: "Community", publicId: uniqueFileName(user_id, i)),
+          );
+          imageUrls.add(res.secureUrl);
+        }
+      }
+
+      // Check if the widget is still mounted before calling setState or context-dependent functions
+      if (!mounted) return;
+
       commuServices.postcommu(
         user_id: user_id,
         context: context,
         title: titleController.text,
         description: descriptionController.text,
-        images: images,
+        images: imageUrls,
       );
     }
   }

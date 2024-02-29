@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/dashborad/screens/dashboard_entrer.dart';
+import 'package:luvcats_app/features/dashborad/screens/dashboard_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/report_entre.dart';

@@ -38,8 +38,8 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-     
-      if (res.statusCode == 200) {
+
+      if (res.statusCode == 201) {
         await navigator.pushAndRemoveUntil(
           CupertinoPageRoute(
             builder: (context) => const SigninScreen(),
@@ -90,7 +90,7 @@ class AuthService {
       );
     }
   }
-  
+
   //เข้าสู่ระบบ
   void signInUser({
     required BuildContext context,
@@ -180,7 +180,7 @@ class AuthService {
       );
     }
   }
-  
+
   void getUserData(BuildContext context, String user_id) async {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -224,7 +224,7 @@ class AuthService {
       );
     }
   }
-  
+
   //ออกจากระบบ
   void signOut(BuildContext context) async {
     final navigator = Navigator.of(context);

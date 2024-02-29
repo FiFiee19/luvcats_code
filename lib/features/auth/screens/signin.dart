@@ -17,7 +17,13 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController passwordController = TextEditingController();
   final AuthService authService = AuthService();
   final _signinFormKey = GlobalKey<FormState>();
-  
+  bool _obscureText = true;
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   //เข้าสู่ระบบ
   void signinUser() {
     if (_signinFormKey.currentState!.validate()) {
@@ -76,10 +82,40 @@ class _SigninScreenState extends State<SigninScreen> {
                               controller: emailController,
                               hintText: 'อีเมล',
                             ),
+                           
                             SizedBox(height: 20),
-                            CustomTextField(
-                              controller: passwordController,
-                              hintText: 'รหัสผ่าน',
+                            Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: TextFormField(
+                                controller: passwordController,
+                                decoration: InputDecoration(
+                                  hintText: 'รหัสผ่าน',
+                                  
+                                  // เพิ่มปุ่มเพื่อเปิด/ซ่อน รหัสผ่าน
+                                  suffixIcon: IconButton(
+                                    onPressed:
+                                        _toggle, // เรียกใช้งานฟังก์ชัน _toggle เมื่อปุ่มถูกกด
+                                    icon: Icon(
+                                      _obscureText
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide(
+                                      color: Colors.black38,
+                                    ),
+                                  ),
+                                ),
+                                validator: (val) {
+                                  if (val == null || val.isEmpty) {
+                                    return 'กรุณากรอกรหัสผ่าน';
+                                  }
+                                },
+                                obscureText:
+                                    _obscureText, // ใช้งานค่า _obscureText เพื่อซ่อนรหัสผ่าน
+                              ),
                             ),
                           ],
                         ),

@@ -6,7 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/models/user.dart';
+import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -41,11 +43,10 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_signupFormKey.currentState!.validate() &&
         passwordConfirmed() &&
         _image != null) {
-          
       //บันทึกภาพลงCloudinary
-      final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
+      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
       CloudinaryResponse resimg = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(_image!.path, folder: "a"),
+        CloudinaryFile.fromFile(_image!.path, folder: "ImageP/user",publicId: _nameController.text),
       );
       print(resimg.secureUrl);
 

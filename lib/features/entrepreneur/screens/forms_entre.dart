@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:uuid/uuid.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -59,10 +59,25 @@ class _FormsEntreState extends State<FormsEntre> {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
-      final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
-      CloudinaryResponse resimg = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(_imageP!.path, folder: "a"),
+      //รูปโปรไฟล์
+      final cloudinary1 = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+      CloudinaryResponse resimg = await cloudinary1.uploadFile(
+        CloudinaryFile.fromFile(_imageP!.path, folder: "ImageP/entrepreneur",publicId: _nameController.text),
       );
+
+      //รูปcathotel
+      final cloudinary2 = CloudinaryPublic('dtdloxmii', 'q2govzgn');
+      List<String> imageUrls = [];
+      String uniqueFileName(String userId, int index) {
+        var uuid = Uuid();
+        return "${userId}/${uuid.v4()}/${index + 1}";
+      }
+      for (int i = 0; i < images.length; i++) {
+        CloudinaryResponse res = await cloudinary2.uploadFile(
+          CloudinaryFile.fromFile(images[i].path, folder: "Cathotel",publicId:uniqueFileName(user_id,i)),
+        );
+        imageUrls.add(res.secureUrl);
+      }
       entreService.cathotel(
         email: _emailController.text,
         password: _passwordController.text,
@@ -78,7 +93,7 @@ class _FormsEntreState extends State<FormsEntre> {
         price: double.parse(priceController.text),
         contact: contactController.text,
         province: selectedProvince,
-        images: images,
+        images: imageUrls,
       );
     } else {
       if (!passwordConfirmed()) {

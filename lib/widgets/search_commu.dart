@@ -4,7 +4,6 @@ import 'package:luvcats_app/features/community/screens/detail_comment.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
-import 'package:luvcats_app/providers/commu_provider.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
@@ -48,15 +47,14 @@ class CommuSearchDelegate extends SearchDelegate<Commu?> {
     });
 
     final titles = titleMap.keys.toList();
-    
 
     void delete(String commu) {
       profileServices.deleteCatCommu(context, commu);
     }
 
     final results = commulist.where((commu) {
-    return commu.title.toLowerCase().contains(query.toLowerCase());
-  }).toList();
+      return commu.title.toLowerCase().contains(query.toLowerCase());
+    }).toList();
 
     return ListView.builder(
       itemCount: titles.length,

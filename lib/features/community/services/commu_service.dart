@@ -19,30 +19,19 @@ class CommuServices {
     required String user_id,
     required String title,
     required String description,
-    required List<File> images,
+    required List<String> images,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // List<Commu>? commuu;
 
     try {
-      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
-      List<String> imageUrls = [];
-
-      if (images.isNotEmpty) {
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: user_id),
-        );
-        imageUrls.add(res.secureUrl);
-      }
-    }
-
       Commu commu = Commu(
         user_id: user_id,
         title: title,
         description: description,
         likes: [],
         comments: [],
-        images: imageUrls,
+        images: [],
       );
 
       http.Response res = await http.post(
@@ -63,7 +52,6 @@ class CommuServices {
         },
       );
     } catch (e) {
-     
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
@@ -215,12 +203,8 @@ class CommuServices {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
-        body: jsonEncode({
-          'user_id': user_id,
-          'message': message,
-          'commu_id':commu_id
-          
-        }),
+        body: jsonEncode(
+            {'user_id': user_id, 'message': message, 'commu_id': commu_id}),
       );
 
       if (res.statusCode == 200) {
@@ -313,7 +297,7 @@ class CommuServices {
         body: jsonEncode({
           'title': title,
           'description': description,
-          'images': imageUrls, 
+          'images': imageUrls,
         }),
       );
       httpErrorHandle(
@@ -335,11 +319,12 @@ class CommuServices {
       );
     }
   }
+
   Future<void> report({
     required BuildContext context,
     required String user_id,
     required String message,
-    required String commu_id, 
+    required String commu_id,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -350,11 +335,8 @@ class CommuServices {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
-        body: jsonEncode({
-          'user_id': user_id,
-          'message': message,
-          'commu_id':commu_id
-        }),
+        body: jsonEncode(
+            {'user_id': user_id, 'message': message, 'commu_id': commu_id}),
       );
 
       if (res.statusCode == 200) {
@@ -365,7 +347,6 @@ class CommuServices {
       } else {
         print(res.body);
         throw Exception('รายงานไม่สำเร็จ!');
-        
       }
       print(res.body);
     } catch (e) {
@@ -377,11 +358,10 @@ class CommuServices {
           margin: EdgeInsets.all(30),
         ),
       );
-      
     }
   }
-  Future<List<Report>> fetchReport(
-      BuildContext context, String commuId) async {
+
+  Future<List<Report>> fetchReport(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(

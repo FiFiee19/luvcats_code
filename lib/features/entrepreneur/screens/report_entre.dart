@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
-import 'package:luvcats_app/features/dashborad/screens/dashboard_entrer.dart';
+import 'package:luvcats_app/features/dashborad/screens/dashboard_entre.dart';
+import 'package:luvcats_app/features/dashborad/screens/rankofcathotel.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
@@ -26,8 +27,13 @@ class _Report_EntreState extends State<Report_Entre> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
-      body: DashboardEntre(
-        reviews: cathotelServices.fetchReviewsUser(context,userProvider.user.id),
+      body: Column(
+        children: [
+          DashboardEntre(
+            reviews: cathotelServices.fetchReviewsUser(context,userProvider.user.id),
+          ),
+          // DashboardRank()
+        ],
       ),
     );
   }

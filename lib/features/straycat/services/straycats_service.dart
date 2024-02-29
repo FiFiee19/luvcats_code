@@ -19,19 +19,11 @@ class CatServices {
     required String description,
     required String gender,
     required String province,
-    required List<File> images,
+    required List<String> images,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
-      List<String> imageUrls = [];
-
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: user_id),
-        );
-        imageUrls.add(res.secureUrl);
-      }
+      
 
       Straycat cat = Straycat(
         user_id: user_id,
@@ -39,7 +31,7 @@ class CatServices {
         gender: gender,
         province: province,
         description: description,
-        images: imageUrls,
+        images: images,
       );
 
       http.Response res = await http.post(

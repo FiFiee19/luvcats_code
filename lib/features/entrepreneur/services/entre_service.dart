@@ -31,20 +31,12 @@ class EntreService {
     required double price,
     required String contact,
     required String province,
-    required List<File> images,
+    required List<String> images,
   }) async {
     final navigator = Navigator.of(context);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
-      List<String> imageUrls = [];
-
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: user_id),
-        );
-        imageUrls.add(res.secureUrl);
-      }
+      
 
       Map<String, dynamic> requestData = {
         'username': username,
@@ -60,7 +52,7 @@ class EntreService {
         'price': price,
         'contact': contact,
         'province': province,
-        'images': imageUrls,
+        'images': images,
       };
       http.Response res = await http.post(
         Uri.parse('${url}/signup_entre'),
