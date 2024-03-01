@@ -78,10 +78,31 @@ class _SigninScreenState extends State<SigninScreen> {
                         padding: const EdgeInsets.all(30.0),
                         child: Column(
                           children: [
-                            CustomTextField(
-                              controller: emailController,
-                              hintText: 'อีเมล',
-                            ),
+                            Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TextFormField(
+                  controller: emailController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'กรุณากรอกอีเมล';
+                    } else if (RegExp(
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$')
+                        .hasMatch(val)) {
+                      return null;
+                    } else {
+                      return 'ที่อยู่อีเมลไม่ถูกต้อง';
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'อีเมล',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(
+                          color: Colors.black38,
+                        )),
+                  ),
+                ),
+              ),
                            
                             SizedBox(height: 20),
                             Padding(

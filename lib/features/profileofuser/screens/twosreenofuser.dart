@@ -52,7 +52,7 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
   @override
   Widget build(BuildContext context) {
     if (straycats == null) {
-      return const Loader(); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
+      return Center(child: const CircularProgressIndicator()); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
     } else if (straycats!.isEmpty) {
       // แสดงข้อความ No Post ถ้าไม่มีโพสต์
       return Scaffold(

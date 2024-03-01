@@ -48,7 +48,7 @@ class _CommuScreenState extends State<CommuScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return const Loader();
+      return Center(child: const CircularProgressIndicator());
     } else if (commu!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],

@@ -14,38 +14,43 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class ProfileServices {
+  //ดึงข้อมูลcommuจากuser_idของผู้ใช้งาน
   Future<List<Commu>> fetchCommuProfile(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final user = userProvider.user.id;
+    final userId = userProvider.user.id;
     List<Commu> commuList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$url/getCommu/$user'), headers: {
+          await http.get(Uri.parse('$url/getCommu/$userId'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'authtoken': userProvider.user.token,
       });
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            commuList.add(
-              Commu.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          commuList.add(
+            Commu.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return commuList;
   }
-
+  
+  //ดึงข้อมูลcommuจากuser_idที่กำหนด
   Future<List<Commu>> fetchCommuId(BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -57,59 +62,67 @@ class ProfileServices {
         'authtoken': userProvider.user.token,
       });
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            commuList.add(
-              Commu.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          commuList.add(
+            Commu.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return commuList;
   }
-
+  
+  //ดึงข้อมูลStrayCatจากuser_idของผู้ใช้งาน
   Future<List<Straycat>> fetchStrayCatProfile(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final user = userProvider.user.id;
+    final userId = userProvider.user.id;
     List<Straycat> straycatList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$url/getStrayCat/$user'), headers: {
+          await http.get(Uri.parse('$url/getStrayCat/$userId'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'authtoken': userProvider.user.token,
       });
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            straycatList.add(
-              Straycat.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          straycatList.add(
+            Straycat.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return straycatList;
   }
-
+  
+  //ดึงข้อมูลStrayCatจากuser_idที่กำหนด
   Future<List<Straycat>> fetchStrayCatId(
       BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -122,27 +135,31 @@ class ProfileServices {
         'authtoken': userProvider.user.token,
       });
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            straycatList.add(
-              Straycat.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          straycatList.add(
+            Straycat.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return straycatList;
   }
-
+  
+  //ดึงข้อมูลUser
   Future<User> fetchIdUser(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user_id = userProvider.user.id;
@@ -157,9 +174,8 @@ class ProfileServices {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+
         if (data is List) {
-          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
           final firstPost = data.first;
           if (firstPost is Map<String, dynamic>) {
             return User.fromMap(firstPost);
@@ -167,7 +183,6 @@ class ProfileServices {
             throw Exception('Data format is not correct');
           }
         } else if (data is Map<String, dynamic>) {
-          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
           return User.fromMap(data);
         } else {
           throw Exception('Data format is not correct');
@@ -179,8 +194,8 @@ class ProfileServices {
       throw Exception('Error fetching data: $e');
     }
   }
-
-  Future<void> deleteCatCommu(BuildContext context, String commuId) async {
+  //ลบcommu
+  Future<void> deleteCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
@@ -198,29 +213,6 @@ class ProfileServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('ลบสำเร็จ!')),
         );
-      
-      }
-
-      if (res.statusCode == 400) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
-      if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -233,8 +225,8 @@ class ProfileServices {
       );
     }
   }
-
-  Future<void> deleteCatStrayCat(
+  //ลบStrayCat
+  Future<void> deleteStrayCat(
       BuildContext context, String straycatId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -253,35 +245,20 @@ class ProfileServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('ลบสำเร็จ!')),
         );
-      
-      }
-
-      if (res.statusCode == 400) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
-      if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
-
+  
+  //แก้ไขรหัสผ่าน
   Future<void> editPassword(
     BuildContext context,
     String password,
@@ -307,14 +284,21 @@ class ProfileServices {
         );
         Navigator.pop(context);
         print(res.body);
-      } else {
-        print('Failed to update password: ${res.body}');
       }
     } catch (e) {
       print('Error updating password: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
-
+  
+  //แก้ไขข้อมูลส่วนตัวของuser
   Future<User?> editUser(
       BuildContext context, String username, File? image) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -344,20 +328,29 @@ class ProfileServices {
       );
 
       if (response.statusCode == 200) {
-        showSnackBar(context, 'แก้ไขสำเร็จ!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('แก้ไขสำเร็จ!')),
+        );
+
         Navigator.pop(context);
 
         User updatedUser = User.fromJson(json.decode(response.body));
         return updatedUser;
-      } else {
-        print('Failed to update profile: ${response.body}');
       }
     } catch (e) {
-      print('Error updating profile: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return null;
   }
-
+  
+  //ค้นหาuserจากชื่อ
   Future<List<User>?> searchName(BuildContext context, String username) async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -374,17 +367,21 @@ class ProfileServices {
         final List<User> users =
             dataList.map((data) => User.fromMap(data)).toList();
         return users;
-      } else {
-        print(
-            'Failed to search for users. Status code: ${response.statusCode}');
-        return null;
       }
     } catch (e) {
-      print('Error occurred while searching for users: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
       return null;
     }
   }
-
+  
+  //ค้นหาร้านค้าจากชื่อ
   Future<List<User>?> searchEntre(BuildContext context, String username) async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -401,13 +398,16 @@ class ProfileServices {
         final List<User> users =
             dataList.map((data) => User.fromMap(data)).toList();
         return users;
-      } else {
-        print(
-            'Failed to search for users. Status code: ${response.statusCode}');
-        return null;
       }
     } catch (e) {
-      print('Error occurred while searching for users: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
       return null;
     }
   }

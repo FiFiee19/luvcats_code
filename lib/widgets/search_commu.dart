@@ -49,7 +49,7 @@ class CommuSearchDelegate extends SearchDelegate<Commu?> {
     final titles = titleMap.keys.toList();
 
     void delete(String commu) {
-      profileServices.deleteCatCommu(context, commu);
+      profileServices.deleteCommu(context, commu);
     }
 
     final results = commulist.where((commu) {

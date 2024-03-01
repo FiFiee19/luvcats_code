@@ -16,7 +16,8 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class EntreService {
-  void cathotel({
+  //ลงทะเบียนเป็นผู้ประกอบการ
+  void signinEntre({
     required BuildContext context,
     required String email,
     required String password,
@@ -36,8 +37,6 @@ class EntreService {
     final navigator = Navigator.of(context);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      
-
       Map<String, dynamic> requestData = {
         'username': username,
         'password': password,
@@ -84,7 +83,7 @@ class EntreService {
         );
       }
       if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+        // กรณีอีเมลไม่ถูกต้อง
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(res.body.toString()),
@@ -107,7 +106,8 @@ class EntreService {
       );
     }
   }
-
+  
+  //แก้ไขข้อมูลcathotel
   Future<void> editProfileEntre(
     BuildContext context,
     String cathotelId,
@@ -171,7 +171,7 @@ class EntreService {
         );
       }
       if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
+        // กรณีอีเมลไม่ถูกต้อง
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(res.body.toString()),
@@ -185,7 +185,8 @@ class EntreService {
       print('Error updating post: $e');
     }
   }
-
+  
+  //ดึงข้อมูลcathotelจากuser_idที่กำหนด
   Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -199,9 +200,8 @@ class EntreService {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+
         if (data is List) {
-          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
           final firstPost = data.first;
           if (firstPost is Map<String, dynamic>) {
             return Cathotel.fromMap(firstPost);
@@ -209,7 +209,6 @@ class EntreService {
             throw Exception('Data format is not correct');
           }
         } else if (data is Map<String, dynamic>) {
-          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
           return Cathotel.fromMap(data);
         } else {
           throw Exception('Data format is not correct');
@@ -221,7 +220,8 @@ class EntreService {
       throw Exception('Error fetching data: $e');
     }
   }
-
+  
+  //แก้ไขข้อมูลส่วนตัว
   Future<void> editEntre(
     BuildContext context,
     String entreId,
@@ -251,32 +251,21 @@ class EntreService {
         Navigator.pop(context);
       }
 
-      if (res.statusCode == 400) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
-      if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง แสดง SnackBar แจ้งให้ผู้ใช้ทราบ
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
+      
     } catch (e) {
       print('Error updating post: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 
+  //ดึงข้อมูลผู้ประกอบการจากuser_id
   Future<Entrepreneur> fetchIdEntre(
       BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -291,9 +280,8 @@ class EntreService {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+
         if (data is List) {
-          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
           final firstPost = data.first;
           if (firstPost is Map<String, dynamic>) {
             return Entrepreneur.fromMap(firstPost);
@@ -301,7 +289,6 @@ class EntreService {
             throw Exception('Data format is not correct');
           }
         } else if (data is Map<String, dynamic>) {
-          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
           return Entrepreneur.fromMap(data);
         } else {
           throw Exception('Data format is not correct');

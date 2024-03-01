@@ -40,7 +40,7 @@ class _CommuAdminState extends State<CommuAdmin> {
 
   //ลบCommu
   void delete(String commu) {
-    profileService.deleteCatCommu(context, commu);
+    profileService.deleteCommu(context, commu);
   }
 
   
@@ -49,7 +49,7 @@ class _CommuAdminState extends State<CommuAdmin> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return const Loader();
+      return Center(child: const CircularProgressIndicator());
     } else if (commu!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],

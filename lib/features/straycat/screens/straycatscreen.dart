@@ -59,7 +59,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
   Widget build(BuildContext context) {
     Widget bodyContent;
     if (straycatlist == null) {
-      bodyContent = const Loader();
+      bodyContent = Center(child: const CircularProgressIndicator());
     } else if (straycatlist!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],

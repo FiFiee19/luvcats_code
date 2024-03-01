@@ -58,7 +58,7 @@ class _OneScreenState extends State<OneScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return const Loader(); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
+      return Center(child: const CircularProgressIndicator()); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
     } else if (commu!.isEmpty) {
       // แสดงข้อความ No Post ถ้าไม่มีโพสต์
       return Scaffold(
@@ -247,7 +247,7 @@ class _OneScreenState extends State<OneScreen> {
                           IconButton(
                             onPressed: () {
                             
-                                          profileService.deleteCatCommu(
+                                          profileService.deleteCommu(
                                               context, commuData.id!);
                              
                             },

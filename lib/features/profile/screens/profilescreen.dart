@@ -76,9 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       
     backgroundColor: Colors.white,
   
-      body: RefreshIndicator(
-        onRefresh: fetchProfile,
-        child: Column(
+      body:  Column(
           children: [
             
             Padding(
@@ -135,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 }

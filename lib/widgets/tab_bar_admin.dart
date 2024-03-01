@@ -58,10 +58,10 @@ class _TabBar_adminState extends State<TabBar_admin> {
         backgroundColor: Colors.white,
         onTap: onTap,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.pets), label: 'Community'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'หน้าแรก'),
+          BottomNavigationBarItem(icon: Icon(Icons.pets), label: 'คอมมูนิตี้'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), label: 'Notifications'),
+              icon: Icon(Icons.notifications), label: 'การแจ้งเตือน'),
           
         ],
         selectedItemColor: Colors.red,

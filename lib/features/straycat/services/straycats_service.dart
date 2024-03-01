@@ -12,6 +12,7 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class CatServices {
+  //โพสต์แมวจร
   void postcat({
     required BuildContext context,
     required String user_id,
@@ -23,8 +24,6 @@ class CatServices {
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      
-
       Straycat cat = Straycat(
         user_id: user_id,
         breed: breed,
@@ -43,16 +42,13 @@ class CatServices {
         body: cat.toJson(),
       );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, 'Product Added Successfully!');
-          Navigator.pop(context);
-        },
-      );
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('โพสต์สำเร็จ!')),
+        );
+        Navigator.pop(context);
+      }
     } catch (e) {
-      // showSnackBar(context, e.toString());
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
@@ -63,7 +59,8 @@ class CatServices {
       );
     }
   }
-
+  
+  //ดึงข้อมูลแมวจรทั้งหมด
   Future<List<Straycat>> fetchAllCats(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Straycat> catList = [];
@@ -74,27 +71,31 @@ class CatServices {
         'authtoken': userProvider.user.token,
       });
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            catList.add(
-              Straycat.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          catList.add(
+            Straycat.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
     return catList;
   }
-
+  
+  //ดึงข้อมูลแมวจรจากidที่กำหนด
   Future<Straycat> fetchIdStraycats(
       BuildContext context, String straycatsId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -109,9 +110,8 @@ class CatServices {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+
         if (data is List) {
-          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
           final firstPost = data.first;
           if (firstPost is Map<String, dynamic>) {
             return Straycat.fromMap(firstPost);
@@ -119,7 +119,6 @@ class CatServices {
             throw Exception('Data format is not correct');
           }
         } else if (data is Map<String, dynamic>) {
-          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
           return Straycat.fromMap(data);
         } else {
           throw Exception('Data format is not correct');
@@ -131,7 +130,8 @@ class CatServices {
       throw Exception('Error fetching data: $e');
     }
   }
-
+  
+  //อัพเดตการได้บ้านของแมวจร
   Future<void> updateCatStatus(
       BuildContext context, String StraycatId, String newStatus) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -147,18 +147,25 @@ class CatServices {
           'status': newStatus,
         }),
       );
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, 'Status updated!');
-        },
+      
+      if (res.statusCode == 200) {
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('อัพเดตสำเร็จ!')),
+        );
+      }
+    } catch (e) {
+     ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
       );
-    } catch (error) {
-      print('Error updating status: $error');
     }
   }
-
+  
+  //แก้ไขโพสต์แมวจร
   Future<void> editPostCat(
     BuildContext context,
     String starycatsId,
@@ -207,16 +214,22 @@ class CatServices {
           'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
         }),
       );
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, 'Post updated successfully!');
-          Navigator.pop(context);
-        },
-      );
+      
+    if (res.statusCode == 200) {
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('แก้ไขสำเร็จ!')),
+        );
+         Navigator.pop(context);
+      }
     } catch (e) {
-      print('Error updating post: $e');
+     ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 }

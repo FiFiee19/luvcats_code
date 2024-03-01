@@ -17,7 +17,7 @@ AppBar customAppBar(BuildContext context) {
         ),
       ),
     ),
-    // centerTitle: true,
+   
     actions: [
       TextButton(
         onPressed: () {
@@ -25,9 +25,9 @@ AppBar customAppBar(BuildContext context) {
         },
         child: Row(
           children: [
-            Icon(Icons.logout), // เพิ่มไอคอน Logout ด้านหน้าข้อความ
-            SizedBox(width: 5), // เพิ่มระยะห่างระหว่างไอคอนและข้อความ
-            Text('Sign Out'), // เพิ่มข้อความ "Sign Out"
+            Icon(Icons.logout), 
+            SizedBox(width: 5), 
+            Text('Sign Out'), 
           ],
         ),
       ),

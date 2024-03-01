@@ -65,6 +65,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -73,7 +74,8 @@ class _ReviewEntreState extends State<ReviewEntre> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: RefreshIndicator(
+        body: 
+        RefreshIndicator(
             onRefresh: loadReviews,
             child: SingleChildScrollView(
               child: Column(

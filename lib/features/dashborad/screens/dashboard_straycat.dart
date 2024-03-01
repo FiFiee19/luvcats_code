@@ -16,7 +16,7 @@ class DashboardStraycat extends StatelessWidget {
       future: catData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading indicator while waiting for data
+          return Center(child: CircularProgressIndicator()); // Show loading indicator while waiting for data
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}'); // Show error message if any
         } else if (snapshot.hasData) {

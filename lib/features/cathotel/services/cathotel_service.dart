@@ -11,6 +11,7 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class CathotelServices {
+  //ดึงข้อมูลcathotelทั้งหมด
   Future<List<Cathotel>> fetchAllCathotel(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Cathotel> cathotelList = [];
@@ -21,21 +22,19 @@ class CathotelServices {
         'authtoken': userProvider.user.token,
       });
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            cathotelList.add(
-              Cathotel.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          cathotelList.add(
+            Cathotel.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      } else {
+        throw Exception('เกิดข้อผิดพลาด');
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -48,7 +47,8 @@ class CathotelServices {
     }
     return cathotelList;
   }
-
+  
+  //ดึงข้อมูลโปรไฟล์ของCathotelที่มี user_id ที่กำหนด
   Future<Cathotel?> fetchCatIdProfile(
       BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -56,8 +56,7 @@ class CathotelServices {
 
     try {
       final http.Response res = await http.get(
-        Uri.parse(
-            '$url/getCathotel/$user_id'), // Ensure $url is correctly defined
+        Uri.parse('$url/getCathotel/$user_id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -67,16 +66,20 @@ class CathotelServices {
       if (res.statusCode == 200) {
         final List<dynamic> body = jsonDecode(res.body);
         if (body.isNotEmpty) {
-          // Assuming you want the first Cathotel object from the list
           catprofile = Cathotel.fromMap(body.first);
-        } else {
-          showSnackBar(context, 'No Cathotel data found for the user.');
         }
       } else {
-        showSnackBar(context, 'Error: ${res.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${res.statusCode}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(30),
+          ),
+        );
       }
     } catch (e) {
-     ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
           backgroundColor: Colors.red,
@@ -88,7 +91,8 @@ class CathotelServices {
 
     return catprofile;
   }
-
+  
+  //ดึงข้อมูลรีวิวร้านฝากเลี้ยงตามidของร้านที่กำหนด
   Future<List<Review>> fetchReviews(
       BuildContext context, String cathotelId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -108,52 +112,51 @@ class CathotelServices {
           return Review.fromMap(data as Map<String, dynamic>);
         }).toList();
       } else {
-        throw Exception('Failed to load Review');
+        throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
-      
       throw Exception('Error fetching reviews: $e');
     }
   }
+  
+  //ดึงข้อมูลรีวิวของร้านฝากเลี้ยงตามuser_idที่กำหนด
+  Future<List<Review>> fetchReviewsUser(
+      BuildContext context, String userId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$url/getReviewU/$userId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
 
-  Future<List<Review>> fetchReviewsUser(BuildContext context, String userId) async {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
-  try {
-    http.Response res = await http.get(
-      Uri.parse('$url/getReviewU/$userId'),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authtoken': userProvider.user.token,
-      },
-    );
-
-    if (res.statusCode == 200) {
-      // Assuming that the response is a list of Cathotel objects
-      List<dynamic> cathotelsData = jsonDecode(res.body);
-      List<Review> reviews = [];
-      for (var cathotelData in cathotelsData) {
-        var cathotelReviews = List<Map<String, dynamic>>.from(cathotelData['reviews']);
-        reviews.addAll(cathotelReviews.map((reviewData) => Review.fromMap(reviewData)));
+      if (res.statusCode == 200) {
+        List<dynamic> cathotelsData = jsonDecode(res.body);
+        List<Review> reviews = [];
+        for (var cathotelData in cathotelsData) {
+          var cathotelReviews =
+              List<Map<String, dynamic>>.from(cathotelData['reviews']);
+          reviews.addAll(
+              cathotelReviews.map((reviewData) => Review.fromMap(reviewData)));
+        }
+        return reviews;
+      } else {
+        throw Exception('เกิดข้อผิดพลาด');
       }
-      return reviews;
-    } else {
-      throw Exception('Failed to load reviews');
+    } catch (e) {
+      throw Exception('Error fetching reviews: $e');
     }
-  } catch (e) {
-    print('Error fetching reviews: $e');
-    
-    throw Exception('Error fetching reviews: $e');
-    
   }
-}
-
-
+  
+  //รีวิว
   Future<void> addReview({
     required BuildContext context,
     required String user_id,
     required String message,
     required double rating,
-    required String cathotelId, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+    required String cathotelId,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -174,11 +177,11 @@ class CathotelServices {
 
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Add Comment Success')),
+          SnackBar(content: Text('รีวิวสำเร็จ!')),
         );
         Navigator.pop(context);
       } else {
-        throw Exception('Failed to add review');
+        throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

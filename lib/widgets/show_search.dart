@@ -38,7 +38,7 @@ class _ShowSearchState extends State<ShowSearcher> {
     }
   }
   void delete(String commu) {
-    profileService.deleteCatCommu(context, commu);
+    profileService.deleteCommu(context, commu);
   }
   @override
   Widget build(BuildContext context) {

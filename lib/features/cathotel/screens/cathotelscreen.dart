@@ -63,7 +63,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
     Widget bodyContent;
 
     if (cathotellist == null) {
-      bodyContent = const Loader();
+      bodyContent = Center(child: const CircularProgressIndicator());
     } else if (cathotellist!.isEmpty) {
       bodyContent = Center(
         child: Text(

@@ -78,7 +78,7 @@ class _FormsEntreState extends State<FormsEntre> {
         );
         imageUrls.add(res.secureUrl);
       }
-      entreService.cathotel(
+      entreService.signinEntre(
         email: _emailController.text,
         password: _passwordController.text,
         username: _nameController.text,

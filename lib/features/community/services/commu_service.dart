@@ -14,6 +14,7 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class CommuServices {
+  //โพสต์community
   void postcommu({
     required BuildContext context,
     required String user_id,
@@ -22,7 +23,7 @@ class CommuServices {
     required List<String> images,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    // List<Commu>? commuu;
+    
 
     try {
       Commu commu = Commu(
@@ -43,14 +44,14 @@ class CommuServices {
         body: commu.toJson(),
       );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, 'โพสต์สำเร็จ!');
-          Navigator.pop(context);
-        },
-      );
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('โพสต์สำเร็จ!')),
+        );
+        Navigator.pop(context);
+      } else {
+        throw Exception('เกิข้อผิดพลาด');
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -62,7 +63,8 @@ class CommuServices {
       );
     }
   }
-
+  
+  //ดึงข้อมูลcommuทั้งหมด
   Future<List<Commu>> fetchAllCommu(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Commu> commuList = [];
@@ -71,22 +73,19 @@ class CommuServices {
         'Content-Type': 'application/json; charset=UTF-8',
         'authtoken': userProvider.user.token,
       });
-
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            commuList.add(
-              Commu.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          commuList.add(
+            Commu.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      } else {
+        throw Exception('เกิดข้อผิดพลาด');
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -99,7 +98,8 @@ class CommuServices {
     }
     return commuList;
   }
-
+  
+  //กดไลค์commu
   Future<void> likesCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -109,11 +109,7 @@ class CommuServices {
         'authtoken': userProvider.user.token,
       });
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {},
-      );
+      if (res.statusCode == 200) {}
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -125,7 +121,8 @@ class CommuServices {
       );
     }
   }
-
+  
+  //ดึงข้อมูลcommuจากidของcommuที่กำหนด
   Future<Commu> fetchIdCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -139,9 +136,8 @@ class CommuServices {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        // ตรวจสอบว่าข้อมูลที่ได้รับเป็น List หรือ Map
+
         if (data is List) {
-          // สมมติว่า API ส่งกลับมาเป็น array และคุณต้องการ object แรก
           final firstPost = data.first;
           if (firstPost is Map<String, dynamic>) {
             return Commu.fromMap(firstPost);
@@ -149,7 +145,6 @@ class CommuServices {
             throw Exception('Data format is not correct');
           }
         } else if (data is Map<String, dynamic>) {
-          // ถ้าข้อมูลที่ได้รับเป็น Map แสดงว่าเป็น single object
           return Commu.fromMap(data);
         } else {
           throw Exception('Data format is not correct');
@@ -161,7 +156,8 @@ class CommuServices {
       throw Exception('Error fetching data: $e');
     }
   }
-
+  
+  //ดึงข้อมูลคอมเมนต์ของcommuจากidที่กำหนด
   Future<List<Comment>> fetchComment(
       BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -181,13 +177,14 @@ class CommuServices {
           return Comment.fromMap(data as Map<String, dynamic>);
         }).toList();
       } else {
-        throw Exception('Failed to load comments');
+        throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
       throw Exception('Error fetching comments: $e');
     }
   }
-
+  
+  //คอมเมนต์
   Future<void> addComment({
     required BuildContext context,
     required String user_id,
@@ -209,9 +206,9 @@ class CommuServices {
 
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Add Comment Success')),
+          SnackBar(content: Text('คอมเมนต์สำเร็จ!')),
         );
-        Navigator.pop(context);
+        
       } else {
         throw Exception('Failed to add comment');
       }
@@ -226,7 +223,8 @@ class CommuServices {
       );
     }
   }
-
+  
+  //ลบคอมเมนต์
   Future<void> deleteComment(BuildContext context, String commentId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -238,14 +236,7 @@ class CommuServices {
         },
       );
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, "Comment deleted successfully.");
-          // คุณอาจต้องการอัปเดต UI ที่นี่
-        },
-      );
+      if (res.statusCode == 200) {}
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -257,7 +248,8 @@ class CommuServices {
       );
     }
   }
-
+  
+  //แก้ไขโพสต์
   Future<void> editPost(
     BuildContext context,
     String commuId,
@@ -268,7 +260,6 @@ class CommuServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<String> imageUrls = [];
     if (images != null && images.isNotEmpty) {
-      // อัปโหลดรูปภาพใหม่และรับ URL
       try {
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
         for (int i = 0; i < images.length; i++) {
@@ -300,14 +291,12 @@ class CommuServices {
           'images': imageUrls,
         }),
       );
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(context, 'แก้ไขสำเร็จ!');
-          Navigator.pop(context);
-        },
-      );
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('แก้ไขสำเร็จ!')),
+        );
+        Navigator.pop(context);
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -319,7 +308,8 @@ class CommuServices {
       );
     }
   }
-
+  
+  //รายงานปัญหา
   Future<void> report({
     required BuildContext context,
     required String user_id,
@@ -360,7 +350,8 @@ class CommuServices {
       );
     }
   }
-
+  
+  //ดึงข้อมูลreportของcommuจากidที่กำหนด
   Future<List<Report>> fetchReport(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {

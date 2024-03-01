@@ -7,7 +7,6 @@ import 'package:luvcats_app/features/expense/screens/expensescreen.dart';
 import 'package:luvcats_app/features/profile/screens/editpassword.dart';
 import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/entre.dart';
 import 'package:provider/provider.dart';
 
 

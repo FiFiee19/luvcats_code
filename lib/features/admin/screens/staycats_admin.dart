@@ -62,14 +62,14 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
 
   //ลบStrayCat
   void delete(String straycat) {
-    profileService.deleteCatStrayCat(context, straycat);
+    profileService.deleteStrayCat(context, straycat);
   }
 
   @override
   Widget build(BuildContext context) {
     Widget bodyContent;
     if (straycatlist == null) {
-      bodyContent = const Loader();
+      bodyContent = Center(child: const CircularProgressIndicator());
     } else if (straycatlist!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],

@@ -57,10 +57,10 @@ class _TabBar_entreState extends State<TabBar_entre> {
         backgroundColor: Colors.white,
         onTap: onTap,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'โปรไฟล์'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'Review'),
+              icon: Icon(Icons.notifications), label: 'การแจ้งเตือน'),
+          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'รีวิว'),
         ],
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.black,
