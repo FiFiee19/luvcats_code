@@ -204,18 +204,22 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                 ],
                               ),
-                              Text(
-                                "${catData.price}/คืน",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 12,
-                                        color: Colors.red,
+                              Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Text(
+                                  "${catData.price}/คืน",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .merge(
+                                        TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 12,
+                                          color: Colors.red,
+                                        ),
                                       ),
-                                    ),
+                                ),
                               ),
                               SizedBox(
                                 width: 3,

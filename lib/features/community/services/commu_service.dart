@@ -376,4 +376,38 @@ class CommuServices {
       throw Exception('Error fetching reports: $e');
     }
   }
+
+  Future<List<Report>> fetchAllReport(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<Report> commuList = [];
+    try {
+      http.Response res = await http.get(Uri.parse('$url/getReport'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authtoken': userProvider.user.token,
+      });
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          commuList.add(
+            Report.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
+              ),
+            ),
+          );
+        }
+      } else {
+        throw Exception('เกิดข้อผิดพลาด');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
+    }
+    return commuList;
+  }
 }

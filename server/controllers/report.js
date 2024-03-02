@@ -50,3 +50,14 @@ exports.list = async (req, res) => {
     }
 };
 
+exports.listall = async (req,res) => {
+    try {
+        const report = await Report.find({}).populate('user')
+        res.json(report)
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+
+    }
+}
