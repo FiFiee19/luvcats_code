@@ -9,6 +9,7 @@ class Report {
   Commu? commu_id;
   final String message;
   final String? id;
+  final String? createdAt;
 
   Report({
     this.user,
@@ -16,6 +17,7 @@ class Report {
     this.commu_id,
     required this.message,
     this.id,
+    this.createdAt,
   });
 
   factory Report.fromMap(Map<String, dynamic>? map) {
@@ -28,6 +30,8 @@ class Report {
       commu_id: map['commu_id'] != null ? Commu.fromMap(map['commu_id']) : null,
       message: map['message'] ?? '',
       id: map['_id'], // Assuming '_id' is the correct field from your backend
+      createdAt: map['createdAt'],
+      
     );
   }
 
@@ -38,6 +42,7 @@ class Report {
       'commu_id': commu_id?.toMap(), // Assuming commu has a toMap() method
       'message': message,
       'id': id,
+      'createdAt': createdAt,
     };
   }
 

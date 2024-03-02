@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/province.dart';
-import 'package:luvcats_app/features/auth/services/auth_service.dart';
+
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
-import 'package:luvcats_app/features/straycat/screens/forms_straycat.dart';
+
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
-import 'package:luvcats_app/widgets/carouselslider.dart';
-import 'package:luvcats_app/widgets/loader.dart';
+
 import 'package:luvcats_app/widgets/search_profile.dart';
 
 class StrayCatAdmin extends StatefulWidget {
@@ -79,26 +78,6 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 20.0),
-          child: FloatingActionButton(
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            backgroundColor: Colors.red,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FormsStrayCat(),
-                ),
-              );
-            },
-            shape: const CircleBorder(),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       );
     } else {
       bodyContent = RefreshIndicator(
@@ -391,26 +370,6 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
       ]),
       backgroundColor: Colors.grey[200],
       body: bodyContent,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: FloatingActionButton(
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.red,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FormsStrayCat(),
-              ),
-            );
-          },
-          shape: const CircleBorder(),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }

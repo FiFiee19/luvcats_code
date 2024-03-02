@@ -61,9 +61,7 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
       
     backgroundColor: Colors.white,
   
-      body: RefreshIndicator(
-        onRefresh: fetchProfile,
-        child: Column(
+      body:  Column(
           children: [
             
             Padding(
@@ -120,7 +118,7 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 }

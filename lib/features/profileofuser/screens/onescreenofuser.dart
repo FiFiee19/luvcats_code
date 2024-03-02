@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
@@ -8,6 +9,7 @@ import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
@@ -49,9 +51,15 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
       setState(() {});
     }
   }
+  void delete(String commu) {
+    profileService.deleteCommu(context, commu);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user = userProvider.user.id;
+    final userType = userProvider.user.type;
     if (commu == null) {
       return Center(child: const CircularProgressIndicator());
     } else if (commu!.isEmpty) {
@@ -80,7 +88,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          DetailCommentScreen(commu: commuData),
+                          DetailCommuAdmin(commu: commuData),
                     ),
                   );
                 },
@@ -126,53 +134,11 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                       SizedBox(
                         height: 20,
                       ),
-                      CarouselSlider(
-                        items: commuData.images.map(
-                          (i) {
-                            return Builder(
-                              builder: (BuildContext context) => Image.network(
-                                i,
-                                fit: BoxFit.contain,
-                                height: 300,
-                              ),
-                            );
-                          },
-                        ).toList(),
-                        carouselController: buttonCarouselController,
-                        options: CarouselOptions(
-                          viewportFraction: 1,
-                          height: 200,
-                          enableInfiniteScroll: false,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _current = index; 
-                            });
-                          },
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: commuData.images.asMap().entries.map((entry) {
-                          return GestureDetector(
-                            onTap: () => buttonCarouselController
-                                .animateToPage(entry.key),
-                            child: Container(
-                              width: 12.0,
-                              height: 12.0,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 4.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _current == entry.key
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.3),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                      if (commuData.images.isNotEmpty)
+              CustomCarouselSlider(
+                images: commuData.images,
+              ),
+                      
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -207,6 +173,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                               const SizedBox(
                                 height: 10.0,
                               ),
+                              if (userType == 'user')
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -259,6 +226,46 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                     '${commuData.comments.length}', // แสดงจำนวน likes
                                     style: TextStyle(color: Colors.grey),
                                   ),
+                                ],
+                              ),
+                              if (userType == 'admin')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    icon: commuData.likes.contains(user)
+                                        ? const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                          )
+                                        : const Icon(
+                                            Icons.favorite_border,
+                                          ),
+                                    onPressed: () async {},
+                                  ),
+                                  Text(
+                                    '${commuData.likes.length}', // แสดงจำนวน likes
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  IconButton(
+                                      icon: const Icon(
+                                        Icons.comment,
+                                      ),
+                                      onPressed: () {}),
+                                  Text(
+                                    '${commuData.comments.length}', // แสดงจำนวน likes
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        delete(commuData.id!);
+                                      },
+                                      icon: Icon(Icons.delete_sharp)),
                                 ],
                               ),
                             ]),

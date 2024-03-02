@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:luvcats_app/config/datetime.dart';
-import 'package:luvcats_app/config/utils.dart';
+
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
-import 'package:luvcats_app/features/report/screens/reportscreen.dart';
+
 import 'package:luvcats_app/models/comment.dart';
 import 'package:luvcats_app/models/postcommu.dart';
-import 'package:luvcats_app/models/report.dart';
+
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
-import 'package:luvcats_app/widgets/custom_button.dart';
-// import 'package:luvcats_app/widgets/custom_button.dart';
-import 'package:luvcats_app/widgets/like_animation.dart';
+
 import 'package:provider/provider.dart';
 
-class DetailCommentScreen extends StatefulWidget {
+class DetailCommuAdmin extends StatefulWidget {
   final Commu commu;
-  const DetailCommentScreen({
+  const DetailCommuAdmin({
     Key? key,
     required this.commu,
   }) : super(key: key);
 
   @override
-  State<DetailCommentScreen> createState() => _DetailCommentScreenState();
+  State<DetailCommuAdmin> createState() => _DetailCommuAdminState();
 }
 
-class _DetailCommentScreenState extends State<DetailCommentScreen> {
+class _DetailCommuAdminState extends State<DetailCommuAdmin> {
   final TextEditingController commentController = TextEditingController();
   final CommuServices commuServices = CommuServices();
   bool isLoading = true;
@@ -75,6 +73,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
       );
     }
   }
+
   //ลบCommu
   void delete(String commu) {
     profileService.deleteCommu(context, commu);
@@ -90,20 +89,11 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context, listen: false).user.id;
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user = userProvider.user.id;
+    final userType = userProvider.user.type;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBar(
-          title: Center(
-            child: Padding(
-                padding: const EdgeInsets.only(left: 220),
-                child: ReportScreen(
-                  commu: widget.commu,
-                )),
-          ),
-        ),
-      ),
+      appBar: AppBar(),
       body: RefreshIndicator(
         onRefresh: loadComments,
         child: SingleChildScrollView(
@@ -136,7 +126,12 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         ),
                   ),
                   Spacer(),
-                  
+                  if (userType == 'admin')
+                    IconButton(
+                        onPressed: () {
+                          delete(widget.commu.id!);
+                        },
+                        icon: Icon(Icons.delete_sharp)),
                 ],
               ),
             ),
@@ -182,31 +177,18 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                       ),
 
                       Spacer(), // This will take all available space pushing the following widgets to the end
-                      LikeAnimation(
-                        isAnimating: widget.commu.likes.contains(user),
-                        smallLike: true,
-                        child: IconButton(
-                          icon: widget.commu.likes.contains(user)
-                              ? const Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                )
-                              : const Icon(
-                                  Icons.favorite_border,
-                                ),
-                          onPressed: () async {
-                            setState(() {
-                              if (widget.commu.likes.contains(user)) {
-                                widget.commu.likes.remove(user);
-                              } else {
-                                widget.commu.likes.add(user);
-                              }
-                            });
-                            await commuServices.likesCommu(
-                                context, widget.commu.id!);
-                          },
-                        ),
+                      IconButton(
+                        icon: widget.commu.likes.contains(user)
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            : const Icon(
+                                Icons.favorite_border,
+                              ),
+                        onPressed: () async {},
                       ),
+
                       Text(
                         '${widget.commu.likes.length}', // แสดงจำนวน likes
                         style: TextStyle(color: Colors.grey),
@@ -308,47 +290,6 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                           ),
                         )
                         .toList(),
-                  ),
-                  Form(
-                    key: _sendCommentFormKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: commentController,
-                          scrollPadding: const EdgeInsets.all(20.0),
-                          decoration: InputDecoration(
-                            hintText: "แสดงความคิดเห็น",
-                            border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.black38),
-                            ),
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black38),
-                            ),
-                          ),
-                          validator: (val) {
-                            if (val == null || val.trim().isEmpty) {
-                              return 'กรุณาแสดงความคิดเห็น';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CustomButton(
-                          text: 'ส่ง',
-                          onTap: () {
-                            if (_sendCommentFormKey.currentState!.validate()) {
-                              addComment();
-                              commentController.clear();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
                   ),
                 ],
               ),

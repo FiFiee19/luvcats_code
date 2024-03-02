@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
+import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
+import 'package:provider/provider.dart';
 
 class DetailStraycatScreen extends StatefulWidget {
   final Straycat straycat;
@@ -16,9 +19,16 @@ class DetailStraycatScreen extends StatefulWidget {
 }
 
 class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
-  var selectedItem = '';
+  final ProfileServices profileService = ProfileServices();
+  //ลบStrayCat
+  void delete(String straycat) {
+    profileService.deleteStrayCat(context, straycat);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userType = userProvider.user.type;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
@@ -176,6 +186,20 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               ],
             ),
           ),
+          if (userType == 'admin')
+            Padding(
+              padding: const EdgeInsets.only(left: 30, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        delete(widget.straycat.id!);
+                      },
+                      icon: Icon(Icons.delete_sharp)),
+                ],
+              ),
+            ),
         ],
       )),
     );

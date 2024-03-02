@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
+import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
@@ -55,14 +56,26 @@ class _ShowSearchState extends State<ShowSearcher> {
           final commuData = filteredCommu[index];
           final userProvider = Provider.of<UserProvider>(context, listen: false);
           final user = userProvider.user.id;
-          return InkWell(
+          final userType = userProvider.user.type;
+         
+          return 
+          InkWell(
             onTap: () {
+              if(userType == 'user')
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailCommentScreen(commu: commuData),
                 ),
               );
+               if(userType == 'admin')
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailCommuAdmin(commu: commuData),
+                ),
+              );
+              
             },
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -132,6 +145,7 @@ class _ShowSearchState extends State<ShowSearcher> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+                            if(userType == 'user')
                             LikeAnimation(
                                     isAnimating: commuData.likes.contains(user),
                                     smallLike: true,
@@ -153,10 +167,21 @@ class _ShowSearchState extends State<ShowSearcher> {
                                       },
                                     ),
                                   ),
+                                  if(userType == 'admin')
+                             IconButton(
+                                      icon: commuData.likes.contains(user)
+                                          ? const Icon(Icons.favorite,
+                                              color: Colors.red)
+                                          : const Icon(Icons.favorite_border),
+                                      onPressed: () async {}
+                                       
+                                    ),
+                                  
                             Text(
                               '${commuData.likes.length}', // Display number of likes
                               style: TextStyle(color: Colors.grey),
                             ),
+                            if(userType == 'user')
                             IconButton(
                               icon: const Icon(Icons.comment),
                               onPressed: () => Navigator.of(context).push(
@@ -165,6 +190,11 @@ class _ShowSearchState extends State<ShowSearcher> {
                                       DetailCommentScreen(commu: commuData),
                                 ),
                               ),
+                            ),
+                            if(userType == 'admin')
+                            IconButton(
+                              icon: const Icon(Icons.comment),
+                              onPressed: () {}
                             ),
                             Text(
                               '${commuData.comments.length}', // Display number of comments

@@ -234,7 +234,9 @@ class CommuServices {
         },
       );
 
-      if (res.statusCode == 200) {}
+      if (res.statusCode == 200) {ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ลบสำเร็จ!')),
+        );}
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -278,7 +280,7 @@ class CommuServices {
     // ส่งข้อมูลโพสต์ร่วมกับ URL รูปภาพ
     try {
       final res = await http.put(
-        Uri.parse('$url/getStrayCat/edit/$commuId'),
+        Uri.parse('$url/getCommu/edit/$commuId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -289,6 +291,8 @@ class CommuServices {
           'images': imageUrls,
         }),
       );
+      
+      
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('แก้ไขสำเร็จ!')),
@@ -326,6 +330,7 @@ class CommuServices {
         body: jsonEncode(
             {'user_id': user_id, 'message': message, 'commu_id': commu_id}),
       );
+     
 
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -391,23 +396,16 @@ class CommuServices {
       // print('Response Body: ${res.body}'); // Print the response body
 
       if (res.statusCode == 200) {
-        List<dynamic> jsonData = jsonDecode(res.body);
-        for (int i = 0; i < jsonData.length; i++) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          print(res.body);
           commuList.add(
-            Report.fromJson(jsonData[i]),
+            Report.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
+              ),
+            ),
           );
         }
-
-        // Print the commuList to check if it's populated correctly
-        print('Commulist: $commuList');
-
-        commuList.forEach((report) {
-          print('Report ID: ${report.id}');
-          print('User ID: ${report.user_id}');
-          print('Message: ${report.message}');
-          print('Commu: ${report.commu_id}');
-          // Print other relevant fields as needed
-        });
       } else {
         throw Exception('เกิดข้อผิดพลาด');
       }
@@ -422,5 +420,32 @@ class CommuServices {
       );
     }
     return commuList;
+  }
+
+  //ลบคอมเมนต์
+  Future<void> deleteReport(BuildContext context, String reportId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.delete(
+        Uri.parse('$url/getReport/delete/$reportId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+
+      if (res.statusCode == 200) {ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ลบสำเร็จ!')),
+        );}
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
+    }
   }
 }

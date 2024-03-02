@@ -61,3 +61,22 @@ exports.listall = async (req, res) => {
         res.status(500).send('Server Error');
     }
 }
+
+exports.deleteReport = async (req, res) => {
+    
+    try {
+        const { reportId } = req.params;
+        const commuId = req.params.commu_id;
+        await Report.findByIdAndDelete(reportId);
+
+        await Commu.findByIdAndUpdate(commuId, {
+            $pull: { reports: reportId },
+        });
+        return res.status(200).json({message:"ลบสำเร็จ!"})
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({ error: 'Server Error' });
+
+    }
+
+}

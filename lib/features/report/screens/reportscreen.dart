@@ -29,6 +29,7 @@ class _ReportScreenState extends State<ReportScreen> {
         message: reportController.text,
         commu_id: widget.commu.id!,
       );
+      print(widget.commu.id!);
       // reportController.clear();
       Navigator.of(context).pop(); // Close the dialog after submitting
     }

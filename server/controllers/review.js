@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Cathotel = require('../models/cathotel');
 const Review = require('../models/review');
 
+
 exports.addReview = async (req, res) => {
     try {
         const { message, rating } = req.body;
@@ -69,6 +70,8 @@ exports.userId = async (req,res) => {
 
     }
 }
+
+
 
 
 
