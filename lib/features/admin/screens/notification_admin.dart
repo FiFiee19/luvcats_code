@@ -34,6 +34,20 @@ class _NotificationAdminState extends State<NotificationAdmin> {
   //เรียกข้อมูลAllCommuจากcommuServices
   Future<void> fetchReport() async {
     reports = await commuServices.fetchAllReport(context);
+    // if (reports != null) {
+    // for (Report report in reports!) {
+    //   print('User ID: ${report.user_id}');
+    //   print('Message: ${report.message}');
+    //   // Print other properties as needed
+    //   print('ff: ${report}');
+    //   if (report.commu_id != null) {
+    //     print('Commu ID: ${report.commu_id!.id}'); // Assuming Commu class has an 'id' field
+    //     print('Commu Title: ${report.commu_id!.title}');
+    //     // Print other Commu properties as needed
+    //   }
+    //   print('-------------------------------');
+    // }}
+    // print(reports);
     if (mounted) {
       setState(() {});
     }
@@ -155,7 +169,7 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${commuData.commu_id["title"]}",
+                                "${commuData.commu_id?.title}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle1!

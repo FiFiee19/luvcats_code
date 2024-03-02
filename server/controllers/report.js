@@ -50,14 +50,14 @@ exports.list = async (req, res) => {
     }
 };
 
-exports.listall = async (req,res) => {
+
+exports.listall = async (req, res) => {
     try {
-        const report = await Report.find({}).populate('user')
-        res.json(report)
-
+        const report = await Report.find({}).populate('user').populate('commu_id');
+        console.log(report); // Log the report data
+        res.json(report);
     } catch (e) {
-        console.log(e)
-        res.status(500).send('Server Error')
-
+        console.log(e);
+        res.status(500).send('Server Error');
     }
 }

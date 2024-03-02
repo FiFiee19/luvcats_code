@@ -23,7 +23,6 @@ class CommuServices {
     required List<String> images,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    
 
     try {
       Commu commu = Commu(
@@ -63,7 +62,7 @@ class CommuServices {
       );
     }
   }
-  
+
   //ดึงข้อมูลcommuทั้งหมด
   Future<List<Commu>> fetchAllCommu(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -98,7 +97,7 @@ class CommuServices {
     }
     return commuList;
   }
-  
+
   //กดไลค์commu
   Future<void> likesCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -121,7 +120,7 @@ class CommuServices {
       );
     }
   }
-  
+
   //ดึงข้อมูลcommuจากidของcommuที่กำหนด
   Future<Commu> fetchIdCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -156,7 +155,7 @@ class CommuServices {
       throw Exception('Error fetching data: $e');
     }
   }
-  
+
   //ดึงข้อมูลคอมเมนต์ของcommuจากidที่กำหนด
   Future<List<Comment>> fetchComment(
       BuildContext context, String commuId) async {
@@ -183,7 +182,7 @@ class CommuServices {
       throw Exception('Error fetching comments: $e');
     }
   }
-  
+
   //คอมเมนต์
   Future<void> addComment({
     required BuildContext context,
@@ -208,7 +207,6 @@ class CommuServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('คอมเมนต์สำเร็จ!')),
         );
-        
       } else {
         throw Exception('Failed to add comment');
       }
@@ -223,7 +221,7 @@ class CommuServices {
       );
     }
   }
-  
+
   //ลบคอมเมนต์
   Future<void> deleteComment(BuildContext context, String commentId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -248,7 +246,7 @@ class CommuServices {
       );
     }
   }
-  
+
   //แก้ไขโพสต์
   Future<void> editPost(
     BuildContext context,
@@ -308,7 +306,7 @@ class CommuServices {
       );
     }
   }
-  
+
   //รายงานปัญหา
   Future<void> report({
     required BuildContext context,
@@ -350,7 +348,7 @@ class CommuServices {
       );
     }
   }
-  
+
   //ดึงข้อมูลreportของcommuจากidที่กำหนด
   Future<List<Report>> fetchReport(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -380,21 +378,36 @@ class CommuServices {
   Future<List<Report>> fetchAllReport(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Report> commuList = [];
+
     try {
-      http.Response res = await http.get(Uri.parse('$url/getReport'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authtoken': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+        Uri.parse('$url/getReport'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+      );
+
+      // print('Response Body: ${res.body}'); // Print the response body
+
       if (res.statusCode == 200) {
-        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+        List<dynamic> jsonData = jsonDecode(res.body);
+        for (int i = 0; i < jsonData.length; i++) {
           commuList.add(
-            Report.fromJson(
-              jsonEncode(
-                jsonDecode(res.body)[i],
-              ),
-            ),
+            Report.fromJson(jsonData[i]),
           );
         }
+
+        // Print the commuList to check if it's populated correctly
+        print('Commulist: $commuList');
+
+        commuList.forEach((report) {
+          print('Report ID: ${report.id}');
+          print('User ID: ${report.user_id}');
+          print('Message: ${report.message}');
+          print('Commu: ${report.commu_id}');
+          // Print other relevant fields as needed
+        });
       } else {
         throw Exception('เกิดข้อผิดพลาด');
       }
