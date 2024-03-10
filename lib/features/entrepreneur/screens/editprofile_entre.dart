@@ -102,7 +102,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('แก้ไขโปรไฟล์'),
+        title: Text('แก้ไขโปรไฟล์'),
       ),
       body: SingleChildScrollView(
         child: Form(

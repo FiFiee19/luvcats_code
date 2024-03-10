@@ -10,19 +10,23 @@ class DashboardEntre extends StatelessWidget {
     required this.reviews,
   }) : super(key: key);
 
-  String ratingMessage(double avgRating) {
-    if (avgRating <= 1) {
-      return "แย่มาก";
-    } else if (avgRating <= 2) {
-      return "ไม่ดี";
-    } else if (avgRating <= 3) {
-      return "ปานกลาง";
-    } else if (avgRating <= 4) {
-      return "ดี";
-    } else {
-      return "ดีมาก";
-    }
+  String ratingMessage(int totalReviews, double avgRating) {
+  if (totalReviews == 0) {
+    return "ยังไม่มีรีวิว";
+  } else if (avgRating == 0) {
+    return "ได้รับคะแนน 0";
+  } else if (avgRating <= 1) {
+    return "แย่มาก";
+  } else if (avgRating <= 2) {
+    return "ไม่ดี";
+  } else if (avgRating <= 3) {
+    return "ปานกลาง";
+  } else if (avgRating <= 4) {
+    return "ดี";
+  } else {
+    return "ดีมาก";
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +38,11 @@ class DashboardEntre extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          final reviews = snapshot.data ?? [];
-
-          final double avgRating = reviews.isNotEmpty
-              ? reviews
-                      .map((review) => double.parse(review.rating.toString()))
-                      .reduce((a, b) => a + b) /
-                  reviews.length
-              : 0.0;
+  final reviews = snapshot.data ?? [];
+  final int totalReviews = reviews.length;
+  final double avgRating = totalReviews > 0
+    ? reviews.map((review) => review.rating).reduce((a, b) => a + b) / totalReviews
+    : 0.0;
 
           return Column(
             children: [
@@ -88,7 +89,7 @@ class DashboardEntre extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 12.0),
                           child: Text(
-                            ratingMessage(avgRating),
+            ratingMessage(totalReviews, avgRating),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 25.0,

@@ -40,37 +40,37 @@ class Commu {
   }
 
   factory Commu.fromMap(Map<String, dynamic>? map) {
-  if (map == null) {
-    throw Exception('Map cannot be null');
-  }
-  try {
-    // Handling the 'user' field
-    User? user;
-    if (map['user'] is Map<String, dynamic>) {
-      // If 'user' is a map, create a User object
-      user = User.fromMap(map['user']);
-    } else if (map['user'] is String) {
-      // If 'user' is a string, you might handle it differently
-      // Depending on your requirements, you might set user to null or use the string value
-      // For now, let's set it to null
-      user = null;
+    if (map == null) {
+      throw Exception('Map cannot be null');
     }
+    try {
+      // Handling the 'user' field
+      User? user;
+      if (map['user'] is Map<String, dynamic>) {
+        // If 'user' is a map, create a User object
+        user = User.fromMap(map['user']);
+      } else if (map['user'] is String) {
+        // If 'user' is a string, you might handle it differently
+        // Depending on your requirements, you might set user to null or use the string value
+        // For now, let's set it to null
+        user = null;
+      }
 
-    return Commu(
-      user: user,
-      user_id: map['user_id'] ?? '',
-      title: map['title'] ?? '',
-      description: map['description'] ?? '',
-      id: map['_id'], // Assuming '_id' is the correct field from your backend
-      likes: map['likes'] ?? [],
-      comments: map['comments'] ?? [],
-      images: List<String>.from(map['images'] ?? []),
-      createdAt: map['createdAt'],
-    );
-  } catch (error) {
-    throw Exception('Error creating Commu object: $error');
+      return Commu(
+        user: user,
+        user_id: map['user_id'] ?? '',
+        title: map['title'] ?? '',
+        description: map['description'] ?? '',
+        id: map['_id'], // Assuming '_id' is the correct field from your backend
+        likes: map['likes'] ?? [],
+        comments: map['comments'] ?? [],
+        images: List<String>.from(map['images'] ?? []),
+        createdAt: map['createdAt'],
+      );
+    } catch (error) {
+      throw Exception('Error creating Commu object: $error');
+    }
   }
-}
 
   String toJson() => json.encode(toMap());
 

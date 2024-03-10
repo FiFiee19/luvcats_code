@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ class UserProvider extends ChangeNotifier {
     password: "",
     type: "",
     imagesP: "",
-
   );
 
   User get user => _user;
@@ -22,7 +20,6 @@ class UserProvider extends ChangeNotifier {
     var decodedJson = json.decode(userJson);
 
     if (decodedJson['user'] != null) {
-
       _user = User.fromMap(decodedJson['user']);
     }
 
@@ -37,8 +34,15 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateUser(User updatedUser) {
-  _user = updatedUser;
+  void updateUser({String? username, String? email, String? token, String? password, String? type, String? imagesP}) {
+  if (username != null) _user.username = username;
+  if (email != null) _user.email = email;
+  if (token != null) _user.token = token;
+  if (password != null) _user.password = password;
+  if (type != null) _user.type = type;
+  if (imagesP != null) _user.imagesP = imagesP;
+
   notifyListeners();
 }
+
 }

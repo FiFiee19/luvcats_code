@@ -24,15 +24,13 @@ const commuSchema = mongoose.Schema({
           required: false,
         },
       ],
-      comments:[{
+    comments:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Comment"
     }], 
     likes:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-        }
+      {type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',}
     ],
     reports:[
       {

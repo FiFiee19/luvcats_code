@@ -3,9 +3,10 @@ import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/profileofuser/screens/onescreenofuser.dart';
 import 'package:luvcats_app/features/profileofuser/screens/twosreenofuser.dart';
 import 'package:luvcats_app/models/user.dart';
+import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProfileOfUser extends StatefulWidget {
-
   final User user;
   const ProfileOfUser({
     Key? key,
@@ -28,97 +29,112 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
     });
   }
 
+  // @override
+  // void initState() {
+  //   fetchProfile(user.id);
+
+  //   super.initState();
+  // }
   @override
   void initState() {
-    fetchProfile();
+    super.initState();
+    // Future.delayed(Duration.zero, () {
+    //   fetchProfile(userId);
+    // }
+    // );
     _pages = [
       OneScreen1(user: widget.user), // Use widget.user instead of user
       TwoScreen2(user: widget.user), // Use widget.user
     ];
     print('User ID: $widget.user');
-    super.initState();
   }
 
-  Future<void> fetchProfile() async {
-  try {
-    User? fetchedUser = await profileServices.fetchIdUser(context);
-    if (fetchedUser != null && mounted) {
-      setState(() {
-        users = fetchedUser;
-        isLoading = false;
-      });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // ดึง userId จาก UserProvider
+    final userId = Provider.of<UserProvider>(context, listen: false).user.id;
+    if (userId != null) {
+      fetchProfile(userId);
     }
-  } catch (e) {
-    // Handle error
   }
-}
+
+  Future<void> fetchProfile(String userId) async {
+    try {
+      User? fetchedUser = await profileServices.fetchIdUser(context, userId);
+      if (fetchedUser != null && mounted) {
+        setState(() {
+          users = fetchedUser;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      // Handle error
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(),
-      
-    backgroundColor: Colors.white,
-  
-      body:  Column(
-          children: [
-            
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    backgroundImage: NetworkImage(
-                      widget.user.imagesP,
-                    ),
-                    radius: 50,
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Text(
-                     widget.user.username,
-                    style: Theme.of(context).textTheme.subtitle1!.merge(
-                          const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black),
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.view_module_outlined,
-                  ),
-                  label: '',
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 10,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.store),
-                  label: '',
+                CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  backgroundImage: NetworkImage(
+                    widget.user.imagesP,
+                  ),
+                  radius: 50,
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                Text(
+                  widget.user.username,
+                  style: Theme.of(context).textTheme.subtitle1!.merge(
+                        const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      ),
                 ),
               ],
-              currentIndex: _selectedIndex,
-              onTap: onTabTapped,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              selectedItemColor: Colors.red,
-              unselectedItemColor: Colors.black,
             ),
-            Expanded(
-              child: _pages.elementAt(_selectedIndex),
-            ),
-          ],
-        ),
-      
+          ),
+          BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.view_module_outlined,
+                ),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.store),
+                label: '',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: onTabTapped,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            selectedItemColor: Colors.red,
+            unselectedItemColor: Colors.black,
+          ),
+          Expanded(
+            child: _pages.elementAt(_selectedIndex),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -144,4 +160,3 @@ class TwoScreen2 extends StatelessWidget {
     return TwoSreenOfUser(user: user);
   }
 }
-

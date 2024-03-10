@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/dashborad/screens/dashboard_straycat.dart';
 import 'package:luvcats_app/features/expense/screens/expensescreen.dart';
+import 'package:luvcats_app/features/notifications/screens/notification.dart';
 import 'package:luvcats_app/features/profile/screens/editpassword.dart';
-import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
-
 
 class HamburgerUser extends StatelessWidget {
-  
   const HamburgerUser({Key? key}) : super(key: key);
 
   void _signOutUser(BuildContext context) {
@@ -35,7 +33,10 @@ class HamburgerUser extends StatelessWidget {
             leading: Icon(Icons.notifications),
             title: const Text('การแจ้งเตือน'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationUser()),
+              );
             },
           ),
           Divider(),
@@ -71,20 +72,20 @@ class HamburgerUser extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          SizedBox(height: 20,),
-          Center(child: Text('สถิติ',style: TextStyle(fontSize: 20),)),
+          SizedBox(
+            height: 20,
+          ),
+          Center(
+              child: Text(
+            'สถิติ',
+            style: TextStyle(fontSize: 20),
+          )),
           DashboardStraycat(
-            catData: catServices.fetchAllCats(context), // This is the future being passed
+            catData: catServices
+                .fetchAllCats(context), // This is the future being passed
           ),
         ],
       ),
     );
   }
 }
-
-
-
-
-
-
-

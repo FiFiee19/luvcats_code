@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
-import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
-import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/review.dart';
-import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:provider/provider.dart';
 
 class ReviewEntre extends StatefulWidget {
   // final Cathotel cathotel;
@@ -65,7 +61,6 @@ class _ReviewEntreState extends State<ReviewEntre> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -74,34 +69,46 @@ class _ReviewEntreState extends State<ReviewEntre> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: 
-        RefreshIndicator(
+        body: RefreshIndicator(
             onRefresh: loadReviews,
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      calculateAverageRating().toStringAsFixed(
-                          1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  if (reviews.isEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(right: 2),
+                      child: Text(
+                        'ยังไม่มีการให้คะแนน', // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  RatingBar.builder(
-                    initialRating: calculateAverageRating(),
-                    ignoreGestures: true,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
+                  if (reviews.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        calculateAverageRating().toStringAsFixed(
+                            1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    onRatingUpdate: (rating) {},
-                  ),
+                  if (reviews.isNotEmpty)
+                    RatingBar.builder(
+                      initialRating: calculateAverageRating(),
+                      ignoreGestures: true,
+                      // minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 20.0,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (rating) {},
+                    ),
                   Padding(
                     padding: EdgeInsets.all(8),
                     child: Text(
@@ -146,7 +153,8 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 30),
+                                        padding:
+                                            const EdgeInsets.only(left: 30),
                                         child: RatingBar.builder(
                                           initialRating: review.rating,
                                           ignoreGestures: true,
@@ -155,7 +163,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                           itemCount: 5,
                                           itemSize: 20.0,
                                           itemPadding: EdgeInsets.symmetric(
-                                              horizontal:2.0),
+                                              horizontal: 2.0),
                                           itemBuilder: (context, _) => Icon(
                                             Icons.star,
                                             color: Colors.amber,
@@ -179,8 +187,8 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                             left: 6, bottom: 10),
                                         child: Text(
                                           review.createdAt != null
-                                              ? DateFormat('yyyy-MM-dd')
-                                                  .format(DateTime.parse(
+                                              ? DateFormat('yyyy-MM-dd').format(
+                                                  DateTime.parse(
                                                       review.createdAt!))
                                               : 'ไม่ทราบวันที่',
                                         ),

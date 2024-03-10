@@ -1,15 +1,9 @@
-import 'package:carousel_slider/carousel_controller.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/editentre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/editprofile_entre.dart';
-import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
-import 'package:luvcats_app/features/profile/screens/editprofile.dart';
 import 'package:luvcats_app/models/cathotel.dart';
-import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -37,12 +31,11 @@ class _Profile_EntreState extends State<Profile_Entre> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     cathotel =
         await cathotelServices.fetchCatIdProfile(context, userProvider.user.id);
-    
+
     if (mounted) {
       setState(() {});
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +49,6 @@ class _Profile_EntreState extends State<Profile_Entre> {
     }
     final cathotelData = cathotel!;
     return Scaffold(
-      
       backgroundColor: Colors.grey[200],
       body: RefreshIndicator(
         onRefresh: fetchProfile,
@@ -70,7 +62,7 @@ class _Profile_EntreState extends State<Profile_Entre> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 270),
+                  padding: const EdgeInsets.only(left: 250),
                   child: ElevatedButton(
                     child: Text(
                       'แก้ไขโปรไฟล์',
@@ -82,14 +74,15 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EditProfileEntre(CathotelId: cathotelData.id,),
+                          builder: (context) => EditProfileEntre(
+                            CathotelId: cathotelData.id,
+                          ),
                         ),
                       );
                     },
                     style: ElevatedButton.styleFrom(primary: Colors.grey),
                   ),
                 ),
-                
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -107,14 +100,18 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       SizedBox(
                         width: 30,
                       ),
-                      Text(
-                        cathotelData.user!.username,
-                        style: Theme.of(context).textTheme.subtitle1!.merge(
-                              const TextStyle(
+                      Expanded(
+                        child: Text(
+                          cathotelData.user!.username,
+                          style: Theme.of(context).textTheme.subtitle1!.merge(
+                                const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.black),
-                            ),
+                                  color: Colors.black,
+                                ),
+                              ),
+                          softWrap: true,
+                        ),
                       ),
                     ],
                   ),
@@ -141,7 +138,7 @@ class _Profile_EntreState extends State<Profile_Entre> {
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
                       setState(() {
-                        _current = index; 
+                        _current = index;
                       });
                     },
                   ),
@@ -167,170 +164,168 @@ class _Profile_EntreState extends State<Profile_Entre> {
                     );
                   }).toList(),
                 ),
-                 Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(
-                          height: 10.0,
+                        Text(
+                          "รายละเอียด: ",
+                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
                         ),
-                        Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "รายละเอียด: ",
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.grey.shade900,
-                        ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20, right: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    cathotelData.description,
-                    softWrap: true,
-                    overflow: TextOverflow.visible,
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade900,
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 30, bottom: 20, right: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            cathotelData.description,
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            style: Theme.of(context).textTheme.subtitle2!.merge(
+                                  TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade900,
+                                  ),
+                                ),
                           ),
                         ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Divider(),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "ราคา:  ",
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.grey.shade900,
+                  Divider(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "ราคา:  ",
+                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
                         ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  cathotelData.price.toString() + "/คืน",
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          cathotelData.price.toString() + "/คืน",
+                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
                         ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Divider(),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "จังหวัด:  ",
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.grey.shade900,
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "จังหวัด:  ",
+                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
                         ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  cathotelData.province,
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          cathotelData.province,
+                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
                         ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Divider(),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "ช่องทางการติดต่อ: ",
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.grey.shade900,
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "ช่องทางการติดต่อ: ",
+                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
                         ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  cathotelData.contact,
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          cathotelData.contact,
+                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade900,
+                                ),
+                              ),
                         ),
-                      ),
-                ),
-              ],
-            ),
-          ),
-                      ]),
-                
+                      ],
+                    ),
+                  ),
+                ]),
               ],
             ),
           ),

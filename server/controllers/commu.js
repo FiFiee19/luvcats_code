@@ -13,10 +13,12 @@ exports.list = async (req,res) => {
     }
 }
 
-exports.create = async (req,res) => {
+
+exports.create = async (req, res) => {
     try {
         const {title,description,images} = req.body
         const user = await User.findById(req.user);
+        
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
@@ -28,35 +30,75 @@ exports.create = async (req,res) => {
             images
             
         })
-
+        
         commu = await commu.save()
         res.json(commu)
 
+        
+
+        // res.send(straycat);
     } catch (e) {
-        console.log(e)
-        res.status(500).send('Server Error')
-
+        console.log(e);
+        res.status(500).send('Server Error');
+        
     }
 }
 
-exports.likes = async (req , res ) => {
+exports.likes = async (req, res) => {
     try {
-        const {commuId} = req.params;
-         
-        var likesPost = await Commu.findById(commuId);
-        if(!likesPost) return res.status(404).json("Post not found !!")
-        
-        if(likesPost.likes.includes(req.user)){
-            likesPost = await Commu.findByIdAndUpdate(commuId , {$pull:{likes:req.user}} , {new:true}) 
-        }else{
-            likesPost = await Commu.findByIdAndUpdate(commuId , {$push:{likes:req.user}} , {new:true}) 
+        const { commuId } = req.params;
+        const userId = req.user; // สมมติว่า req.user._id คือ ObjectId ของผู้ใช้งานที่ทำการ like
+
+        let commuPost = await Commu.findById(commuId);
+        if (!commuPost) return res.status(404).json("Post not found !!");
+
+        const index = commuPost.likes.indexOf(userId);
+        if (index > -1) {
+            // User already liked the post, so remove their like
+            await Commu.findByIdAndUpdate(commuId, { $pull: { likes: userId } }, { new: true });
+        } else {
+            // User has not liked the post yet, so add their like
+            await Commu.findByIdAndUpdate(commuId, { $push: { likes: userId } }, { new: true });
         }
-        
-        return res.status(200).json(await likesPost.populate('user_id'));
+
+        commuPost = await Commu.findById(commuId).populate('user').populate('likes', 'username imagesP'); // หลังจากอัปเดต ทำการ populate เพื่อแสดงข้อมูล
+        return res.status(200).json(commuPost);
     } catch (error) {
-        return res.status(500).json(error.message);
+        return res.status(500).json({ message: error.message });
     }
-}
+};
+
+
+exports.noti_likes = async (req, res) => {
+    try {
+        // สมมุติว่า `req.user` เป็น ID ของผู้ใช้ที่ทำการร้องขอ
+        const commus = await Commu.find({ user_id: req.user })
+                                  .populate('likes', 'username imagesP')
+                                  .exec();
+
+        if (!commus.length) {
+            return res.status(404).send({ message: 'No Commu found for this user.' });
+        }
+
+        // ปรับปรุงการแสดงข้อมูล
+        const allLikes = commus.map(commu => ({
+            title: commu.title,
+            likes: commu.likes.map(like => ({
+                userId: like._id, // แสดง userId ของผู้ใช้ที่กดถูกใจ
+                username: like.username, // ชื่อผู้ใช้
+                imagesP: like.imagesP // ภาพโปรไฟล์ของผู้ใช้
+            })) 
+        }));
+
+        res.status(200).send(allLikes);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};
+
+
+
+
 
 exports.userId = async (req,res) => {
     try {
@@ -110,7 +152,7 @@ exports.addComment = async (req, res) => {
             message,
             user_id: req.user,
             user: user,
-            commu_id: commu
+            commu_id: commu._id
         })
         await newComment.save();
         var addComment = await Commu.findById(commuId);
@@ -148,6 +190,42 @@ exports.comment = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.commentUser = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const commuPosts = await Commu.find({ user_id }).populate({
+            path: 'comments',
+            populate: { path: 'user' }
+        });
+
+        // Assuming you want to gather all comments from all posts by this user
+        let allComments = [];
+        commuPosts.forEach(post => {
+            allComments = [...allComments, ...post.comments];
+        });
+
+        if (allComments.length === 0) {
+            return res.status(404).json({ msg: 'Comments not found' });
+        }
+
+        // Transform comments to include user details
+        const commentsWithUserDetails = allComments.map(comment => ({
+            id : comment.id,
+            commu_id: comment.commu_id,
+            message: comment.message,
+            user: comment.user, 
+            createdAt: comment.createdAt,
+            // include any other fields you need
+        }));
+        console.log(commentsWithUserDetails.map(c => c.id));
+        res.json(commentsWithUserDetails);
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Server Error');
+    }
+};
+
 
 exports.deletePost = async (req, res) => {
     

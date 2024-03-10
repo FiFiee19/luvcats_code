@@ -4,7 +4,7 @@ import 'package:luvcats_app/features/admin/screens/notification_admin.dart';
 import 'package:luvcats_app/features/admin/screens/staycats_admin.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/report_entre.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/dashboard_entre.dart';
 
 
 class TabBar_admin extends StatefulWidget {

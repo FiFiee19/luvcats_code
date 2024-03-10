@@ -8,6 +8,7 @@ const entrepreneurRouter = require("./routes/entrepreneur");
 const cathotelRouter = require("./routes/cathotel");
 const reportRouter = require("./routes/report");
 const reviewRouter = require("./routes/review");
+const expenseRouter = require("./routes/expense");
 const PORT = process.env.PORT || 5000;
 const app = express();
 const connectDB = require('./config/db');
@@ -22,7 +23,7 @@ app.use(entrepreneurRouter);
 app.use(cathotelRouter);
 app.use(reportRouter);
 app.use(reviewRouter);
-
+app.use(expenseRouter);
 
 //connect database
 connectDB()

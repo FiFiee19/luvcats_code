@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/dashborad/screens/dashboard_entre.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/dashboard_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/report_entre.dart';
 
 // import '../pages/commu.dart';
 
@@ -60,7 +59,7 @@ class _TabBar_entreState extends State<TabBar_entre> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'โปรไฟล์'),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications), label: 'การแจ้งเตือน'),
-          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'รีวิว'),
+          BottomNavigationBarItem(icon: Icon(Icons.report), label: 'ภาพรวม'),
         ],
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.black,

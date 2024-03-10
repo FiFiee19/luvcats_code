@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/utils.dart';
@@ -21,16 +21,13 @@ class _EditprofileState extends State<Editprofile> {
   bool isLoading = true;
   File? imagesP; // รูปภาพที่เลือกใหม่
   String? imageUrl;
-  
+
   ProfileServices profileServices = ProfileServices();
 
   @override
   void initState() {
     super.initState();
     usernameController = TextEditingController();
-
-    // ทำการโหลดข้อมูลโพสต์เดิม
-    _loadProfile();
   }
 
   @override
@@ -42,27 +39,29 @@ class _EditprofileState extends State<Editprofile> {
   }
 
   void _submitForm() async {
-  if (globalFormKey.currentState!.validate()) {
-    User? updatedUser = await profileServices.editUser(context, usernameController.text, imagesP);
-    if (updatedUser != null) {  
-      Provider.of<UserProvider>(context, listen: false).updateUser(updatedUser);
-      Navigator.pop(context, true);
-    } else {
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update the profile')),
-      );
+    if (globalFormKey.currentState!.validate()) {
+      User? updatedUser = await profileServices.editUser(
+          context, usernameController.text, imagesP);
+      if (updatedUser != null) {
+        Provider.of<UserProvider>(context, listen: false)
+            .updateUser(username: usernameController.text, imagesP: imageUrl);
+      }
     }
   }
-}
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // ดึง userId จาก UserProvider
+    final userId = Provider.of<UserProvider>(context, listen: false).user.id;
+    if (userId != null) {
+      _loadProfile(userId);
+    }
+  }
 
-
-  Future<void> _loadProfile() async {
+  Future<void> _loadProfile(String userId) async {
     try {
-      final profile = await profileServices.fetchIdUser(
-        context,
-      );
+      final profile = await profileServices.fetchIdUser(context, userId);
       usernameController.text = profile.username;
       imageUrl = profile.imagesP;
     } catch (e) {
@@ -121,7 +120,6 @@ class _EditprofileState extends State<Editprofile> {
                             Icon(Icons.camera_alt,
                                 color: Colors.grey, size: 50),
                             SizedBox(height: 15),
-                            
                           ],
                         ),
                       ),

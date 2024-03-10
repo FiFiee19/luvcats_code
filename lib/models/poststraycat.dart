@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:luvcats_app/models/user.dart';
 
 class Straycat {
@@ -11,7 +12,7 @@ class Straycat {
   final String? id;
   final List<String> images;
   final String? status;
-final String? createdAt;
+  final String? createdAt;
   Straycat({
     this.user,
     required this.user_id,
@@ -22,7 +23,7 @@ final String? createdAt;
     this.id,
     required this.images,
     this.status,
-     this.createdAt,
+    this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +45,7 @@ final String? createdAt;
     if (map == null) {
       throw Exception('Map cannot be null');
     }
+    print('ข้อมูล User Straycat จาก map: ${map['user']}');
     return Straycat(
       user: map['user'] != null ? User.fromMap(map['user']) : null,
       user_id: map['user_id'] ?? '',
@@ -60,7 +62,6 @@ final String? createdAt;
 
   String toJson() => json.encode(toMap());
 
-  factory Straycat.fromJson(String source) => Straycat.fromMap(json.decode(source));
-
-  
+  factory Straycat.fromJson(String source) =>
+      Straycat.fromMap(json.decode(source));
 }

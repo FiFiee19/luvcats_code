@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
 import 'package:luvcats_app/features/home/home.dart';
+import 'package:luvcats_app/providers/profile_provider.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,12 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProxyProvider<UserProvider, ProfileProvider>(
+          create: (context) => ProfileProvider(
+              Provider.of<UserProvider>(context, listen: false)),
+          update: (context, userProvider, profileProvider) =>
+              ProfileProvider(userProvider),
+        ),
       ],
       child: const MyApp(),
     ),

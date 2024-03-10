@@ -1,8 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:luvcats_app/config/datetime.dart';
-import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
 import 'package:luvcats_app/features/community/screens/forms_commu.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
@@ -10,7 +7,6 @@ import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
-import 'package:luvcats_app/widgets/loader.dart';
 import 'package:luvcats_app/widgets/search_commu.dart';
 import 'package:provider/provider.dart';
 
@@ -37,12 +33,11 @@ class _CommuScreenState extends State<CommuScreen> {
     commu = await commuServices.fetchAllCommu(context);
 
     if (mounted) {
-      commu!.sort((a, b) => DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
+      commu!.sort((a, b) =>
+          DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
       setState(() {});
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +76,8 @@ class _CommuScreenState extends State<CommuScreen> {
       );
     } else {
       return Scaffold(
-        appBar:AppBar(actions: [IconButton(
+        appBar: AppBar(actions: [
+          IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
               showSearch(
@@ -89,7 +85,8 @@ class _CommuScreenState extends State<CommuScreen> {
                 delegate: CommuSearchDelegate(commulist: commu ?? []),
               );
             },
-          ),]),
+          ),
+        ]),
         backgroundColor: Colors.grey[200],
         body: RefreshIndicator(
           onRefresh: fetchAllCommu,
@@ -224,12 +221,16 @@ class _CommuScreenState extends State<CommuScreen> {
                               padding:
                                   const EdgeInsets.only(left: 5, bottom: 10),
                               child: Text(
-                                formatDateTime(commuData.createdAt),style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
+                                formatDateTime(commuData.createdAt),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
                               ),
                             ),
                           ],
@@ -266,4 +267,3 @@ class _CommuScreenState extends State<CommuScreen> {
     }
   }
 }
-

@@ -70,6 +70,18 @@ exports.userId = async (req,res) => {
 
     }
 }
+// exports.list = async (req, res) => {
+//     try {
+//         const cathotel = await Cathotel.find({}).populate('user')
+//         res.json(cathotel);
+ 
+        
+//     } catch (e) {
+//         console.log(e)
+//         res.status(500).send('Server Error')
+//     }
+
+// }
 
 
 

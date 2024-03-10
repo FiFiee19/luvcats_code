@@ -1,10 +1,9 @@
 // import 'package:flutter/material.dart';
 // import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
-// // สมมติว่าคุณมีโมเดลสำหรับร้านและรีวิว
 // import 'package:luvcats_app/models/cathotel.dart';
 // import 'package:luvcats_app/models/review.dart';
-
-
+// import 'package:luvcats_app/providers/user_provider.dart';
+// import 'package:provider/provider.dart';
 
 // class DashboardRank extends StatefulWidget {
 //   const DashboardRank({super.key});
@@ -14,52 +13,70 @@
 // }
 
 // class _DashboardRankState extends State<DashboardRank> {
-//   Cathotel? cathotel;
-//   List<Cathotel>? allcathotel;
+//   List<Cathotel>? allCathotels;
+//   List<Review>? reviews;
+//   int? rank; // The rank of your specific cathotel
+//   int? totalCathotels;
+//   Cathotel? highestRatedCathotel;
 //   final CathotelServices cathotelServices = CathotelServices();
+
 //   @override
 //   void initState() {
 //     super.initState();
-//     fetchAllCathotel();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       fetchAllCathotels();
+//     });
 //   }
 
-//   //เรียกข้อมูลAllCathotelในcathotelServices
-//   Future<void> fetchAllCathotel() async {
-//     allcathotel = await cathotelServices.fetchAllCathotel(context);
-//     double calculateAverageRating(List<Review> reviews) {
-//       if (reviews.isEmpty) return 0.0;
-//       double sum = reviews.fold(0.0, (sum, item) => sum + item.rating);
-//       return  sum / reviews.length;
-//     }
-//     allcathotel?.sort((a, b) => b.calculateAverageRating().compareTo(a.averageRating));
-    
+//   Future<void> fetchAllCathotels() async {
+//     // Correctly fetching all cathotels and sorting them
+//     List<Cathotel> cathotels = await cathotelServices.fetchAllCathotel();
+//     if (cathotels.isNotEmpty) {
+//       cathotels.sort((a, b) => b.averageRating.compareTo(a.averageRating));
 
-//     if (mounted) {
-//       setState(() {});
+//       // Assuming you're interested in finding the rank of the user's own cathotel
+//       final userProvider = Provider.of<UserProvider>(context, listen: false);
+//       reviews =
+//             cathotelServices.fetchReviewsUser(context, userProvider.user.id);
+//       String yourCathotelId = reviews; // Assuming this is how you get the user's cathotel ID
+
+//       setState(() {
+//         allCathotels = cathotels;
+//         highestRatedCathotel = cathotels.first;
+//         totalCathotels = cathotels.length;
+//         rank = cathotels.indexWhere((c) => c.id == yourCathotelId) + 1; // Finding the rank
+//       });
 //     }
 //   }
-//   double calculateAverageRating(List<Review> reviews) {
-//       if (reviews.isEmpty) return 0.0;
-//       double sum = reviews.fold(0.0, (sum, item) => sum + item.rating);
-//       return sum / reviews.length;
-//     }
 
 //   @override
 //   Widget build(BuildContext context) {
-//     if (allcathotel == null) {
-//       return CircularProgressIndicator();
-//     } else if (allcathotel!.isEmpty) {
-//       return Text("No data available");
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Cathotel Rankings'),
+//       ),
+//       body: buildBody(),
+//     );
+//   }
+
+//   Widget buildBody() {
+//     if (allCathotels == null) {
+//       return Center(child: CircularProgressIndicator());
+//     } else if (allCathotels!.isEmpty) {
+//       return Center(child: Text("No cathotels available"));
 //     } else {
-//       return ListView.builder(
-//         itemCount: allcathotel!.length,
-//         itemBuilder: (context, index) {
-//           final cathotel = allcathotel![index];
-//           return ListTile(
-//             title: Text(cathotel.user!.username),
-//             subtitle: Text("Average Rating: '$calculateAverageRating()'"),
-//           );
-//         },
+//       return ListView(
+//         children: [
+//           if (highestRatedCathotel != null)
+//             ListTile(
+//               title: Text('Highest Rated Cathotel: ${highestRatedCathotel!.name}'),
+//               subtitle: Text('Rating: ${highestRatedCathotel!.averageRating.toStringAsFixed(2)}'),
+//             ),
+//           if (rank != null && totalCathotels != null)
+//             ListTile(
+//               title: Text('Your Cathotel Rank: $rank out of $totalCathotels'),
+//             ),
+//         ],
 //       );
 //     }
 //   }

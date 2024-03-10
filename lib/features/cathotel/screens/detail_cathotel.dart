@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
 import 'package:luvcats_app/features/cathotel/screens/forms_review.dart';
 import 'package:luvcats_app/features/cathotel/screens/review_screen.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
-import 'package:luvcats_app/features/report/screens/reportscreen.dart';
-import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/review.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
-import 'package:luvcats_app/widgets/loader.dart';
 
 class DetailCathotelScreen extends StatefulWidget {
   final Cathotel cathotel;
@@ -36,20 +32,21 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
   }
 
   Future<void> loadReviews() async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
     try {
-      reviews =
+      final fetchedReviews =
           await cathotelServices.fetchReviews(context, widget.cathotel.id);
-      print(reviews);
+      if (mounted) {
+        setState(() {
+          reviews = fetchedReviews;
+          totalRating = calculateAverageRating();
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      print(e.toString());
-    }
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 

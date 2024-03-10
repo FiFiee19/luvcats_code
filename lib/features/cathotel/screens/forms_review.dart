@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/review.dart';
@@ -33,17 +32,19 @@ class _FormsReviewState extends State<FormsReview> {
     print(widget.cathotel);
   }
 
-
-
   void addReview() async {
-    print("Attempting to add comment"); // Debugging statement
+    print("Attempting to add review"); // Debugging statement
     if (_sendReviewFormKey.currentState?.validate() ?? false) {
       final userId = Provider.of<UserProvider>(context, listen: false).user.id;
+      final double rating = ratingController.text.isNotEmpty
+          ? double.parse(ratingController.text)
+          : 0.0; // อนุญาตให้ส่งคะแนน 0
+
       await cathotelServices.addReview(
         user_id: userId,
         context: context,
         message: messageController.text,
-        rating: double.parse(ratingController.text),
+        rating: rating, // ใช้ตัวแปร rating ที่คำนวณไว้
         cathotelId: widget.cathotel.id,
       );
     }
@@ -62,12 +63,12 @@ class _FormsReviewState extends State<FormsReview> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      centerTitle: true,
-      title: const Text(
-        'ให้คะแนน',style: TextStyle(color: Colors.black),
+        centerTitle: true,
+        title: const Text(
+          'ให้คะแนน',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-      
-    ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -75,10 +76,12 @@ class _FormsReviewState extends State<FormsReview> {
               key: _sendReviewFormKey,
               child: Column(
                 children: [
-                   SizedBox(height: 50,),
+                  SizedBox(
+                    height: 50,
+                  ),
                   RatingBar.builder(
                     initialRating: 0,
-                    minRating: 1,
+                    minRating: 0,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     itemCount: 5,
@@ -92,9 +95,13 @@ class _FormsReviewState extends State<FormsReview> {
                           rating.toString(); // อัปเดตค่าใน ratingController
                     },
                   ),
-                  SizedBox(height: 50,),
+                  SizedBox(
+                    height: 50,
+                  ),
                   Divider(),
-                  SizedBox(height: 50,),
+                  SizedBox(
+                    height: 50,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: TextFormField(
@@ -119,7 +126,6 @@ class _FormsReviewState extends State<FormsReview> {
                       },
                     ),
                   ),
-                  
                   SizedBox(height: 20),
                   CustomButton(
                     text: 'ส่ง',

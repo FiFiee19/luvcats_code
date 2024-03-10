@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:luvcats_app/config/datetime.dart';
-import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/comment.dart';
 import 'package:luvcats_app/models/postcommu.dart';
-import 'package:luvcats_app/models/report.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
@@ -75,6 +72,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
       );
     }
   }
+
   //ลบCommu
   void delete(String commu) {
     profileService.deleteCommu(context, commu);
@@ -136,7 +134,6 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         ),
                   ),
                   Spacer(),
-                  
                 ],
               ),
             ),
@@ -211,6 +208,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         '${widget.commu.likes.length}', // แสดงจำนวน likes
                         style: TextStyle(color: Colors.grey),
                       ),
+
                       SizedBox(
                         width: 20,
                       ),

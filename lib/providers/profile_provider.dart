@@ -11,44 +11,40 @@ import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class ProfileServices {
-  //ดึงข้อมูลcommuจากuser_idของผู้ใช้งาน
-  Future<List<Commu>> fetchCommuProfile(BuildContext context) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final userId = userProvider.user.id;
-    List<Commu> commuList = [];
+class ProfileProvider with ChangeNotifier {
+  List<Commu> _commuList = [];
+  List<Straycat> _straycatList = [];
+
+  List<Commu> get commuList => _commuList;
+  List<Straycat> get straycatList => _straycatList;
+
+  final UserProvider _userProvider;
+  ProfileProvider(this._userProvider);
+  
+  // Fetch Community Posts by User ID
+  Future<void> fetchCommuProfile() async {
+    final userId = _userProvider.user.id;
     try {
-      http.Response res =
-          await http.get(Uri.parse('$url/getCommu/$userId'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authtoken': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+        Uri.parse('$url/getCommu/$userId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': _userProvider.user.token,
+        },
+      );
 
       if (res.statusCode == 200) {
-        for (int i = 0; i < jsonDecode(res.body).length; i++) {
-          commuList.add(
-            Commu.fromJson(
-              jsonEncode(
-                jsonDecode(res.body)[i],
-              ),
-            ),
-          );
-        }
+        _commuList = (jsonDecode(res.body) as List)
+            .map((data) => Commu.fromJson(jsonEncode(data)))
+            .toList();
+        notifyListeners();
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(30),
-        ),
-      );
+      // Handle errors
+      throw Exception('Error fetching community posts: $e');
     }
-    return commuList;
   }
 
-  //ดึงข้อมูลcommuจากuser_idที่กำหนด
   Future<List<Commu>> fetchCommuId(BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -322,11 +318,12 @@ class ProfileServices {
         final responseData = json.decode(response.body);
         if (responseData is Map<String, dynamic>) {
           final updatedUser = User.fromMap(responseData);
-          userProvider.updateUser();
+          userProvider.setUserFromModel(updatedUser);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('แก้ไขสำเร็จ!')),
           );
-          Navigator.pop(context);
+          // You can also choose to navigate back
+          // Navigator.pop(context);
           return updatedUser;
         } else {
           throw Exception('Invalid response format');
@@ -340,7 +337,7 @@ class ProfileServices {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text('An error occurred: $e'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
           margin: EdgeInsets.all(30),
@@ -411,4 +408,6 @@ class ProfileServices {
       return null;
     }
   }
+
+  
 }

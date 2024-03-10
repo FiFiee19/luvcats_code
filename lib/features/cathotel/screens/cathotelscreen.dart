@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/screens/detail_cathotel.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
-
-import 'package:luvcats_app/widgets/loader.dart';
 import 'package:luvcats_app/widgets/search_cathotel.dart';
 
 class CatHotelScreen extends StatefulWidget {
@@ -80,7 +77,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
             crossAxisCount: 2,
             crossAxisSpacing: 12.0,
             mainAxisSpacing: 12.0,
-            mainAxisExtent: 330,
+            mainAxisExtent: 350,
           ),
           itemBuilder: (context, index) {
             final catData = cathotellist![index];
@@ -139,7 +136,9 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                 width: 10,
                               ),
                               Text(
-                                catData.user!.username,
+                                catData.user!.username.length > 15
+                                    ? "${catData.user!.username.substring(0, 15)}..."
+                                    : catData.user!.username,
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle1!

@@ -8,7 +8,6 @@ import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/straycat/screens/forms_straycat.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
-import 'package:luvcats_app/widgets/loader.dart';
 import 'package:luvcats_app/widgets/search_profile.dart';
 
 class StrayCatScreen extends StatefulWidget {
@@ -175,13 +174,18 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                           ),
                           Row(
                             children: [
-                              Text("สายพันธุ์:  ",
-                              style: Theme.of(context).textTheme.subtitle2!.merge(
+                              Text(
+                                "สายพันธุ์:  ",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Colors.grey.shade900,
                                       ),
-                                    ),),
+                                    ),
+                              ),
                               Text(
                                 straycat.breed.length > 10
                                     ? "${straycat.breed.substring(0, 10)}..."
@@ -198,18 +202,26 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               ),
                             ],
                           ),
-                          
                           Row(
                             children: [
-                              Text("เพศ:  ",style: Theme.of(context).textTheme.subtitle2!.merge(
+                              Text(
+                                "เพศ:  ",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Colors.grey.shade900,
                                       ),
-                                    ),),
+                                    ),
+                              ),
                               Text(
                                 " ${straycat.gender}",
-                                style: Theme.of(context).textTheme.subtitle2!.merge(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .merge(
                                       TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.grey.shade900,
@@ -262,6 +274,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                       .subtitle2!
                                       .merge(
                                         TextStyle(
+                                          fontSize: 8,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.grey.shade600,
                                         ),
