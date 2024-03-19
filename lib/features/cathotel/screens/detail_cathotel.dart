@@ -131,6 +131,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 ],
               ),
             ),
+            
             Padding(
               padding: const EdgeInsets.only(left: 30, bottom: 20, right: 30),
               child: Row(

@@ -141,7 +141,7 @@ class _CommuScreenState extends State<CommuScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
 
                       // Conditional rendering based on whether there are images
                       if (commuData.images.isNotEmpty)

@@ -42,10 +42,10 @@ class _EditprofileState extends State<Editprofile> {
     if (globalFormKey.currentState!.validate()) {
       User? updatedUser = await profileServices.editUser(
           context, usernameController.text, imagesP);
-      if (updatedUser != null) {
-        Provider.of<UserProvider>(context, listen: false)
-            .updateUser(username: usernameController.text, imagesP: imageUrl);
-      }
+      // if (updatedUser != null) {
+      //   Provider.of<UserProvider>(context, listen: false)
+      //       .updateUser(username: usernameController.text, imagesP: imageUrl);
+      // }
     }
   }
 

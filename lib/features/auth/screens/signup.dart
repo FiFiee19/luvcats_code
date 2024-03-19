@@ -6,9 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/models/user.dart';
-import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
-import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -29,7 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isImageSelected = false;
   var user = User;
   File? _image;
-  
+
   //เลือกรูปภาพ
   void _pickImage() async {
     var res = await pickImageGallery();
@@ -37,7 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
       _image = res;
     });
   }
-  
+
   //สมัครสมาชิก
   void signupUser() async {
     if (_signupFormKey.currentState!.validate() &&
@@ -46,7 +44,8 @@ class _SignupScreenState extends State<SignupScreen> {
       //บันทึกภาพลงCloudinary
       final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
       CloudinaryResponse resimg = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(_image!.path, folder: "ImageP/user",publicId: _nameController.text),
+        CloudinaryFile.fromFile(_image!.path,
+            folder: "ImageP/user", publicId: _nameController.text),
       );
       print(resimg.secureUrl);
 
@@ -234,7 +233,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.all(3.0),
+                padding: EdgeInsets.all(3.0),
                 child: TextFormField(
                   controller: _cpasswordController,
                   validator: (value) {

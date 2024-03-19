@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/cathotel/screens/cathotelscreen.dart';
 import 'package:luvcats_app/features/community/screens/commuscreen.dart';
-import 'package:luvcats_app/features/map/screens/mapscreen.dart';
+import 'package:luvcats_app/features/map/screens/custom_marker_info_window.dart';
 import 'package:luvcats_app/features/profile/screens/profilescreen.dart';
 import 'package:luvcats_app/features/straycat/screens/straycatscreen.dart';
 
@@ -48,7 +48,7 @@ class _tab_BarState extends State<tab_Bar> {
           StrayCatScreen(),
           CatHotelScreen(),
           CommuScreen(),
-          Map_Cat(),
+          CustomMarketInfoWindow(),
           ProfileScreen(),
         ],
         controller: pageController,

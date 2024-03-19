@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
-import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
@@ -11,7 +10,6 @@ import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
-import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
 class OneScreenOfUser extends StatefulWidget {
@@ -51,6 +49,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
       setState(() {});
     }
   }
+
   void delete(String commu) {
     profileService.deleteCommu(context, commu);
   }
@@ -87,8 +86,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          DetailCommuAdmin(commu: commuData),
+                      builder: (context) => DetailCommuAdmin(commu: commuData),
                     ),
                   );
                 },
@@ -135,10 +133,9 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                         height: 20,
                       ),
                       if (commuData.images.isNotEmpty)
-              CustomCarouselSlider(
-                images: commuData.images,
-              ),
-                      
+                        CustomCarouselSlider(
+                          images: commuData.images,
+                        ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -174,100 +171,103 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                 height: 10.0,
                               ),
                               if (userType == 'user')
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  LikeAnimation(
-                                    isAnimating:
-                                        commuData.likes.contains(widget.user),
-                                    smallLike: true,
-                                    child: IconButton(
-                                      icon:
-                                          commuData.likes.contains(widget.user)
-                                              ? const Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                )
-                                              : const Icon(
-                                                  Icons.favorite_border,
-                                                ),
-                                      onPressed: () async {
-                                        setState(() {
-                                          if (commuData.likes
-                                              .contains(widget.user)) {
-                                            commuData.likes.remove(widget.user);
-                                          } else {
-                                            commuData.likes.add(widget.user);
-                                          }
-                                        });
-                                        await commuServices.likesCommu(
-                                            context, commuData.id!);
-                                      },
-                                    ),
-                                  ),
-                                  Text(
-                                    '${commuData.likes.length}', // แสดงจำนวน likes
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.comment,
-                                    ),
-                                    onPressed: () => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailCommentScreen(
-                                          commu: commuData,
-                                        ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    LikeAnimation(
+                                      isAnimating:
+                                          commuData.likes.contains(widget.user),
+                                      smallLike: true,
+                                      child: IconButton(
+                                        icon: commuData.likes
+                                                .contains(widget.user)
+                                            ? const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                              )
+                                            : const Icon(
+                                                Icons.favorite_border,
+                                              ),
+                                        onPressed: () async {
+                                          setState(() {
+                                            if (commuData.likes
+                                                .contains(widget.user)) {
+                                              commuData.likes
+                                                  .remove(widget.user);
+                                            } else {
+                                              commuData.likes.add(widget.user);
+                                            }
+                                          });
+                                          await commuServices.likesCommu(
+                                              context, commuData.id!);
+                                        },
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    '${commuData.comments.length}', // แสดงจำนวน likes
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                              if (userType == 'admin')
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    icon: commuData.likes.contains(user)
-                                        ? const Icon(
-                                            Icons.favorite,
-                                            color: Colors.red,
-                                          )
-                                        : const Icon(
-                                            Icons.favorite_border,
-                                          ),
-                                    onPressed: () async {},
-                                  ),
-                                  Text(
-                                    '${commuData.likes.length}', // แสดงจำนวน likes
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  IconButton(
+                                    Text(
+                                      '${commuData.likes.length}', // แสดงจำนวน likes
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    IconButton(
                                       icon: const Icon(
                                         Icons.comment,
                                       ),
-                                      onPressed: () {}),
-                                  Text(
-                                    '${commuData.comments.length}', // แสดงจำนวน likes
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        delete(commuData.id!);
-                                      },
-                                      icon: Icon(Icons.delete_sharp)),
-                                ],
-                              ),
+                                      onPressed: () =>
+                                          Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailCommentScreen(
+                                            commu: commuData,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '${commuData.comments.length}', // แสดงจำนวน likes
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              if (userType == 'admin')
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      icon: commuData.likes.contains(user)
+                                          ? const Icon(
+                                              Icons.favorite,
+                                              color: Colors.red,
+                                            )
+                                          : const Icon(
+                                              Icons.favorite_border,
+                                            ),
+                                      onPressed: () async {},
+                                    ),
+                                    Text(
+                                      '${commuData.likes.length}', // แสดงจำนวน likes
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    IconButton(
+                                        icon: const Icon(
+                                          Icons.comment,
+                                        ),
+                                        onPressed: () {}),
+                                    Text(
+                                      '${commuData.comments.length}', // แสดงจำนวน likes
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              if (userType == 'admin')
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {
+                                          delete(commuData.id!);
+                                        },
+                                        icon: Icon(Icons.delete_sharp)),
+                                  ],
+                                ),
                             ]),
                       ),
                     ],

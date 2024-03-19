@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
-import 'package:luvcats_app/config/error.dart';
-import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/review.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
@@ -47,7 +45,7 @@ class CathotelServices {
     }
     return cathotelList;
   }
-  
+
   //ดึงข้อมูลโปรไฟล์ของCathotelที่มี user_id ที่กำหนด
   Future<Cathotel?> fetchCatIdProfile(
       BuildContext context, String user_id) async {
@@ -91,7 +89,7 @@ class CathotelServices {
 
     return catprofile;
   }
-  
+
   //ดึงข้อมูลรีวิวร้านฝากเลี้ยงตามidของร้านที่กำหนด
   Future<List<Review>> fetchReviews(
       BuildContext context, String cathotelId) async {
@@ -118,7 +116,7 @@ class CathotelServices {
       throw Exception('Error fetching reviews: $e');
     }
   }
-  
+
   //ดึงข้อมูลรีวิวของร้านฝากเลี้ยงตามuser_idที่กำหนด
   Future<List<Review>> fetchReviewsUser(
       BuildContext context, String userId) async {
@@ -149,7 +147,7 @@ class CathotelServices {
       throw Exception('Error fetching reviews: $e');
     }
   }
-  
+
   //รีวิว
   Future<void> addReview({
     required BuildContext context,
@@ -194,5 +192,49 @@ class CathotelServices {
       );
     }
   }
-  
+
+  Future<void> replyToReview({
+    required BuildContext context,
+    required String reviewId,
+    required String replyMessage,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      final res = await http.post(
+        Uri.parse('$url/getReview/$reviewId/reply'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'message':
+              replyMessage, // อาจจะต้องเปลี่ยนเป็น 'message' ถ้า API ของคุณคาดหวัง key นี้
+        }),
+      );
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ตอบกลับรีวิวสำเร็จ!')),
+        );
+      } else {
+        // อาจจะมีการแสดงข้อความเฉพาะตามสถานะข้อผิดพลาดที่ได้รับจาก API
+        final Map<String, dynamic> responseBody = jsonDecode(res.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Failed to reply to review: ${responseBody['message']}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
+    }
+  }
 }

@@ -9,10 +9,8 @@ import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/widgets/search_cathotel.dart';
 
 class CatHotelScreen extends StatefulWidget {
-  // final Cathotel cathotel;
   const CatHotelScreen({
     Key? key,
-    // required this.cathotel,
   }) : super(key: key);
 
   @override

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
@@ -7,8 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
-import 'package:luvcats_app/config/error.dart';
-import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/auth/screens/signin.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/entrepreneur.dart';
@@ -106,7 +103,7 @@ class EntreService {
       );
     }
   }
-  
+
   //แก้ไขข้อมูลcathotel
   Future<void> editProfileEntre(
     BuildContext context,
@@ -185,7 +182,7 @@ class EntreService {
       print('Error updating post: $e');
     }
   }
-  
+
   //ดึงข้อมูลcathotelจากuser_idที่กำหนด
   Future<Cathotel> fetchIdCathotel(BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -220,7 +217,7 @@ class EntreService {
       throw Exception('Error fetching data: $e');
     }
   }
-  
+
   //แก้ไขข้อมูลส่วนตัว
   Future<void> editEntre(
     BuildContext context,
@@ -250,8 +247,6 @@ class EntreService {
         );
         Navigator.pop(context);
       }
-
-      
     } catch (e) {
       print('Error updating post: $e');
       ScaffoldMessenger.of(context).showSnackBar(

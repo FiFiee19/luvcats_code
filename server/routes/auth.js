@@ -7,7 +7,6 @@ const {
   signin,
   tokenIsValid,
   list,
-  editPassword
 } = require('../controllers/auth')
 
 // Sign Up
@@ -20,7 +19,7 @@ authRouter.post("/tokenIsValid", tokenIsValid);
 
 // get user data
 authRouter.get("/", auth, list);
-// authRouter.put('/edit/:user_id',auth,editPassword)
+
 
 module.exports = authRouter;
 

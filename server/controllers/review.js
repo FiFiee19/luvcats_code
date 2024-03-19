@@ -70,18 +70,34 @@ exports.userId = async (req,res) => {
 
     }
 }
-// exports.list = async (req, res) => {
-//     try {
-//         const cathotel = await Cathotel.find({}).populate('user')
-//         res.json(cathotel);
- 
-        
-//     } catch (e) {
-//         console.log(e)
-//         res.status(500).send('Server Error')
-//     }
+exports.replyToReview = async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+        const { message } = req.body; // ตัวอย่างของ message ของการตอบกลับ
 
-// }
+        const review = await Review.findById(reviewId);
+        if (!review) {
+            return res.status(404).json({ msg: 'Review not found' });
+        }
+
+        if (review.reply) {
+            return res.status(400).json({ msg: 'Review already has a reply' });
+        }
+
+        review.reply = {
+            message,
+            repliedAt: new Date(), // ตัวอย่างการบันทึกเวลาขณะตอบกลับ
+        };
+
+        await review.save();
+
+        res.json({ msg: 'Reply added to review' });
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send('Server Error');
+    }
+};
 
 
 

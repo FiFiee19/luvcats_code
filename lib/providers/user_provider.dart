@@ -33,16 +33,4 @@ class UserProvider extends ChangeNotifier {
     _user = user;
     notifyListeners();
   }
-
-  void updateUser({String? username, String? email, String? token, String? password, String? type, String? imagesP}) {
-  if (username != null) _user.username = username;
-  if (email != null) _user.email = email;
-  if (token != null) _user.token = token;
-  if (password != null) _user.password = password;
-  if (type != null) _user.type = type;
-  if (imagesP != null) _user.imagesP = imagesP;
-
-  notifyListeners();
-}
-
 }

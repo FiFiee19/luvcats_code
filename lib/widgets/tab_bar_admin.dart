@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/admin/screens/commu_admin.dart';
 import 'package:luvcats_app/features/admin/screens/notification_admin.dart';
 import 'package:luvcats_app/features/admin/screens/staycats_admin.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/dashboard_entre.dart';
-
 
 class TabBar_admin extends StatefulWidget {
   const TabBar_admin({Key? key}) : super(key: key);

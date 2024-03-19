@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/features/auth/screens/signup.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/forms_entre.dart';
-import 'package:luvcats_app/widgets/custom_textfield.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -18,6 +17,7 @@ class _SigninScreenState extends State<SigninScreen> {
   final AuthService authService = AuthService();
   final _signinFormKey = GlobalKey<FormState>();
   bool _obscureText = true;
+
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
@@ -54,7 +54,6 @@ class _SigninScreenState extends State<SigninScreen> {
                             style: GoogleFonts.gluten(
                                 fontSize: 60.0, color: Colors.red),
                           ),
-                          // SizedBox(height: 10),
                           Icon(
                             Icons.pets,
                             color: Colors.red,
@@ -62,7 +61,6 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                         ],
                       ),
-                      // SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -79,31 +77,30 @@ class _SigninScreenState extends State<SigninScreen> {
                         child: Column(
                           children: [
                             Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: TextFormField(
-                  controller: emailController,
-                  validator: (val) {
-                    if (val!.isEmpty) {
-                      return 'กรุณากรอกอีเมล';
-                    } else if (RegExp(
-                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$')
-                        .hasMatch(val)) {
-                      return null;
-                    } else {
-                      return 'ที่อยู่อีเมลไม่ถูกต้อง';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'อีเมล',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                          color: Colors.black38,
-                        )),
-                  ),
-                ),
-              ),
-                           
+                              padding: const EdgeInsets.all(3.0),
+                              child: TextFormField(
+                                controller: emailController,
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return 'กรุณากรอกอีเมล';
+                                  } else if (RegExp(
+                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$')
+                                      .hasMatch(val)) {
+                                    return null;
+                                  } else {
+                                    return 'ที่อยู่อีเมลไม่ถูกต้อง';
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'อีเมล',
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: BorderSide(
+                                        color: Colors.black38,
+                                      )),
+                                ),
+                              ),
+                            ),
                             SizedBox(height: 20),
                             Padding(
                               padding: const EdgeInsets.all(3.0),
@@ -111,11 +108,10 @@ class _SigninScreenState extends State<SigninScreen> {
                                 controller: passwordController,
                                 decoration: InputDecoration(
                                   hintText: 'รหัสผ่าน',
-                                  
+
                                   // เพิ่มปุ่มเพื่อเปิด/ซ่อน รหัสผ่าน
                                   suffixIcon: IconButton(
-                                    onPressed:
-                                        _toggle, // เรียกใช้งานฟังก์ชัน _toggle เมื่อปุ่มถูกกด
+                                    onPressed: _toggle,
                                     icon: Icon(
                                       _obscureText
                                           ? Icons.visibility
@@ -153,9 +149,8 @@ class _SigninScreenState extends State<SigninScreen> {
                               width: 200.0,
                               height: 50.0,
                               decoration: BoxDecoration(
-                                color: Colors.red, // สีพื้นหลังของปุ่ม
-                                borderRadius: BorderRadius.circular(
-                                    10.0), // รูปร่างของปุ่ม
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               alignment: Alignment.center,
                               child: Text(

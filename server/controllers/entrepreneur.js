@@ -4,51 +4,55 @@ const User = require('../models/user')
 const bcrypt = require("bcrypt");
 exports.create = async (req, res) => {
     try {
-        const { username, email, password, imagesP,description,
+        const { username,
+            email,
+            password,
+            imagesP,
+            description,
             price,
             contact,
             province,
             images, } = req.body;
 
-    
-    var user_email = await User.findOne({ email });
-    if (user_email) {
-      return res.send('User Already Exists!!!').status(400);
-    }
 
-    const salt = await bcrypt.genSalt(8);
-    const hashedPassword = await bcrypt.hash(password, salt);
+        var user_email = await User.findOne({ email });
+        if (user_email) {
+            return res.send('User Already Exists!!!').status(400);
+        }
 
-    const newUser = new User({
-        username,
-        email,
-        password: hashedPassword,
-        type: 'entrepreneur',
-        imagesP
-    });
-    await newUser.save();
-    
-    const cathotel = new Cathotel({
-        user: newUser._id,
-        user_id: newUser._id,
-        description,
-        price,
-        contact,
-        province,
-        images
-    });
-    await cathotel.save();
+        const salt = await bcrypt.genSalt(8);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newEntre = new Entre({
-        user: newUser._id,
-        user_id: newUser._id, // ใช้ newUser._id แทน newUser และ user_id
-        store_id: cathotel._id, // ใช้ _id ที่ถูกต้องจาก Mongoose
-        name: req.body.name,
-        store_address: req.body.store_address,
-        phone: req.body.phone
-    });
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            type: 'entrepreneur',
+            imagesP
+        });
+        await newUser.save();
 
-    await newEntre.save();
+        const cathotel = new Cathotel({
+            user: newUser._id,
+            user_id: newUser._id,
+            description,
+            price,
+            contact,
+            province,
+            images
+        });
+        await cathotel.save();
+
+        const newEntre = new Entre({
+            user: newUser._id,
+            user_id: newUser._id, // ใช้ newUser._id แทน newUser และ user_id
+            store_id: cathotel._id, // ใช้ _id ที่ถูกต้องจาก Mongoose
+            name: req.body.name,
+            store_address: req.body.store_address,
+            phone: req.body.phone
+        });
+
+        await newEntre.save();
         console.log(req.body)
         res.send('Register Success!!');
 
@@ -71,7 +75,7 @@ exports.list = async (req, res) => {
     }
 }
 
-exports.userId = async (req,res) => {
+exports.userId = async (req, res) => {
     try {
         const entre = await Entre.find({ user_id: req.params.user_id }).populate('user');
         if (!entre) {
@@ -85,10 +89,10 @@ exports.userId = async (req,res) => {
 
     }
 }
-exports.entreId = async (req,res) => {
+exports.entreId = async (req, res) => {
     try {
-        const  id = req.params
-        const entre = await Entre.find( id );
+        const id = req.params
+        const entre = await Entre.find(id);
         if (!entre) {
             return res.status(404).send('Cathotel not found');
         }
@@ -103,10 +107,10 @@ exports.entreId = async (req,res) => {
 
 exports.editEntre = async (req, res) => {
     const id = req.params.id;
-    try { 
+    try {
         const updatedEntre = await Entre.findByIdAndUpdate(
-            id, 
-            req.body, 
+            id,
+            req.body,
             { new: true, runValidators: true } // Ensures the return of the updated document and runs schema validations
         );
 

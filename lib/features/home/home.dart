@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/widgets/app_bar.dart';
 import 'package:luvcats_app/widgets/hamburger_user.dart';
 import 'package:luvcats_app/widgets/tab_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,14 +30,15 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      centerTitle: true,
-      title: const Text(
-        'LuvCats',style: TextStyle(color: Colors.white),
-      ),
-      backgroundColor: Colors.red,
-    ),
-    drawer: HamburgerUser(), body: const tab_Bar()
-    );
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'LuvCats',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ),
+        drawer: HamburgerUser(),
+        body: const tab_Bar());
   }
 }

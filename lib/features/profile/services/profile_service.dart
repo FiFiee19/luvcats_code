@@ -321,13 +321,13 @@ class ProfileServices {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData is Map<String, dynamic>) {
-          final updatedUser = User.fromMap(responseData);
-          userProvider.updateUser();
+          // final updatedUser = User.fromMap(responseData);
+          // userProvider.updateUser();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('แก้ไขสำเร็จ!')),
           );
           Navigator.pop(context);
-          return updatedUser;
+          // return updatedUser;
         } else {
           throw Exception('Invalid response format');
         }

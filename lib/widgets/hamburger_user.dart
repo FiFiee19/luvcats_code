@@ -20,6 +20,8 @@ class HamburgerUser extends StatelessWidget {
     final CatServices catServices = CatServices();
 
     final user = Provider.of<UserProvider>(context).user;
+    final userId = user.id;
+    print('userProvider=>$userId');
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,

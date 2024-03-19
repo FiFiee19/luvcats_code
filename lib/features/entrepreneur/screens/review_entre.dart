@@ -19,6 +19,7 @@ class ReviewEntre extends StatefulWidget {
 
 class _ReviewEntreState extends State<ReviewEntre> {
   final CathotelServices cathotelServices = CathotelServices();
+  final TextEditingController replyController = TextEditingController();
   bool isLoading = true;
   List<Review> reviews = [];
 
@@ -57,6 +58,59 @@ class _ReviewEntreState extends State<ReviewEntre> {
       sum += double.parse(review.rating.toString());
     }
     return sum / reviews.length;
+  }
+
+  Future<void> showReplyDialog(BuildContext context, String reviewId) async {
+    final TextEditingController replyController = TextEditingController();
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // Set to true for better UX
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ตอบกลับรีวิว'),
+          content: TextField(
+            controller: replyController,
+            decoration:
+                InputDecoration(hintText: "กรอกข้อความตอบกลับที่นี่..."),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ยกเลิก'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('ส่ง'),
+              onPressed: () async {
+                final message = replyController.text;
+                // Ensure the reply message is not empty before sending
+                if (message.trim().isNotEmpty) {
+                  await cathotelServices.replyToReview(
+                    context: context,
+                    reviewId: reviewId,
+                    replyMessage: message,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('กรุณากรอกข้อความตอบกลับ'),
+                    ),
+                  );
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    replyController.dispose();
+    super.dispose();
   }
 
   @override
@@ -125,8 +179,8 @@ class _ReviewEntreState extends State<ReviewEntre> {
                           (review) => Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 10, bottom: 20),
                               child: Column(
                                 children: [
                                   Column(
@@ -182,17 +236,77 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 6, bottom: 10),
-                                        child: Text(
-                                          review.createdAt != null
-                                              ? DateFormat('yyyy-MM-dd').format(
-                                                  DateTime.parse(
-                                                      review.createdAt!))
-                                              : 'ไม่ทราบวันที่',
-                                        ),
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 6, bottom: 10),
+                                            child: Text(
+                                              review.createdAt != null
+                                                  ? DateFormat('yyyy-MM-dd')
+                                                      .format(DateTime.parse(
+                                                          review.createdAt!))
+                                                  : 'ไม่ทราบวันที่',
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          if (review.reply == null)
+                                            Padding(
+                                              padding: EdgeInsets.only(),
+                                              child: TextButton(
+                                                child: Text('ตอบกลับ'),
+                                                onPressed: () {
+                                                  // Call the dialog with the current review's ID
+                                                  showReplyDialog(
+                                                      context, review.id!);
+                                                },
+                                              ),
+                                            )
+                                        ],
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: review.reply !=
+                                                null // Check if reply is not null
+                                            ? Container(
+                                                width: double.infinity,
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        8.0, 8.0, 18.0, 8.0),
+                                                decoration: BoxDecoration(
+                                                  color: Color.fromARGB(
+                                                      255, 216, 212, 212),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'การตอบกลับของร้าน',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14.0,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 8.0),
+                                                    Text(
+                                                      review.reply!
+                                                          .message, // We can safely use the bang operator now
+                                                      style: TextStyle(
+                                                        fontSize: 14.0,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox
+                                                .shrink(), // If reply is null, display nothing
+                                      ),
+                                      Divider(),
                                     ],
                                   ),
                                 ],

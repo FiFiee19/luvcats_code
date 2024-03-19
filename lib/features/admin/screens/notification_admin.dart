@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
-
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
@@ -30,7 +29,6 @@ class _NotificationAdminState extends State<NotificationAdmin> {
   //เรียกข้อมูลAllCommuจากcommuServices
   Future<void> fetchReport() async {
     reports = await commuServices.fetchAllReport(context);
-
     if (mounted) {
       setState(() {});
     }
@@ -67,11 +65,10 @@ class _NotificationAdminState extends State<NotificationAdmin> {
 
               return InkWell(
                 onTap: () async {
-                  final commuId =
-                      reportData.commu_id?.id; // Get the ID from commu_id
+                  final commuId = reportData.commu_id?.id;
                   if (commuId != null) {
-                    final commu = await commuServices.fetchIdCommu(
-                        context, commuId); // Fetch the Commu object
+                    final commu =
+                        await commuServices.fetchIdCommu(context, commuId);
                     if (commu != null) {
                       Navigator.push(
                         context,
@@ -80,13 +77,23 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                         ),
                       );
                     } else {
+                      // This is where you handle the case if the post does not exist.
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Failed to load Commu data'),
+                          content: Text(
+                              'ไม่พบโพตส์นี้'), // The message indicating the post was not found.
                           backgroundColor: Colors.red,
                         ),
                       );
                     }
+                  } else {
+                    // Handle the case where commuId is null which means it wasn't provided.
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('ไม่พบโพตส์นี้'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 },
                 child: Container(
@@ -130,23 +137,29 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                                   const EdgeInsets.only(left: 40, bottom: 10),
                               child: Row(
                                 children: [
-                                  Text('รายงานโพสต์ว่า'),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text('"'),
                                   Text(
-                                    reportData.message.length > 10
-                                        ? "${reportData.message.substring(0, 10)}..."
-                                        : reportData.message,
+                                    'รายงานโพสต์ว่า',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  SizedBox(width: 5),
+                                ],
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 40, right: 40, bottom: 10),
+                                  child: Text(
+                                    '"' + reportData.message + '"',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
                                     ),
                                   ),
-                                  Text('"'),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                             Row(
                               children: [

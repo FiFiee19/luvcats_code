@@ -33,7 +33,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      '_id': id,
+      // '_id': id,
       'username': username,
       'email': email,
       'token': token,

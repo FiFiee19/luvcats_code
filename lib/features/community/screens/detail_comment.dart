@@ -36,6 +36,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
   void initState() {
     super.initState();
     loadComments();
+    widget.commu.comments;
   }
 
   //เรียกข้อมูลCommentsจากcommuServices
@@ -164,6 +165,9 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                             color: Colors.grey.shade500,
                           ),
                         ),
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.start, // You can use this to explicitly align to the start

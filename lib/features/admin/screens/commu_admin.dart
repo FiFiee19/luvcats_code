@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
-
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
-
 import 'package:luvcats_app/widgets/search_commu.dart';
 import 'package:provider/provider.dart';
 
@@ -141,29 +140,19 @@ class _CommuAdminState extends State<CommuAdmin> {
                             children: [
                               Text(
                                 "${commuData.title}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .merge(
-                                      const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black),
-                                    ),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black),
                               ),
                               const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
                                 "${commuData.description}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade500,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 8.0,
@@ -206,6 +195,22 @@ class _CommuAdminState extends State<CommuAdmin> {
                                       },
                                       icon: Icon(Icons.delete_sharp)),
                                 ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 5, bottom: 10),
+                                child: Text(
+                                  formatDateTime(commuData.createdAt),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .merge(
+                                        TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                ),
                               ),
                             ]),
                       ),
