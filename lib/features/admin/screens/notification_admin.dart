@@ -34,9 +34,39 @@ class _NotificationAdminState extends State<NotificationAdmin> {
     }
   }
 
-  //ลบCommu
-  void delete(String commu) {
-    profileService.deleteCommu(context, commu);
+  //ลบการแจ้งเตือน
+  void _showDeleteDialog(String report) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // ห้ามให้ user ปิด dialog โดยการแตะนอกขอบเขต
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบการแจ้งเตือน',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await commuServices.deleteReport(context, report);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -77,7 +107,6 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                         ),
                       );
                     } else {
-                      // This is where you handle the case if the post does not exist.
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -168,22 +197,16 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                                       left: 5, bottom: 10),
                                   child: Text(
                                     formatDateTime(reportData.createdAt),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle2!
-                                        .merge(
-                                          TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                        ),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade600,
+                                    ),
                                   ),
                                 ),
                                 Spacer(),
                                 IconButton(
                                   onPressed: () {
-                                    commuServices.deleteReport(
-                                        context, reportData.id!);
+                                    _showDeleteDialog(reportData.id!);
                                   },
                                   icon: Icon(Icons.delete_sharp),
                                 )

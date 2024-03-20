@@ -1,17 +1,11 @@
-import 'dart:io';
-
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/config/province.dart';
-import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class EditEntreScreen extends StatefulWidget {
-  final String entreId; 
+  final String entreId;
 
   const EditEntreScreen({
     Key? key,
@@ -29,9 +23,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
   late TextEditingController phoneController = TextEditingController();
   bool isLoading = true;
 
-  EntreService entreService =
-      EntreService();
-  
+  EntreService entreService = EntreService();
 
   @override
   void initState() {
@@ -65,6 +57,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
       );
     }
   }
+
   //โหลดข้อมูลผู้ประกอบการ
   Future<void> _loadPostData() async {
     try {
@@ -139,7 +132,6 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 20),
-                
                 CustomButton(
                   text: 'ลงทะเบียน',
                   onTap: _submitForm,

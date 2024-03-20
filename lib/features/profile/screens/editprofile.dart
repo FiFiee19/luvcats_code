@@ -4,7 +4,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
-import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -40,19 +39,14 @@ class _EditprofileState extends State<Editprofile> {
 
   void _submitForm() async {
     if (globalFormKey.currentState!.validate()) {
-      User? updatedUser = await profileServices.editUser(
-          context, usernameController.text, imagesP);
-      // if (updatedUser != null) {
-      //   Provider.of<UserProvider>(context, listen: false)
-      //       .updateUser(username: usernameController.text, imagesP: imageUrl);
-      // }
+      await profileServices.editUser(context, usernameController.text, imagesP);
     }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // ดึง userId จาก UserProvider
+
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
     if (userId != null) {
       _loadProfile(userId);

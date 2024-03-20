@@ -5,15 +5,14 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
-import 'package:luvcats_app/features/straycat/screens/straycatscreen.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 
 class EditStraycats extends StatefulWidget {
-  final String starycatsId; // เพิ่มตัวแปรนี้
+  final String starycatsId; 
 
   const EditStraycats({
     Key? key,
-    required this.starycatsId, // เพิ่มตัวแปรนี้
+    required this.starycatsId, 
   }) : super(key: key);
 
   @override
@@ -29,9 +28,7 @@ class _EditStraycatsState extends State<EditStraycats> {
   bool isLoading = true;
   List<File> images = []; //รูปใหม่
   List<String> imageUrls = []; //รูปเก่า
-  CatServices catServices = CatServices(); // สร้าง instance ของ CommuServices
-  // String selectedGender = 'ไม่ทราบ';
-  // String selectedProvince = 'กรุงเทพมหานคร';
+  CatServices catServices = CatServices(); 
   final List<String> listgender = [
     'ผู้',
     'เมีย',
@@ -84,10 +81,10 @@ class _EditStraycatsState extends State<EditStraycats> {
 
   Future<void> _loadPostData() async {
     try {
-      // สมมติว่าคุณมีฟังก์ชันที่ชื่อว่า fetchPostById สำหรับดึงข้อมูลโพสต์
+     
       final post =
           await catServices.fetchIdStraycats(context, widget.starycatsId);
-      // นำข้อมูลเดิมมาใส่ใน TextEditingController
+  
       breedController.text = post.breed;
       genderController.text = post.gender;
       provinceController.text = post.province;

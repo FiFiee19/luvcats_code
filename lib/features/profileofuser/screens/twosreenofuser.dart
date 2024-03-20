@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
@@ -9,11 +8,10 @@ import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
 class TwoSreenOfUser extends StatefulWidget {
-    final User user;
+  final User user;
   const TwoSreenOfUser({
     Key? key,
     required this.user,
@@ -39,20 +37,49 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
   }
 
   Future<void> fetchStraycatsId() async {
-    straycats = await profileService.fetchStrayCatId(context,widget.user.id);
+    straycats = await profileService.fetchStrayCatId(context, widget.user.id);
     if (straycats != null) {
-      // กรองเฉพาะ cats ที่มีสถานะเป็น "no"
       straycats = straycats!.where((cat) => cat.status == 'no').toList();
     }
-    
-      if (mounted) {
+
+    if (mounted) {
       setState(() {});
     }
-    
   }
   //ลบStrayCat
-  void delete(String straycat) {
-    profileService.deleteStrayCat(context, straycat);
+
+  void _showDeleteDialog(String straycat) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteStrayCat(context, straycat);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -60,9 +87,8 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userType = userProvider.user.type;
     if (straycats == null) {
-      return Center(child: const CircularProgressIndicator()); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
+      return Center(child: const CircularProgressIndicator());
     } else if (straycats!.isEmpty) {
-      // แสดงข้อความ No Post ถ้าไม่มีโพสต์
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Center(
@@ -84,11 +110,11 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
 
               return InkWell(
                 onTap: () {
-                  // ทำสิ่งที่คุณต้องการเมื่อกดที่ Container
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailStraycatScreen(straycat: catData),
+                      builder: (context) =>
+                          DetailStraycatScreen(straycat: catData),
                     ),
                   );
                 },
@@ -120,7 +146,7 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                           enableInfiniteScroll: false,
                           onPageChanged: (index, reason) {
                             setState(() {
-                              _current = index; // อัปเดตตำแหน่งสไลด์ปัจจุบัน
+                              _current = index;
                             });
                           },
                         ),
@@ -167,15 +193,11 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                             ),
                             Text(
                               "${catData.user!.username}",
-                              style:
-                                  Theme.of(context).textTheme.subtitle1!.merge(
-                                        const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
                             ),
-                            
                           ],
                         ),
                       ),
@@ -193,15 +215,10 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                                   children: [
                                     Text(
                                       "สายพันธุ์:  " + catData.breed,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .merge(
-                                            TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.grey.shade900,
-                                            ),
-                                          ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -215,15 +232,10 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                                   children: [
                                     Text(
                                       "เพศ:  " + catData.gender,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .merge(
-                                            TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.grey.shade900,
-                                            ),
-                                          ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -237,15 +249,10 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                                   children: [
                                     Text(
                                       "จังหวัด:  " + catData.province,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .merge(
-                                            TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.grey.shade900,
-                                            ),
-                                          ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -259,15 +266,10 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                                   children: [
                                     Text(
                                       "ข้อมูลเพิ่มเติม: ",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .merge(
-                                            TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.grey.shade900,
-                                            ),
-                                          ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.grey.shade900,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -284,15 +286,10 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                                         catData.description,
                                         softWrap: true,
                                         overflow: TextOverflow.visible,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2!
-                                            .merge(
-                                              TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade900,
-                                              ),
-                                            ),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade900,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -304,32 +301,23 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
                                     padding: const EdgeInsets.only(left: 28),
                                     child: Text(
                                       formatDateTime(catData.createdAt),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .merge(
-                                            TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey.shade600,
-                                            ),
-                                          ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                      ),
                                     ),
-                                  ),Spacer(),
-                                  if(userType == 'admin')
-                              IconButton(
-                                  onPressed: () {
-                                    delete(catData.id!);
-                                  },
-                                  icon: Icon(Icons.delete_sharp)),
-                              
+                                  ),
+                                  Spacer(),
+                                  if (userType == 'admin')
+                                    IconButton(
+                                        onPressed: () {
+                                          _showDeleteDialog(catData.id!);
+                                        },
+                                        icon: Icon(Icons.delete_sharp)),
                                 ],
                               ),
-                              
-                              
-                              
                             ]),
                       ),
-                      
                     ],
                   ),
                 ),

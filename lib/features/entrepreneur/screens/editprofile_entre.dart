@@ -31,9 +31,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
   bool isLoading = true;
   List<File> images = [];
   List<String> imageUrls = [];
-  EntreService entreService =
-      EntreService(); // สร้าง instance ของ CommuServices
-  // String? selectedProvince;
+  EntreService entreService = EntreService();
 
   @override
   void initState() {
@@ -234,7 +232,6 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    // การตกแต่งอื่นๆ...
                   ),
                   hint: const Text(
                     'จังหวัด',

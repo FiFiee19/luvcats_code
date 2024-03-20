@@ -1,7 +1,4 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/home/home.dart';
 import 'package:luvcats_app/features/profile/screens/profilescreen.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/features/profileofuser/screens/profileofuser.dart';
@@ -14,11 +11,9 @@ class SearchProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // สร้างปุ่มที่เมื่อกดจะเปิด CustomSearchDelegate
     return IconButton(
       icon: const Icon(Icons.search),
       onPressed: () {
-        // เรียกใช้งาน showSearch พร้อม CustomSearchDelegate
         showSearch(
           context: context,
           delegate: CustomSearchDelegate(),
@@ -56,7 +51,6 @@ class CustomSearchDelegate extends SearchDelegate<User?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // เรียกใช้งานการค้นหาและแสดงผลลัพธ์
     return FutureBuilder<List<User>?>(
       future: profileService.searchName(context, query),
       builder: (context, snapshot) {
@@ -81,32 +75,24 @@ class CustomSearchDelegate extends SearchDelegate<User?> {
                     radius: 20,
                   ),
                   title: Text(user.username),
-                  // สมมติว่าคุณมีการคลิกที่ชื่อผู้ใช้จากผลการค้นหา
                   onTap: () {
                     final currentUser =
                         Provider.of<UserProvider>(context, listen: false).user;
                     if (user.id == currentUser.id) {
-                      // หากชื่อที่คลิกตรงกับชื่อผู้ใช้ที่เข้าสู่ระบบ นำทางไปยังหน้าโปรไฟล์ของตัวเอง
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                            ProfileScreen(),
-                                ),
+                          builder: (context) => ProfileScreen(),
+                        ),
                       );
                     } else {
-                      // หากไม่ใช่ นำทางไปยังหน้าโปรไฟล์ของผู้ใช้อื่น
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ProfileOfUser(user: user)),
+                            builder: (context) => ProfileOfUser(user: user)),
                       );
                     }
-                  }
-
-
-                  ))
+                  }))
               .toList(),
         );
       },
@@ -115,7 +101,6 @@ class CustomSearchDelegate extends SearchDelegate<User?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-
     return Container();
   }
 }

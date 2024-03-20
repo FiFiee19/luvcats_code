@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
-import 'package:luvcats_app/features/report/screens/reportscreen.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
@@ -65,12 +64,10 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                     ),
                     Text(
                       widget.straycat.user!.username,
-                      style: Theme.of(context).textTheme.subtitle2!.merge(
-                            TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.grey.shade900,
-                                fontSize: 16),
-                          ),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey.shade900,
+                          fontSize: 16),
                     ),
                   ],
                 ),
@@ -87,12 +84,10 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   "สายพันธุ์:  " + widget.straycat.breed,
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
-                        ),
-                      ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade900,
+                  ),
                 ),
               ],
             ),
@@ -104,12 +99,10 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   "เพศ:  " + widget.straycat.gender,
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
-                        ),
-                      ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade900,
+                  ),
                 ),
               ],
             ),
@@ -121,12 +114,10 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   "ข้อมูลเพิ่มเติม: ",
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
-                        ),
-                      ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade900,
+                  ),
                 ),
               ],
             ),
@@ -141,12 +132,10 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                     widget.straycat.description,
                     softWrap: true,
                     overflow: TextOverflow.visible,
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ),
               ],
@@ -159,12 +148,10 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   "จังหวัด:  " + widget.straycat.province,
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey.shade900,
-                        ),
-                      ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade900,
+                  ),
                 ),
               ],
             ),
@@ -176,12 +163,10 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               children: [
                 Text(
                   formatDateTime(widget.straycat.createdAt),
-                  style: Theme.of(context).textTheme.subtitle2!.merge(
-                        TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
               ],
             ),

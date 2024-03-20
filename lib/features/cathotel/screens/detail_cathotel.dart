@@ -52,7 +52,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
 
   double calculateAverageRating() {
     if (reviews.isEmpty) {
-      return 0.0; // ถ้าไม่มีรีวิวให้คืนค่า 0.0 แทน
+      return 0.0;
     }
     double sum = 0;
     for (var review in reviews) {
@@ -98,12 +98,10 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                       ),
                       Text(
                         widget.cathotel.user!.username,
-                        style: Theme.of(context).textTheme.subtitle2!.merge(
-                              TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey.shade900,
-                                  fontSize: 16),
-                            ),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey.shade900,
+                            fontSize: 16),
                       ),
                     ],
                   ),
@@ -120,18 +118,15 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 children: [
                   Text(
                     "รายละเอียด: ",
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ],
               ),
             ),
-            
             Padding(
               padding: const EdgeInsets.only(left: 30, bottom: 20, right: 30),
               child: Row(
@@ -142,12 +137,10 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                       widget.cathotel.description,
                       softWrap: true,
                       overflow: TextOverflow.visible,
-                      style: Theme.of(context).textTheme.subtitle2!.merge(
-                            TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade900,
-                            ),
-                          ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.shade900,
+                      ),
                     ),
                   ),
                 ],
@@ -164,13 +157,11 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 children: [
                   Text(
                     "ราคา:  ",
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ],
               ),
@@ -182,12 +173,10 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 children: [
                   Text(
                     widget.cathotel.price.toString() + "/คืน",
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ],
               ),
@@ -203,13 +192,11 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 children: [
                   Text(
                     "จังหวัด:  ",
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ],
               ),
@@ -221,12 +208,10 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 children: [
                   Text(
                     widget.cathotel.province,
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ],
               ),
@@ -242,13 +227,11 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 children: [
                   Text(
                     "ช่องทางการติดต่อ: ",
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ],
               ),
@@ -260,12 +243,10 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 children: [
                   Text(
                     widget.cathotel.contact,
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.grey.shade900,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade900,
+                    ),
                   ),
                 ],
               ),
@@ -275,7 +256,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 2),
                 child: Text(
-                  'ยังไม่มีการให้คะแนน', // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                  'ยังไม่มีการให้คะแนน', 
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -284,7 +265,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 padding: EdgeInsets.only(right: 2),
                 child: Text(
                   calculateAverageRating()
-                      .toStringAsFixed(1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                      .toStringAsFixed(1), 
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -320,7 +301,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                             ReviewScreen(cathotel: widget.cathotel)),
                   );
                   if (result != null) {
-                    setState(() {}); // บังคับให้ UI รีเฟรช
+                    setState(() {}); 
                   }
                 },
                 style: ElevatedButton.styleFrom(primary: Colors.red),

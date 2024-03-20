@@ -46,14 +46,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   @override
   void initState() {
     super.initState();
-    selectedMonth = DateTime.now().month; // Set to current month initially
-    selectedYear = DateTime.now().year; // Set to current year initially
+    selectedMonth = DateTime.now().month;
+    selectedYear = DateTime.now().year;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // ดึง userId จาก UserProvider
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
     if (userId != null) {
       fetchExpense(userId);
@@ -66,7 +65,6 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           await expenseService.fetchExpense(context, userId);
       if (mounted) {
         setState(() {
-          // Apply filter based on selectedMonth and selectedYear
           expenses = fetchedExpenses.where((expense) {
             final expenseDate = DateTime.parse(expense.createdAt!);
             return expenseDate.month == selectedMonth &&
@@ -86,7 +84,6 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   }
 
   Map<String, double> aggregateAmount(List<Expense> expenses) {
-    // ตั้งค่าเริ่มต้นสำหรับหมวดหมู่
     Map<String, double> aggregated = {
       'อาหาร': 0,
       'ยาและการรักษา': 0,
@@ -94,13 +91,11 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       'ของใช้อื่นๆ': 0,
     };
 
-    // รวมค่าใช้จ่ายตามหมวดหมู่
     for (var expense in expenses) {
       if (aggregated.containsKey(expense.category)) {
         aggregated[expense.category] =
             (aggregated[expense.category] ?? 0.0) + expense.amount;
       } else {
-        // หากมีหมวดหมู่ที่ไม่ตรงกับหมวดหมู่เริ่มต้น เพิ่มเข้าไปใน aggregated
         aggregated[expense.category] = expense.amount;
       }
     }
@@ -185,8 +180,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       onChanged: (newValue) {
                         setState(() {
                           selectedMonth = monthNames.indexOf(newValue!) + 1;
-                          // Call fetchExpense again to update the expenses list
-                          // based on the new month and year
+
                           final userId =
                               Provider.of<UserProvider>(context, listen: false)
                                   .user
@@ -231,12 +225,9 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                   ),
                   PieChart(
                     chartType: ChartType.ring,
-
-                    dataMap:
-                        percentages, // Use percentages instead of aggregated
+                    dataMap: percentages,
                     colorList: colorList,
                     chartRadius: MediaQuery.of(context).size.width / 3,
-
                     ringStrokeWidth: 40,
                     animationDuration: const Duration(seconds: 1),
                     chartValuesOptions: const ChartValuesOptions(
@@ -252,7 +243,6 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       legendPosition: LegendPosition.bottom,
                       showLegendsInRow: true,
                     ),
-                    // Add any other options or configurations here...
                   ),
                   Container(
                     color: Color.fromRGBO(201, 201, 201, 0.89),
@@ -277,20 +267,15 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                               .user
                               .id;
                       return Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 0,
-                            horizontal: 18), // ลดระยะห่างด้านบนและล่าง
+                        padding:
+                            EdgeInsets.symmetric(vertical: 0, horizontal: 18),
                         child: ListTile(
-                          contentPadding:
-                              EdgeInsets.zero, // กำหนด contentPadding เป็น 0
-                          visualDensity:
-                              VisualDensity(vertical: -4), // ลดระยะห่างด้านข้าง
+                          contentPadding: EdgeInsets.zero,
+                          visualDensity: VisualDensity(vertical: -4),
                           title: Text(
                             category,
-                            style:
-                                TextStyle(fontSize: 12.0), // ลดขนาดฟอนต์ข้อความ
-                            overflow: TextOverflow
-                                .ellipsis, // หากข้อความยาวเกินไปจะแสดง '...'
+                            style: TextStyle(fontSize: 12.0),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           trailing: TextButton(
                             onPressed: () {
@@ -307,9 +292,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                             },
                             child: Text(
                               '${totalAmount.toStringAsFixed(2)} บาท',
-                              style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.red), // ลดขนาดฟอนต์ข้อความ
+                              style:
+                                  TextStyle(fontSize: 12.0, color: Colors.red),
                             ),
                           ),
                         ),

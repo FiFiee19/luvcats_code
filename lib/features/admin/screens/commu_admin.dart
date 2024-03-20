@@ -37,8 +37,38 @@ class _CommuAdminState extends State<CommuAdmin> {
   }
 
   //ลบCommu
-  void delete(String commu) {
-    profileService.deleteCommu(context, commu);
+  void _showDeleteDialog(String commu) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // ห้ามให้ user ปิด dialog โดยการแตะนอกขอบเขต
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteCommu(context, commu);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -114,15 +144,12 @@ class _CommuAdminState extends State<CommuAdmin> {
                             ),
                             Text(
                               "${commuData.user!.username}",
-                              style:
-                                  Theme.of(context).textTheme.subtitle1!.merge(
-                                        const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
                             ),
-                            const SizedBox(
+                            SizedBox(
                               width: 96.0,
                             ),
                           ],
@@ -191,7 +218,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                                 children: [
                                   IconButton(
                                       onPressed: () {
-                                        delete(commuData.id!);
+                                        _showDeleteDialog(commuData.id!);
                                       },
                                       icon: Icon(Icons.delete_sharp)),
                                 ],
@@ -201,15 +228,10 @@ class _CommuAdminState extends State<CommuAdmin> {
                                     const EdgeInsets.only(left: 5, bottom: 10),
                                 child: Text(
                                   formatDateTime(commuData.createdAt),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2!
-                                      .merge(
-                                        TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade600,
+                                  ),
                                 ),
                               ),
                             ]),

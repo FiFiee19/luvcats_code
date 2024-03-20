@@ -68,9 +68,39 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
     }
   }
 
-  //ลบCommu
-  void delete(String commu) {
-    profileService.deleteCommu(context, commu);
+  //ลบโพสต์
+  void _showDeleteDialog(String commu) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteCommu(context, commu);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -121,7 +151,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                   if (userType == 'admin')
                     IconButton(
                         onPressed: () {
-                          delete(widget.commu.id!);
+                          _showDeleteDialog(widget.commu.id!);
                         },
                         icon: Icon(Icons.delete_sharp)),
                 ],
@@ -249,15 +279,10 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                                         left: 5, bottom: 10),
                                     child: Text(
                                       formatDateTime(comment.createdAt),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .merge(
-                                            TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey.shade600,
-                                            ),
-                                          ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -33,18 +33,18 @@ class _FormsReviewState extends State<FormsReview> {
   }
 
   void addReview() async {
-    print("Attempting to add review"); // Debugging statement
+    print("Attempting to add review");
     if (_sendReviewFormKey.currentState?.validate() ?? false) {
       final userId = Provider.of<UserProvider>(context, listen: false).user.id;
       final double rating = ratingController.text.isNotEmpty
           ? double.parse(ratingController.text)
-          : 0.0; // อนุญาตให้ส่งคะแนน 0
+          : 0.0;
 
       await cathotelServices.addReview(
         user_id: userId,
         context: context,
         message: messageController.text,
-        rating: rating, // ใช้ตัวแปร rating ที่คำนวณไว้
+        rating: rating,
         cathotelId: widget.cathotel.id,
       );
     }
@@ -91,8 +91,7 @@ class _FormsReviewState extends State<FormsReview> {
                       color: Colors.amber,
                     ),
                     onRatingUpdate: (rating) {
-                      ratingController.text =
-                          rating.toString(); // อัปเดตค่าใน ratingController
+                      ratingController.text = rating.toString();
                     },
                   ),
                   SizedBox(

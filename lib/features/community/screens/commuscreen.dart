@@ -143,11 +143,9 @@ class _CommuScreenState extends State<CommuScreen> {
                       ),
                       SizedBox(height: 10),
 
-                      // Conditional rendering based on whether there are images
                       if (commuData.images.isNotEmpty)
                         CustomCarouselSlider(images: commuData.images),
 
-                      // Post title and description, always shown
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -155,25 +153,18 @@ class _CommuScreenState extends State<CommuScreen> {
                           children: [
                             Text(
                               commuData.title,
-                              style:
-                                  Theme.of(context).textTheme.subtitle1!.merge(
-                                        const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
                             ),
                             const SizedBox(height: 10.0),
                             Text(
                               commuData.description,
-                              style:
-                                  Theme.of(context).textTheme.subtitle2!.merge(
-                                        TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.grey.shade500),
-                                      ),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade500),
                             ),
                             const SizedBox(height: 8.0),
-                            // Likes, comments, and interactions
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -222,15 +213,10 @@ class _CommuScreenState extends State<CommuScreen> {
                                   const EdgeInsets.only(left: 5, bottom: 10),
                               child: Text(
                                 formatDateTime(commuData.createdAt),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade600,
+                                ),
                               ),
                             ),
                           ],

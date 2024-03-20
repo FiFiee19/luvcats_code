@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
@@ -11,7 +12,6 @@ import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
-import 'package:luvcats_app/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
 class OneScreen extends StatefulWidget {
@@ -29,9 +29,8 @@ class _OneScreenState extends State<OneScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   CarouselController buttonCarouselController = CarouselController();
-  int _current = 0;
-  bool isLiked = false;
 
+  bool isLiked = false;
   @override
   void initState() {
     super.initState();
@@ -52,20 +51,52 @@ class _OneScreenState extends State<OneScreen> {
   void dispose() {
     super.dispose();
   }
-  
+
+  void _showDeleteDialog(String commu) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteCommu(context, commu);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return Center(child: const CircularProgressIndicator()); // แสดงตัวโหลดถ้า commu ยังไม่ได้ถูกเรียก
+      return Center(child: const CircularProgressIndicator());
     } else if (commu!.isEmpty) {
-      // แสดงข้อความ No Post ถ้าไม่มีโพสต์
       return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Center(
           child: Text(
-            'No Post',
+            'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
@@ -100,7 +131,6 @@ class _OneScreenState extends State<OneScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // User info and post metadata, always shown
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -115,25 +145,18 @@ class _OneScreenState extends State<OneScreen> {
                             SizedBox(width: 20),
                             Text(
                               commuData.user!.username,
-                              style:
-                                  Theme.of(context).textTheme.subtitle1!.merge(
-                                        const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
                             ),
                             Spacer(),
                           ],
                         ),
                       ),
                       SizedBox(height: 20),
-
-                      // Conditional rendering based on whether there are images
                       if (commuData.images.isNotEmpty)
                         CustomCarouselSlider(images: commuData.images),
-
-                      // Post title and description, always shown
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -141,25 +164,18 @@ class _OneScreenState extends State<OneScreen> {
                           children: [
                             Text(
                               commuData.title,
-                              style:
-                                  Theme.of(context).textTheme.subtitle1!.merge(
-                                        const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
                             ),
                             const SizedBox(height: 10.0),
                             Text(
                               commuData.description,
-                              style:
-                                  Theme.of(context).textTheme.subtitle2!.merge(
-                                        TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.grey.shade500),
-                                      ),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade500),
                             ),
                             const SizedBox(height: 8.0),
-                            // Likes, comments, and interactions
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -208,15 +224,10 @@ class _OneScreenState extends State<OneScreen> {
                                   const EdgeInsets.only(left: 5, bottom: 10),
                               child: Text(
                                 formatDateTime(commuData.createdAt),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade600,
+                                ),
                               ),
                             ),
                           ],
@@ -227,7 +238,6 @@ class _OneScreenState extends State<OneScreen> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              // Make sure 'commuData.id' is non-nullable before you pass it
                               if (commuData.id != null) {
                                 Navigator.push(
                                   context,
@@ -237,19 +247,13 @@ class _OneScreenState extends State<OneScreen> {
                                     ),
                                   ),
                                 );
-                              } else {
-                                // Handle the case where 'commuData.id' is null
-                              }
+                              } else {}
                             },
                             icon: Icon(Icons.edit),
                           ),
-                          
                           IconButton(
                             onPressed: () {
-                            
-                                          profileService.deleteCommu(
-                                              context, commuData.id!);
-                             
+                              _showDeleteDialog(commuData.id!);
                             },
                             icon: Icon(Icons.delete_sharp),
                           )

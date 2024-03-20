@@ -158,14 +158,9 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               ),
                               Text(
                                 "${straycat.user?.username}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .merge(
-                                      const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black),
-                                    ),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black),
                               ),
                             ],
                           ),
@@ -176,29 +171,19 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                             children: [
                               Text(
                                 "สายพันธุ์:  ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade900,
+                                ),
                               ),
                               Text(
                                 straycat.breed.length > 10
                                     ? "${straycat.breed.substring(0, 10)}..."
                                     : straycat.breed,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade900,
+                                ),
                               ),
                             ],
                           ),
@@ -206,27 +191,17 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                             children: [
                               Text(
                                 "เพศ:  ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade900,
+                                ),
                               ),
                               Text(
                                 " ${straycat.gender}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade900,
+                                ),
                               ),
                             ],
                           ),
@@ -254,31 +229,21 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               ),
                               Text(
                                 "${straycat.province}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade500,
-                                      ),
-                                    ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade500,
+                                ),
                               ),
                               Spacer(),
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: Text(
                                   formatDateTime(straycat.createdAt),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2!
-                                      .merge(
-                                        TextStyle(
-                                          fontSize: 8,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade600,
+                                  ),
                                 ),
                               ),
                             ],
@@ -373,7 +338,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
               setState(() {
                 selectedProvince = result['province'];
                 selectedGender = result['gender'];
-                fetchAllCats(); // Refetch cats with new filters
+                fetchAllCats();
               });
             }
           },
@@ -383,8 +348,8 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
           onPressed: () {
             setState(() {
               selectedProvince = null;
-              selectedGender = null; // Reset ค่า selectedProvince
-              fetchAllCats(); // โหลดข้อมูลทั้งหมดอีกครั้ง
+              selectedGender = null;
+              fetchAllCats();
             });
           },
         ),
@@ -396,7 +361,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
             height: 10,
           ),
           Expanded(
-            child: bodyContent, // ส่วนที่เหลือของเนื้อหา
+            child: bodyContent,
           ),
         ],
       ),

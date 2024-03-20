@@ -3,7 +3,6 @@ import 'package:luvcats_app/features/entrepreneur/screens/dashboard_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
 
-// import '../pages/commu.dart';
 
 class TabBar_entre extends StatefulWidget {
   const TabBar_entre({Key? key}) : super(key: key);

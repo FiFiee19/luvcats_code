@@ -83,8 +83,7 @@ class HamburgerUser extends StatelessWidget {
             style: TextStyle(fontSize: 20),
           )),
           DashboardStraycat(
-            catData: catServices
-                .fetchAllCats(context), // This is the future being passed
+            catData: catServices.fetchAllCats(context),
           ),
         ],
       ),

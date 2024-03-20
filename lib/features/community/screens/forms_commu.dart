@@ -43,7 +43,7 @@ class _FormsCommuState extends State<FormsCommu> {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
-      
+
       List<String> imageUrls = [];
 
       String uniqueFileName(String userId, int index) {
@@ -62,7 +62,6 @@ class _FormsCommuState extends State<FormsCommu> {
         }
       }
 
-      // Check if the widget is still mounted before calling setState or context-dependent functions
       if (!mounted) return;
 
       commuServices.postcommu(

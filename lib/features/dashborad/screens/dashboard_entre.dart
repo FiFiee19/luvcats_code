@@ -11,22 +11,22 @@ class DashboardEntre extends StatelessWidget {
   }) : super(key: key);
 
   String ratingMessage(int totalReviews, double avgRating) {
-  if (totalReviews == 0) {
-    return "ยังไม่มีรีวิว";
-  } else if (avgRating == 0) {
-    return "ได้รับคะแนน 0";
-  } else if (avgRating <= 1) {
-    return "แย่มาก";
-  } else if (avgRating <= 2) {
-    return "ไม่ดี";
-  } else if (avgRating <= 3) {
-    return "ปานกลาง";
-  } else if (avgRating <= 4) {
-    return "ดี";
-  } else {
-    return "ดีมาก";
+    if (totalReviews == 0) {
+      return "ยังไม่มีรีวิว";
+    } else if (avgRating == 0) {
+      return "ได้รับคะแนน 0";
+    } else if (avgRating <= 1) {
+      return "แย่มาก";
+    } else if (avgRating <= 2) {
+      return "ไม่ดี";
+    } else if (avgRating <= 3) {
+      return "ปานกลาง";
+    } else if (avgRating <= 4) {
+      return "ดี";
+    } else {
+      return "ดีมาก";
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +38,20 @@ class DashboardEntre extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
-  final reviews = snapshot.data ?? [];
-  final int totalReviews = reviews.length;
-  final double avgRating = totalReviews > 0
-    ? reviews.map((review) => review.rating).reduce((a, b) => a + b) / totalReviews
-    : 0.0;
+          final reviews = snapshot.data ?? [];
+          final int totalReviews = reviews.length;
+          final double avgRating = totalReviews > 0
+              ? reviews.map((review) => review.rating).reduce((a, b) => a + b) /
+                  totalReviews
+              : 0.0;
 
           return Column(
             children: [
               Card(
                 margin: EdgeInsets.all(20.0),
-                elevation: 4, // Adjust elevation for shadow
+                elevation: 4,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(15), // Rounded corners for card
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
@@ -61,16 +61,14 @@ class DashboardEntre extends StatelessWidget {
                       SizedBox(height: 8.0),
                       Center(
                         child: Row(
-                          mainAxisSize: MainAxisSize
-                              .min, // To constrain the Row's size to its children
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.star, // Replace with your preferred icon
-                              color: Colors.amber, // Icon color
-                              size: 24.0, // Icon size
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 24.0,
                             ),
-                            SizedBox(
-                                width: 8.0), // Spacing between icon and text
+                            SizedBox(width: 8.0),
                             Text(
                               'รีวิวโดยรวม',
                               textAlign: TextAlign.center,
@@ -83,13 +81,12 @@ class DashboardEntre extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8.0),
-                      // Rating message container
                       Center(
                         child: Container(
                           padding: EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 12.0),
                           child: Text(
-            ratingMessage(totalReviews, avgRating),
+                            ratingMessage(totalReviews, avgRating),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 25.0,

@@ -66,7 +66,6 @@ class _DetailExpenseState extends State<DetailExpense> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate the total amount for the current category
     final double totalAmount =
         expenses.fold(0.0, (sum, item) => sum + item.amount);
 
@@ -108,7 +107,7 @@ class _DetailExpenseState extends State<DetailExpense> {
                             final formattedDate = expense.createdAt != null
                                 ? DateFormat('yyyy-MM-dd')
                                     .format(DateTime.parse(expense.createdAt!))
-                                : 'Unknown Date';
+                                : 'ไม่ทราบวันที่';
                             return ListTile(
                               contentPadding:
                                   EdgeInsets.symmetric(horizontal: 16.0),

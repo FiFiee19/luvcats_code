@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:uuid/uuid.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -12,8 +12,8 @@ import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
-import 'package:luvcats_app/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class FormsEntre extends StatefulWidget {
   const FormsEntre({super.key});
@@ -59,10 +59,11 @@ class _FormsEntreState extends State<FormsEntre> {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
-      //รูปโปรไฟล์
+
       final cloudinary1 = CloudinaryPublic('dtdloxmii', 'q2govzgn');
       CloudinaryResponse resimg = await cloudinary1.uploadFile(
-        CloudinaryFile.fromFile(_imageP!.path, folder: "ImageP/entrepreneur",publicId: _nameController.text),
+        CloudinaryFile.fromFile(_imageP!.path,
+            folder: "ImageP/entrepreneur", publicId: _nameController.text),
       );
 
       //รูปcathotel
@@ -72,9 +73,11 @@ class _FormsEntreState extends State<FormsEntre> {
         var uuid = Uuid();
         return "${userId}/${uuid.v4()}/${index + 1}";
       }
+
       for (int i = 0; i < images.length; i++) {
         CloudinaryResponse res = await cloudinary2.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: "Cathotel",publicId:uniqueFileName(user_id,i)),
+          CloudinaryFile.fromFile(images[i].path,
+              folder: "Cathotel", publicId: uniqueFileName(user_id, i)),
         );
         imageUrls.add(res.secureUrl);
       }
@@ -159,7 +162,7 @@ class _FormsEntreState extends State<FormsEntre> {
       _emailController.dispose();
       _passwordController.dispose();
       _nameController.dispose();
-       _cpasswordController.dispose();
+      _cpasswordController.dispose();
     }
     super.dispose();
   }
@@ -359,7 +362,6 @@ class _FormsEntreState extends State<FormsEntre> {
                         ),
                       ),
                 const SizedBox(height: 30),
-                
                 Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: TextFormField(
@@ -379,9 +381,7 @@ class _FormsEntreState extends State<FormsEntre> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
-                
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: TextFormField(
@@ -403,91 +403,89 @@ class _FormsEntreState extends State<FormsEntre> {
                 ),
                 const SizedBox(height: 10),
                 Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: TextFormField(
-                  controller: descriptionController,
-                  maxLines: 7,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'กรุณากรอกรายละเอียด';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'รายละะเอียด',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                          color: Colors.black38,
-                        )),
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: descriptionController,
+                    maxLines: 7,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกรายละเอียด';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'รายละะเอียด',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
                   ),
                 ),
-              ),
-                const SizedBox(height: 10),
-                
-                Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: TextFormField(
-                  controller: priceController,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'กรุณากรอกราคา';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'ราคา',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                          color: Colors.black38,
-                        )),
-                  ),
-                ),
-              ),
                 const SizedBox(height: 10),
                 Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: TextFormField(
-                  controller: contactController,
-                  maxLines: 4,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'กรุณากรอกช่องทางการติดต่อ';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'ช่องทางการติดต่อ',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                          color: Colors.black38,
-                        )),
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: priceController,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกราคา';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'ราคา',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
                   ),
                 ),
-              ),
                 const SizedBox(height: 10),
-                const SizedBox(height: 10),
-                
                 Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: TextFormField(
-                  controller: store_addressController,
-                  maxLines: 4,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'กรุณากรอกที่อยู่ของร้าน';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'ที่อยู่ของร้าน',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                          color: Colors.black38,
-                        )),
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: contactController,
+                    maxLines: 4,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกช่องทางการติดต่อ';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'ช่องทางการติดต่อ',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 10),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: TextFormField(
+                    controller: store_addressController,
+                    maxLines: 4,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'กรุณากรอกที่อยู่ของร้าน';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'ที่อยู่ของร้าน',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
@@ -497,7 +495,6 @@ class _FormsEntreState extends State<FormsEntre> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    // การตกแต่งอื่นๆ...
                   ),
                   hint: const Text(
                     'จังหวัด',
@@ -523,14 +520,12 @@ class _FormsEntreState extends State<FormsEntre> {
                       selectedProvince = value!;
                     });
                   },
-                  // ตัวเลือกอื่นๆ...
                 ),
                 const SizedBox(height: 30),
                 CustomButton(
                   text: 'ลงทะเบียน',
                   onTap: formsentre,
                 ),
-                
               ],
             ),
           ),

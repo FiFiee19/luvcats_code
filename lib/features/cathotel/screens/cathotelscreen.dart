@@ -62,7 +62,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
     } else if (cathotellist!.isEmpty) {
       bodyContent = Center(
         child: Text(
-          'No Post',
+          'ไม่มีโรงแรมแมว',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       );
@@ -137,14 +137,9 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                 catData.user!.username.length > 15
                                     ? "${catData.user!.username.substring(0, 15)}..."
                                     : catData.user!.username,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .merge(
-                                      const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black),
-                                    ),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black),
                               ),
                             ],
                           ),
@@ -188,16 +183,11 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                     catData.province.length > 10
                                         ? "${catData.province.substring(0, 10)}..."
                                         : catData.province,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle2!
-                                        .merge(
-                                          TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 12,
-                                            color: Colors.grey.shade500,
-                                          ),
-                                        ),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                      color: Colors.grey.shade500,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -206,16 +196,11 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                 padding: const EdgeInsets.only(right: 10),
                                 child: Text(
                                   "${catData.price}/คืน",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2!
-                                      .merge(
-                                        TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 12,
-                                          color: Colors.red,
-                                        ),
-                                      ),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
                                 ),
                               ),
                               SizedBox(
@@ -300,16 +285,16 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                         ),
                         actions: [
                           TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text("ยกเลิก"),
+                          ),
+                          TextButton(
                             onPressed: () => Navigator.of(context).pop({
                               'province': tempSelectedProvince,
                               'startPrice': startPrice,
                               'endPrice': endPrice,
                             }),
                             child: Text("ตกลง"),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text("ยกเลิก"),
                           ),
                         ],
                       );

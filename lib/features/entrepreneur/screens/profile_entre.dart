@@ -103,13 +103,11 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       Expanded(
                         child: Text(
                           cathotelData.user!.username,
-                          style: Theme.of(context).textTheme.subtitle1!.merge(
-                                const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
                           softWrap: true,
                         ),
                       ),
@@ -197,12 +195,10 @@ class _Profile_EntreState extends State<Profile_Entre> {
                             cathotelData.description,
                             softWrap: true,
                             overflow: TextOverflow.visible,
-                            style: Theme.of(context).textTheme.subtitle2!.merge(
-                                  TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade900,
-                                  ),
-                                ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey.shade900,
+                            ),
                           ),
                         ),
                       ],
@@ -219,13 +215,11 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       children: [
                         Text(
                           "ราคา:  ",
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16,
-                                  color: Colors.grey.shade900,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: Colors.grey.shade900,
+                          ),
                         ),
                       ],
                     ),
@@ -237,12 +231,10 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       children: [
                         Text(
                           cathotelData.price.toString() + "/คืน",
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey.shade900,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey.shade900,
+                          ),
                         ),
                       ],
                     ),
@@ -258,13 +250,11 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       children: [
                         Text(
                           "จังหวัด:  ",
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16,
-                                  color: Colors.grey.shade900,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: Colors.grey.shade900,
+                          ),
                         ),
                       ],
                     ),
@@ -276,12 +266,10 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       children: [
                         Text(
                           cathotelData.province,
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey.shade900,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey.shade900,
+                          ),
                         ),
                       ],
                     ),
@@ -297,13 +285,11 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       children: [
                         Text(
                           "ช่องทางการติดต่อ: ",
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16,
-                                  color: Colors.grey.shade900,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: Colors.grey.shade900,
+                          ),
                         ),
                       ],
                     ),
@@ -315,12 +301,10 @@ class _Profile_EntreState extends State<Profile_Entre> {
                       children: [
                         Text(
                           cathotelData.contact,
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey.shade900,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey.shade900,
+                          ),
                         ),
                       ],
                     ),

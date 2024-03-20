@@ -11,9 +11,9 @@ class FilterProvince extends StatefulWidget {
 }
 
 class _FilterProvinceState extends State<FilterProvince> {
-  String? selectedProvince; // แก้ไขเป็น String? เพื่อเก็บค่าที่เลือก
+  String? selectedProvince;
   List<Straycat>? straycatlist;
-  List<Straycat>? filteredStraycatlist; // รายการที่ถูก filter
+  List<Straycat>? filteredStraycatlist;
   final CatServices catServices = CatServices();
 
   @override
@@ -24,7 +24,7 @@ class _FilterProvinceState extends State<FilterProvince> {
 
   Future<void> fetchAllCats() async {
     straycatlist = await catServices.fetchAllCats(context);
-    filteredStraycatlist = straycatlist; // เริ่มต้นด้วยรายการทั้งหมด
+    filteredStraycatlist = straycatlist;
     if (mounted) {
       setState(() {});
     }
@@ -39,7 +39,7 @@ class _FilterProvinceState extends State<FilterProvince> {
       });
     } else {
       setState(() {
-        filteredStraycatlist = straycatlist; // ถ้าไม่เลือกจังหวัดใดๆ ให้แสดงทั้งหมด
+        filteredStraycatlist = straycatlist;
       });
     }
   }
@@ -62,7 +62,7 @@ class _FilterProvinceState extends State<FilterProvince> {
               'จังหวัด',
               style: TextStyle(fontSize: 14),
             ),
-            value: selectedProvince, // เพิ่ม value เพื่อแสดงค่าที่เลือก
+            value: selectedProvince,
             items: province.map((String province) {
               return DropdownMenuItem<String>(
                 value: province,
@@ -79,7 +79,6 @@ class _FilterProvinceState extends State<FilterProvince> {
               filterStraycatsByProvince(value);
             },
           ),
-          // ใช้ filteredStraycatlist ในการสร้าง ListView หรือ Widget อื่นๆ ที่แสดงรายการ
         ],
       ),
     );

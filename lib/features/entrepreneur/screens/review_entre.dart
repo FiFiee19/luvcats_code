@@ -5,11 +5,9 @@ import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/review.dart';
 
 class ReviewEntre extends StatefulWidget {
-  // final Cathotel cathotel;
   final String cathotel;
   const ReviewEntre({
     Key? key,
-    // required this.cathotel,
     required this.cathotel,
   }) : super(key: key);
 
@@ -84,7 +82,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
               child: Text('ส่ง'),
               onPressed: () async {
                 final message = replyController.text;
-                // Ensure the reply message is not empty before sending
+
                 if (message.trim().isNotEmpty) {
                   await cathotelServices.replyToReview(
                     context: context,
@@ -132,7 +130,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
                     Padding(
                       padding: EdgeInsets.only(right: 2),
                       child: Text(
-                        'ยังไม่มีการให้คะแนน', // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                        'ยังไม่มีการให้คะแนน',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -141,8 +139,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
                     Padding(
                       padding: EdgeInsets.all(8),
                       child: Text(
-                        calculateAverageRating().toStringAsFixed(
-                            1), // แสดงค่าเฉลี่ยทศนิยมหนึ่งตำแหน่ง
+                        calculateAverageRating().toStringAsFixed(1),
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
@@ -256,7 +253,6 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                               child: TextButton(
                                                 child: Text('ตอบกลับ'),
                                                 onPressed: () {
-                                                  // Call the dialog with the current review's ID
                                                   showReplyDialog(
                                                       context, review.id!);
                                                 },
@@ -266,8 +262,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: review.reply !=
-                                                null // Check if reply is not null
+                                        child: review.reply != null
                                             ? Container(
                                                 width: double.infinity,
                                                 padding:
@@ -294,8 +289,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                                     ),
                                                     SizedBox(height: 8.0),
                                                     Text(
-                                                      review.reply!
-                                                          .message, // We can safely use the bang operator now
+                                                      review.reply!.message,
                                                       style: TextStyle(
                                                         fontSize: 14.0,
                                                       ),
@@ -303,8 +297,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
                                                   ],
                                                 ),
                                               )
-                                            : SizedBox
-                                                .shrink(), // If reply is null, display nothing
+                                            : SizedBox.shrink(),
                                       ),
                                       Divider(),
                                     ],

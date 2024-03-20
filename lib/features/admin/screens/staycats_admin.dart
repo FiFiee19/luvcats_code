@@ -56,9 +56,38 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
     }
   }
 
-  //ลบStrayCat
-  void delete(String straycat) {
-    profileService.deleteStrayCat(context, straycat);
+  void _showDeleteDialog(String straycat) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // ห้ามให้ user ปิด dialog โดยการแตะนอกขอบเขต
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteStrayCat(context, straycat);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -71,7 +100,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
         backgroundColor: Colors.grey[200],
         body: Center(
           child: Text(
-            'No Post',
+            'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
@@ -224,7 +253,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                               Spacer(),
                               IconButton(
                                   onPressed: () {
-                                    delete(straycat.id!);
+                                    _showDeleteDialog(straycat.id!);
                                   },
                                   icon: Icon(Icons.delete_sharp)),
                             ],
@@ -319,7 +348,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
               setState(() {
                 selectedProvince = result['province'];
                 selectedGender = result['gender'];
-                fetchAllCats(); // Refetch cats with new filters
+                fetchAllCats();
               });
             }
           },
@@ -329,8 +358,8 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
           onPressed: () {
             setState(() {
               selectedProvince = null;
-              selectedGender = null; // Reset ค่า selectedProvince
-              fetchAllCats(); // โหลดข้อมูลทั้งหมดอีกครั้ง
+              selectedGender = null;
+              fetchAllCats();
             });
           },
         ),

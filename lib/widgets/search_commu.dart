@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/config/datetime.dart';
-import 'package:luvcats_app/features/community/screens/detail_comment.dart';
-import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
-import 'package:luvcats_app/providers/user_provider.dart';
-import 'package:luvcats_app/widgets/carouselslider.dart';
-import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:luvcats_app/widgets/show_search.dart';
-import 'package:provider/provider.dart';
 
 class CommuSearchDelegate extends SearchDelegate<Commu?> {
   final List<Commu> commulist;

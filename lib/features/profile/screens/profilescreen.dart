@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // ดึง userId จาก UserProvider
+  
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
     if (userId != null) {
       fetchProfile(userId);
@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     } catch (e) {
-      // Handle error
+     
     }
   }
 
@@ -80,8 +80,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
                 if (result != null && users != null) {
                   await fetchProfile(
-                      users!.id); // Only refresh if `users` is non-null
-                  setState(() {}); // Force the UI to refresh
+                      users!.id); 
+                  setState(() {});
                 }
               },
               style: ElevatedButton.styleFrom(primary: Colors.grey),
@@ -108,14 +108,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(width: 30),
                 Text(
                   users?.username ??
-                      '', // Use a fallback value like an empty string if `users` is null
-                  style: Theme.of(context).textTheme.subtitle1!.merge(
+                      '', 
+                  style: 
                         const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             color: Colors.black),
                       ),
-                ),
+                
               ],
             ),
           ),

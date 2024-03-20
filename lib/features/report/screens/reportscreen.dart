@@ -30,8 +30,8 @@ class _ReportScreenState extends State<ReportScreen> {
         commu_id: widget.commu.id!,
       );
       print(widget.commu.id!);
-      // reportController.clear();
-      Navigator.of(context).pop(); // Close the dialog after submitting
+
+      Navigator.of(context).pop();
     }
   }
 
@@ -71,12 +71,13 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: report, // Call the report function
-            child: const Text('ยืนยัน'),
+            onPressed: () =>
+                {Navigator.of(context).pop(), reportController.clear()},
+            child: const Text('ยกเลิก'),
           ),
           TextButton(
-            onPressed: () =>{ Navigator.of(context).pop(), reportController.clear()},
-            child: const Text('ยกเลิก'),
+            onPressed: report,
+            child: const Text('ยืนยัน'),
           ),
         ],
       ),

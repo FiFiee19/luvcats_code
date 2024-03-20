@@ -29,22 +29,14 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
     });
   }
 
-  // @override
-  // void initState() {
-  //   fetchProfile(user.id);
-
-  //   super.initState();
-  // }
+  
   @override
   void initState() {
     super.initState();
-    // Future.delayed(Duration.zero, () {
-    //   fetchProfile(userId);
-    // }
-    // );
+    
     _pages = [
-      OneScreen1(user: widget.user), // Use widget.user instead of user
-      TwoScreen2(user: widget.user), // Use widget.user
+      OneScreen1(user: widget.user), 
+      TwoScreen2(user: widget.user), 
     ];
     print('User ID: $widget.user');
   }
@@ -52,7 +44,7 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // ดึง userId จาก UserProvider
+  
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
     if (userId != null) {
       fetchProfile(userId);
@@ -69,13 +61,12 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
         });
       }
     } catch (e) {
-      // Handle error
+     
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(),
       backgroundColor: Colors.white,
@@ -100,12 +91,12 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
                 ),
                 Text(
                   widget.user.username,
-                  style: Theme.of(context).textTheme.subtitle1!.merge(
+                  style: 
                         const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             color: Colors.black),
-                      ),
+                      
                 ),
               ],
             ),

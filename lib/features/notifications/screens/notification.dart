@@ -15,28 +15,27 @@ class NotificationUser extends StatefulWidget {
 
 class _NotificationUserState extends State<NotificationUser> {
   final CommuServices commuServices = CommuServices();
-  List<Comment>? comment; // Change to List<Comment>? to hold comments data
+  List<Comment>? comment;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
-    fetchComments(userId); // Renamed to fetchComments
+    fetchComments(userId);
   }
 
   Future<void> fetchComments(String userId) async {
     try {
-      var comments = await commuServices.noti_Comment(
-          context, userId); // Renamed to comments
+      var comments = await commuServices.noti_Comment(context, userId);
       if (mounted) {
         setState(() {
-          comment = comments; // Set the state with the fetched comments
+          comment = comments;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          comment = []; // Handle the error state
+          comment = [];
         });
       }
     }
@@ -67,7 +66,6 @@ class _NotificationUserState extends State<NotificationUser> {
                         // ไม่แสดงคอมเมนต์ของตนเอง
                         return Container();
                       } else {
-                        // แสดงคอมเมนต์ของผู้ใช้อื่น
                         return buildCommentItem(commentData, context);
                       }
                     },
@@ -77,15 +75,11 @@ class _NotificationUserState extends State<NotificationUser> {
   }
 
   Widget buildCommentItem(Comment commentData, BuildContext context) {
-    // สร้าง Widget สำหรับแสดงคอมเมนต์ที่นี่
     return InkWell(
       onTap: () async {
-        // Ensure that you're getting a unique commu_id for each comment
         final commuId = commentData.commu_id;
         print(commuId);
         if (commuId != null) {
-          // Make sure this fetchIdCommu function calls the right API endpoint
-          // and correctly handles the commuId
           final commu = await commuServices.fetchIdCommu(context, commuId);
           print(commu);
           if (commu != null) {

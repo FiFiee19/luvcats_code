@@ -36,7 +36,7 @@ class _Notification_EntreState extends State<Notification_Entre> {
         });
       }
     } catch (e) {
-      print(e); // For debugging purposes
+      print(e);
     }
   }
 
@@ -150,25 +150,13 @@ class _Notification_EntreState extends State<Notification_Entre> {
                                     const EdgeInsets.only(left: 5, bottom: 10),
                                 child: Text(
                                   formatDateTime(reviewData.createdAt),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2!
-                                      .merge(
-                                        TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade600,
+                                  ),
                                 ),
                               ),
                               Spacer(),
-                              // IconButton(
-                              //   onPressed: () {
-                              //     commuServices.deleteReport(
-                              //         context, reportData.id!);
-                              //   },
-                              //   icon: Icon(Icons.delete_sharp),
-                              // )
                             ],
                           ),
                         ],

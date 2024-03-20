@@ -26,11 +26,9 @@ class OneScreenOfUser extends StatefulWidget {
 class _OneScreenOfUserState extends State<OneScreenOfUser> {
   List<Commu>? commu;
   final CommuServices commuServices = CommuServices();
-  // final AuthService authService = AuthService();
   final ProfileServices profileService = ProfileServices();
 
   CarouselController buttonCarouselController = CarouselController();
-  int _current = 0;
   bool isLiked = false;
 
   @override
@@ -50,8 +48,38 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
     }
   }
 
-  void delete(String commu) {
-    profileService.deleteCommu(context, commu);
+  void _showDeleteDialog(String commu) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteCommu(context, commu);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -66,7 +94,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
         backgroundColor: Colors.grey[200],
         body: Center(
           child: Text(
-            'No Post',
+            'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
@@ -119,13 +147,13 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                             Text(
                               "${commuData.user!.username}",
                               style:
-                                  Theme.of(context).textTheme.subtitle1!.merge(
+                                  
                                         const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
                                             color: Colors.black),
                                       ),
-                            ),
+                            
                           ],
                         ),
                       ),
@@ -143,28 +171,22 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                             children: [
                               Text(
                                 "${commuData.title}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .merge(
+                                style:
                                       const TextStyle(
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black),
-                                    ),
+                                    
                               ),
                               const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
                                 "${commuData.description}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2!
-                                    .merge(
+                                style: 
                                       TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Colors.grey.shade500,
-                                      ),
+                                      
                                     ),
                               ),
                               const SizedBox(
@@ -263,7 +285,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                   children: [
                                     IconButton(
                                         onPressed: () {
-                                          delete(commuData.id!);
+                                          _showDeleteDialog(commuData.id!);
                                         },
                                         icon: Icon(Icons.delete_sharp)),
                                   ],

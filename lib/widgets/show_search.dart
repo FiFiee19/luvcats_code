@@ -86,7 +86,7 @@ class _ShowSearchState extends State<ShowSearcher> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // User info and post metadata, always shown
+                  
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -100,12 +100,12 @@ class _ShowSearchState extends State<ShowSearcher> {
                         SizedBox(width: 20),
                         Text(
                           commuData.user!.username,
-                          style: Theme.of(context).textTheme.subtitle1!.merge(
+                          style: 
                                 const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.black),
-                              ),
+                              
                         ),
                         Spacer(),
                       ],
@@ -113,11 +113,11 @@ class _ShowSearchState extends State<ShowSearcher> {
                   ),
                   SizedBox(height: 20),
       
-                  // Conditional rendering based on whether there are images
+                 
                   if (commuData.images.isNotEmpty)
                     CustomCarouselSlider(images: commuData.images),
       
-                  // Post title and description, always shown
+                  
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -125,23 +125,23 @@ class _ShowSearchState extends State<ShowSearcher> {
                       children: [
                         Text(
                           commuData.title,
-                          style: Theme.of(context).textTheme.subtitle1!.merge(
+                          style: 
                                 const TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Colors.black),
-                              ),
+                              
                         ),
                         const SizedBox(height: 10.0),
                         Text(
                           commuData.description,
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
+                          style: 
                                 TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Colors.grey.shade500),
-                              ),
+                              
                         ),
                         const SizedBox(height: 8.0),
-                        // Likes, comments, and interactions
+                        
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -178,7 +178,7 @@ class _ShowSearchState extends State<ShowSearcher> {
                                     ),
                                   
                             Text(
-                              '${commuData.likes.length}', // Display number of likes
+                              '${commuData.likes.length}', 
                               style: TextStyle(color: Colors.grey),
                             ),
                             if(userType == 'user')
@@ -197,7 +197,7 @@ class _ShowSearchState extends State<ShowSearcher> {
                               onPressed: () {}
                             ),
                             Text(
-                              '${commuData.comments.length}', // Display number of comments
+                              '${commuData.comments.length}', 
                               style: TextStyle(color: Colors.grey),
                             ),
                           ],
@@ -206,11 +206,11 @@ class _ShowSearchState extends State<ShowSearcher> {
                           padding: const EdgeInsets.only(left: 5, bottom: 10),
                           child: Text(
                             formatDateTime(commuData.createdAt),
-                            style: Theme.of(context).textTheme.subtitle2!.merge(
+                            style: 
                                   TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.grey.shade600,
-                                  ),
+                                  
                                 ),
                           ),
                         ),

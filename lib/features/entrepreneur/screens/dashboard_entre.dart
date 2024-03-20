@@ -1,19 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/features/dashborad/screens/dashboard_entre.dart';
-import 'package:luvcats_app/features/dashborad/screens/rankofcathotel.dart';
-import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
-import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class Report_Entre extends StatefulWidget {
-  // final String cathotelId;
-
   const Report_Entre({
     Key? key,
-    // required this.cathotelId,
   }) : super(key: key);
 
   @override
@@ -30,9 +23,9 @@ class _Report_EntreState extends State<Report_Entre> {
       body: Column(
         children: [
           DashboardEntre(
-            reviews: cathotelServices.fetchReviewsUser(context,userProvider.user.id),
+            reviews: cathotelServices.fetchReviewsUser(
+                context, userProvider.user.id),
           ),
-          // DashboardRank()
         ],
       ),
     );

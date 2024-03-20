@@ -54,7 +54,7 @@ class _FormsExpenseState extends State<FormsExpense> {
             setState(() {
               selectedOption = value;
               categoryController.text =
-                  listcategory[value!]; // Update the category controller
+                  listcategory[value!]; 
             });
           },
         ),

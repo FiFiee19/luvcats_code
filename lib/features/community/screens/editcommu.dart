@@ -61,10 +61,9 @@ class _EditCommuState extends State<EditCommu> {
   //เรียกข้อมูลCommuจากcommuServices
   Future<void> _loadCommu() async {
     try {
-      // ในฟังก์ชัน _loadCommu
       final post = await commuServices.fetchIdCommu(context, widget.commuId);
       print('Loading data for commuId: ${widget.commuId}, got post: $post');
-// ทำการตั้งค่าเข้าไปใน controller
+
       titleController.text = post.title;
       descriptionController.text = post.description;
       imageUrls = post.images;

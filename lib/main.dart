@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Provider.of<UserProvider>(context).user.token.isEmpty
-            ? const SigninScreen() // ถ้าไม่มี Token, ไปที่หน้า SigninScreen
+            ? const SigninScreen()
             : const Home());
   }
 }

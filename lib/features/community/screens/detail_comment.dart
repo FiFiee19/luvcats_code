@@ -79,6 +79,35 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
     profileService.deleteCommu(context, commu);
   }
 
+  void _showDeleteDialog(String cemment) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () {
+              commuServices.deleteComment(context, cemment);
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     if (mounted) {
@@ -127,12 +156,10 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                   ),
                   Text(
                     "${widget.commu.user!.username}",
-                    style: Theme.of(context).textTheme.subtitle1!.merge(
-                          const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black),
-                        ),
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
                   ),
                   Spacer(),
                 ],
@@ -149,22 +176,18 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                 children: [
                   Text(
                     "${widget.commu.title}",
-                    style: Theme.of(context).textTheme.subtitle1!.merge(
-                          const TextStyle(
-                              fontWeight: FontWeight.w700, color: Colors.black),
-                        ),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w700, color: Colors.black),
                   ),
                   const SizedBox(
                     height: 10.0,
                   ),
                   Text(
                     "${widget.commu.description}",
-                    style: Theme.of(context).textTheme.subtitle2!.merge(
-                          TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.grey.shade500,
-                          ),
-                        ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                   SizedBox(
                     height: 30,
@@ -174,12 +197,10 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                     children: [
                       Text(
                         formatDateTime(widget.commu.createdAt),
-                        style: Theme.of(context).textTheme.subtitle2!.merge(
-                              TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey.shade600,
+                        ),
                       ),
 
                       Spacer(), // This will take all available space pushing the following widgets to the end
@@ -225,12 +246,10 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                       children: [
                         Text(
                           "${widget.commu.comments.length} ความคิดเห็น",
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
                         ),
                         SizedBox(height: 10),
                       ],
@@ -270,8 +289,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                               .user_id) // Display delete button only if the current user is the owner
                                         IconButton(
                                           onPressed: () {
-                                            commuServices.deleteComment(
-                                                context, comment.id!);
+                                            _showDeleteDialog(comment.id!);
                                           },
                                           icon: Icon(Icons.delete_sharp),
                                         )

@@ -54,7 +54,7 @@ class _HamburgerEntreState extends State<HamburgerEntre> {
               title: const Text('ข้อมูลผู้ประกอบการ'),
               onTap: () {
                 if (entre != null) {
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

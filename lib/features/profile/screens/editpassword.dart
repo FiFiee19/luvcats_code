@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/widgets/custom_button.dart';
-import 'package:provider/provider.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
-import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/widgets/custom_button.dart';
 
 class EditPassword extends StatefulWidget {
   const EditPassword({Key? key}) : super(key: key);
@@ -53,7 +51,7 @@ class _EditPasswordState extends State<EditPassword> {
               children: [
                 TextFormField(
                   controller: newPasswordController,
-                  obscureText: true, // Hides the text being edited
+                  obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'รหัสผ่านใหม่',
                   ),
@@ -66,7 +64,7 @@ class _EditPasswordState extends State<EditPassword> {
                 ),
                 TextFormField(
                   controller: confirmPasswordController,
-                  obscureText: true, // Hides the text being edited
+                  obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'ยืนยันรหัสผ่านใหม่',
                   ),

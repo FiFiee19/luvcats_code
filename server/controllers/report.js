@@ -63,20 +63,30 @@ exports.listall = async (req, res) => {
 }
 
 exports.deleteReport = async (req, res) => {
-    
     try {
         const { reportId } = req.params;
-        const commuId = req.params.commu_id;
+        const report = await Report.findById(reportId);
+        if (!report) {
+            return res.status(404).json({ message: "Report not found" });
+        }
+        const commuId = report.commu_id; // หรือ req.params.commu_id ถ้ารายงานมี field commu_id ที่เก็บ ObjectId ของ Commu
+
+        // ลบรายงาน
         await Report.findByIdAndDelete(reportId);
 
-        await Commu.findByIdAndUpdate(commuId, {
-            $pull: { reports: reportId },
-        });
-        return res.status(200).json({message:"ลบสำเร็จ!"})
+        // ลบอ้างอิงรายงานออกจาก Commu
+        const updatedCommu = await Commu.findByIdAndUpdate(
+            commuId,
+            { $pull: { reports: reportId } },
+            { new: true }
+        );
+        if (!updatedCommu) {
+            return res.status(404).json({ message: "Commu not found" });
+        }
+
+        return res.status(200).json({ message: "Report deleted successfully" });
     } catch (e) {
-        console.log(e)
+        console.log(e);
         res.status(500).json({ error: 'Server Error' });
-
     }
-
-}
+};

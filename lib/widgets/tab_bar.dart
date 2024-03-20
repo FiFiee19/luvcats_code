@@ -5,8 +5,6 @@ import 'package:luvcats_app/features/map/screens/custom_marker_info_window.dart'
 import 'package:luvcats_app/features/profile/screens/profilescreen.dart';
 import 'package:luvcats_app/features/straycat/screens/straycatscreen.dart';
 
-// import '../pages/commu.dart';
-
 class tab_Bar extends StatefulWidget {
   const tab_Bar({Key? key}) : super(key: key);
 

@@ -49,7 +49,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
   double calculateAverageRating() {
     if (reviews.isEmpty) {
-      return 0.0; // ถ้าไม่มีรีวิวให้คืนค่า 0.0 แทน
+      return 0.0;
     }
     double sum = 0;
     for (var review in reviews) {
@@ -177,8 +177,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: review.reply !=
-                                              null // Check if reply is not null
+                                      child: review.reply != null
                                           ? Container(
                                               width: double.infinity,
                                               padding:
@@ -204,8 +203,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                                   ),
                                                   SizedBox(height: 8.0),
                                                   Text(
-                                                    review.reply!
-                                                        .message, // We can safely use the bang operator now
+                                                    review.reply!.message,
                                                     style: TextStyle(
                                                       fontSize: 14.0,
                                                     ),
