@@ -62,7 +62,7 @@ class _ReviewEntreState extends State<ReviewEntre> {
     final TextEditingController replyController = TextEditingController();
     return showDialog<void>(
       context: context,
-      barrierDismissible: true, // Set to true for better UX
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('ตอบกลับรีวิว'),

@@ -5,8 +5,6 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:luvcats_app/config/constants.dart';
-import 'package:luvcats_app/config/error.dart';
-import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';

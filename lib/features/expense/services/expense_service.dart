@@ -80,4 +80,36 @@ class ExpenseServices {
       throw Exception('Error fetching comments: $e');
     }
   }
+
+  //ลบStrayCat
+  Future<void> deleteExpense(BuildContext context, String expenseId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.delete(
+        Uri.parse('$url/getExpense/delete/$expenseId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authtoken': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'expenseId': expenseId,
+        }),
+      );
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ลบสำเร็จ!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
+    }
+  }
 }

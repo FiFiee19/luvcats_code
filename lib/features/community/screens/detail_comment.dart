@@ -82,10 +82,11 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
   void _showDeleteDialog(String cemment) {
     showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: const Center(
           child: Text(
-            'ลบโพสต์',
+            'ลบคอมเมนต์',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -98,8 +99,12 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
             child: const Text('ยกเลิก'),
           ),
           TextButton(
-            onPressed: () {
-              commuServices.deleteComment(context, cemment);
+            onPressed: () async {
+              await commuServices.deleteComment(context, cemment);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
             },
             child: const Text('ยืนยัน'),
           ),

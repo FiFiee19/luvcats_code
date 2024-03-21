@@ -45,62 +45,117 @@ class DashboardEntre extends StatelessWidget {
                   totalReviews
               : 0.0;
 
-          return Column(
-            children: [
-              Card(
-                margin: EdgeInsets.all(20.0),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 8.0),
-                      Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 24.0,
-                            ),
-                            SizedBox(width: 8.0),
-                            Text(
-                              'รีวิวโดยรวม',
+          return Center(
+            child: Column(
+              children: [
+                Card(
+                  margin: EdgeInsets.all(20.0),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 8.0),
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 24.0,
+                              ),
+                              SizedBox(width: 8.0),
+                              Text(
+                                'รีวิวโดยรวม',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 12.0),
+                            child: Text(
+                              ratingMessage(totalReviews, avgRating),
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: 25.0,
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 8.0),
-                      Center(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 12.0),
-                          child: Text(
-                            ratingMessage(totalReviews, avgRating),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Card(
+                  margin: EdgeInsets.all(20.0),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 8.0),
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 24.0,
+                              ),
+                              SizedBox(width: 8.0),
+                              Text(
+                                'คะแนนโดยรวม',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 12.0),
+                            child: Text(
+                              avgRating.toStringAsFixed(1),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 25.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         } else {
           return Text('No data available');

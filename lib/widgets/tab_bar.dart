@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/cathotel/screens/cathotelscreen.dart';
 import 'package:luvcats_app/features/community/screens/commuscreen.dart';
-import 'package:luvcats_app/features/map/screens/custom_marker_info_window.dart';
 import 'package:luvcats_app/features/profile/screens/profilescreen.dart';
 import 'package:luvcats_app/features/straycat/screens/straycatscreen.dart';
+
+import '../features/map/screens/mapscreen.dart';
 
 class tab_Bar extends StatefulWidget {
   const tab_Bar({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class _tab_BarState extends State<tab_Bar> {
           StrayCatScreen(),
           CatHotelScreen(),
           CommuScreen(),
-          CustomMarketInfoWindow(),
+          MapScreen(),
           ProfileScreen(),
         ],
         controller: pageController,

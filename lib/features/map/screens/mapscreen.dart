@@ -1,118 +1,194 @@
-// import 'dart:async';
+import 'dart:async';
 
-// import 'package:flutter/material.dart';
-// import 'package:geolocator/geolocator.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:luvcats_app/features/map/screens/application_bloc.dart';
+import 'package:luvcats_app/models/maps/place.dart';
+import 'package:provider/provider.dart';
 
-// class HomeScreen extends StatefulWidget {
-//   const HomeScreen({Key? key}) : super(key: key);
+class MapScreen extends StatefulWidget {
+  MapScreen({Key? key}) : super(key: key);
 
-//   @override
-//   State<HomeScreen> createState() => _HomeScreenState();
-// }
+  @override
+  _MapScreenState createState() => _MapScreenState();
+}
 
-// class _HomeScreenState extends State<HomeScreen> {
-//   Completer<GoogleMapController> _controller = Completer();
-//   List<Marker> _marker = [];
-//   List<Marker> _list = [
-//     Marker(
-//         markerId: MarkerId('1'),
-//         position: LatLng(37.42796133580664, -122.085749655962),
-//         infoWindow: InfoWindow(title: 'My Position')),
-//     Marker(
-//         markerId: MarkerId('2'),
-//         position: LatLng(38.42796133580664, -122.085749655962),
-//         infoWindow: InfoWindow(title: 'Second Position'))
-//   ];
+class _MapScreenState extends State<MapScreen> {
+  Completer<GoogleMapController> _mapController = Completer();
+  StreamSubscription? locationSubscription;
+  StreamSubscription? boundsSubscription;
+  final _locationController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    final applicationBloc =
+        Provider.of<ApplicationBloc>(context, listen: false);
 
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     _marker.addAll(_list);
-//     navigateToCurrentPosition();
-//   }
+    locationSubscription =
+        applicationBloc.selectedLocation!.stream.listen((place) {
+      if (place != null) {
+        _goToPlace(place);
+      }
+    });
 
-//   static const CameraPosition _kGooglePlex = CameraPosition(
-//     target: LatLng(37.42796133580664, -122.085749655962),
-//     zoom: 14.4746,
-//   );
+    boundsSubscription = applicationBloc.bounds!.stream.listen((bounds) async {
+      if (bounds != null) {
+        final GoogleMapController controller = await _mapController.future;
+        controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+      }
+    });
+  }
 
-//   Future<Position> getUserCurrentLocation() async {
-//     await Geolocator.requestPermission()
-//         .then((value) {})
-//         .onError((error, stackTrace) {
-//       debugPrint('error in getting current location');
-//       debugPrint(error.toString());
-//     });
+  @override
+  void dispose() {
+    locationSubscription?.cancel();
+    boundsSubscription?.cancel();
+    super.dispose();
+  }
 
-//     return await Geolocator.getCurrentPosition(
-//         desiredAccuracy: LocationAccuracy.high);
-//   }
+  Future<void> _goToPlace(Place place) async {
+    final GoogleMapController controller = await _mapController.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(
+              place.geometry!.location!.lat!, place.geometry!.location!.lng!),
+          zoom: 14.0,
+        ),
+      ),
+    );
+  }
 
-//   void navigateToCurrentPosition() {
-//     getUserCurrentLocation().then((value) async {
-//       debugPrint('My current location');
-//       debugPrint(value.latitude.toString() + value.longitude.toString());
+  @override
+  Widget build(BuildContext context) {
+    final applicationBloc = Provider.of<ApplicationBloc>(context);
 
-//       _marker.add(Marker(
-//           markerId: MarkerId("6"),
-//           position: LatLng(value.latitude, value.longitude),
-//           infoWindow: InfoWindow(
-//             title: 'My current location',
-//           )));
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: TextField(
+      //     controller: _searchController,
+      //     decoration: InputDecoration(
+      //       hintText: 'Search by City',
+      //       suffixIcon: Icon(Icons.search),
+      //     ),
+      //     onChanged: (value) {
+      //       // Trigger search operation
+      //       applicationBloc.searchPlaces(value);
+      //     },
+      //   ),
+      // ),
+      body: applicationBloc.currentLocation == null
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _locationController,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        hintText: 'Search by City',
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) => applicationBloc.searchPlaces(value),
+                      onTap: () => applicationBloc.clearSelectedLocation(),
+                    ),
+                  ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 540.0,
+                        child: Expanded(
+                          child: GoogleMap(
+                            mapType: MapType.normal,
+                            myLocationEnabled: true,
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                  applicationBloc.currentLocation!.latitude,
+                                  applicationBloc.currentLocation!.longitude),
+                              zoom: 14,
+                            ),
+                            onMapCreated: (GoogleMapController controller) {
+                              _mapController.complete(controller);
+                            },
+                            scrollGesturesEnabled: true,
+                            zoomGesturesEnabled: true,
+                            markers: Set<Marker>.of(applicationBloc.markers!),
+                            // Add more configurations if needed
+                          ),
+                        ),
+                      ),
+                      if (applicationBloc.searchResults != null &&
+                          applicationBloc.searchResults!.length != 0)
+                        Container(
+                            height: 300.0,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(.6),
+                                backgroundBlendMode: BlendMode.darken)),
+                      if (applicationBloc.searchResults != null)
+                        Container(
+                          height: 300.0,
+                          child: ListView.builder(
+                              itemCount: applicationBloc.searchResults!.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    applicationBloc
+                                        .searchResults![index].description!,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    applicationBloc.setSelectedLocation(
+                                        applicationBloc
+                                            .searchResults![index].placeId!);
+                                  },
+                                );
+                              }),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showFilterModal(context),
+        child: Icon(Icons.filter_list),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+    );
+  }
 
-//       CameraPosition cameraPosition = CameraPosition(
-//         target: LatLng(value.latitude, value.longitude),
-//         zoom: 14,
-//       );
-
-//       final GoogleMapController controller = await _controller.future;
-//       controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-//       setState(() {});
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           getUserCurrentLocation().then((value) async {
-//             debugPrint('My current location');
-//             debugPrint(value.latitude.toString() + value.longitude.toString());
-
-//             _marker.add(Marker(
-//                 markerId: MarkerId("6"),
-//                 position: LatLng(value.latitude, value.longitude),
-//                 infoWindow: InfoWindow(
-//                   title: 'My current location',
-//                 )));
-
-//             CameraPosition cameraPosition = CameraPosition(
-//               target: LatLng(value.latitude, value.longitude),
-//               zoom: 14,
-//             );
-
-//             final GoogleMapController controller = await _controller.future;
-//             controller
-//                 .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-//             setState(() {});
-//           });
-//         },
-//         child: Icon(
-//           Icons.add_location_rounded,
-//           size: 30,
-//         ),
-//       ),
-//       body: GoogleMap(
-//         initialCameraPosition: _kGooglePlex,
-//         myLocationEnabled: true,
-//         onMapCreated: (GoogleMapController controller) {
-//           _controller.complete(controller);
-//         },
-//         markers: Set<Marker>.of(_marker),
-//       ),
-//     );
-//   }
-// }
+  void _showFilterModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return Container(
+          height: 200,
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.store),
+                title: Text('Pet Store'),
+                onTap: () => Navigator.pop(context, 'pet_store'),
+              ),
+              ListTile(
+                leading: Icon(Icons.local_hospital),
+                title: Text('Pet Hospital'),
+                onTap: () => Navigator.pop(context, 'veterinary_care'),
+              ),
+              // Add more ListTile rows for other place types
+            ],
+          ),
+        );
+      },
+    ).then((value) {
+      if (value != null) {
+        Provider.of<ApplicationBloc>(context, listen: false)
+            .togglePlaceType(value, true, 5);
+      }
+    });
+  }
+}

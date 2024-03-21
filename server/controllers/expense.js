@@ -51,3 +51,14 @@ exports.user_Id = async (req,res) => {
 
     }
 }
+exports.deleteExpense = async (req, res) => {
+    const expenseId = req.params.id;
+    try {
+        await Expense.findByIdAndDelete(expenseId);
+        return res.status(200).json({message:"Deleted successfully"})
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Server Error')
+    }
+
+}

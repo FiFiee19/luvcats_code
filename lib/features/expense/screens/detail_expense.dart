@@ -64,6 +64,40 @@ class _DetailExpenseState extends State<DetailExpense> {
     }
   }
 
+  void _showDeleteDialog(String expense) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await expenseService.deleteExpense(context, expense);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double totalAmount =
@@ -75,61 +109,78 @@ class _DetailExpenseState extends State<DetailExpense> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Container(
-                  color: Color.fromRGBO(201, 201, 201, 0.89),
-                  padding: EdgeInsets.all(18),
-                  child: Row(
-                    children: [
-                      Text(
-                        '${widget.category}',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      Spacer(),
-                      Text(
-                        'รวม ${totalAmount.toStringAsFixed(2)} บาท',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: expenses.isEmpty
-                      ? Center(
-                          child: Text('ไม่มีรายการค่าใช้จ่ายในหมวดหมู่นี้'))
-                      : ListView.separated(
-                          itemCount: expenses.length,
-                          itemBuilder: (context, index) {
-                            final expense = expenses[index];
-                            final formattedDate = expense.createdAt != null
-                                ? DateFormat('yyyy-MM-dd')
-                                    .format(DateTime.parse(expense.createdAt!))
-                                : 'ไม่ทราบวันที่';
-                            return ListTile(
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16.0),
-                              title: Text(
-                                expense.description,
-                                style: TextStyle(fontSize: 15.0),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              subtitle: Text(
-                                formattedDate,
-                                style: TextStyle(fontSize: 12.0),
-                              ),
-                              trailing: Text(
-                                '${expense.amount.toStringAsFixed(2)} บาท',
-                                style: TextStyle(fontSize: 15.0),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (context, index) => Divider(),
+          : RefreshIndicator(
+              onRefresh: () => fetchExpense(widget.userId),
+              child: Column(
+                children: [
+                  Container(
+                    color: Color.fromRGBO(201, 201, 201, 0.89),
+                    padding: EdgeInsets.all(18),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${widget.category}',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
                         ),
-                ),
-              ],
+                        Spacer(),
+                        Text(
+                          'รวม ${totalAmount.toStringAsFixed(2)} บาท',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: expenses.isEmpty
+                        ? Center(
+                            child: Text('ไม่มีรายการค่าใช้จ่ายในหมวดหมู่นี้'))
+                        : ListView.separated(
+                            itemCount: expenses.length,
+                            itemBuilder: (context, index) {
+                              final expense = expenses[index];
+                              final formattedDate = expense.createdAt != null
+                                  ? DateFormat('yyyy-MM-dd').format(
+                                      DateTime.parse(expense.createdAt!))
+                                  : 'ไม่ทราบวันที่';
+                              return ListTile(
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 16.0),
+                                title: Text(
+                                  expense.description,
+                                  style: TextStyle(fontSize: 15.0),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(
+                                  formattedDate,
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize
+                                      .min, // ใช้เพื่อให้ Row มีขนาดพอดีกับ children
+                                  children: [
+                                    Text(
+                                      '${expense.amount.toStringAsFixed(2)} บาท',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete_sharp),
+                                      onPressed: () async {
+                                        // รายการที่คลิกจะลบที่นี่
+                                        _showDeleteDialog(expense.id!);
+                                        // เรียก setState หรือใช้ State Management เช่น Provider หรือ bloc เพื่ออัพเดท UI
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) => Divider(),
+                          ),
+                  ),
+                ],
+              ),
             ),
     );
   }
