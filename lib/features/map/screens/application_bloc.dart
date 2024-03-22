@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,6 +8,7 @@ import 'package:luvcats_app/models/maps/geometry.dart';
 import 'package:luvcats_app/models/maps/location.dart';
 import 'package:luvcats_app/models/maps/place.dart';
 import 'package:luvcats_app/models/maps/place_search.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc with ChangeNotifier {
   final geoLocatorService = GeolocatorService();
@@ -19,8 +18,8 @@ class ApplicationBloc with ChangeNotifier {
   //Variables
   Position? currentLocation;
   List<PlaceSearch>? searchResults;
-  StreamController<Place>? selectedLocation = StreamController<Place>();
-  StreamController<LatLngBounds>? bounds = StreamController<LatLngBounds>();
+  BehaviorSubject<Place?> selectedLocation = BehaviorSubject<Place?>();
+  BehaviorSubject<LatLngBounds?> bounds = BehaviorSubject<LatLngBounds?>();
   Place? selectedLocationStatic;
   String? placeType;
   List<Place>? placeResults;
@@ -48,9 +47,7 @@ class ApplicationBloc with ChangeNotifier {
           ),
         ),
       );
-    } else {
-     
-    }
+    } else {}
     notifyListeners();
   }
 
@@ -61,7 +58,8 @@ class ApplicationBloc with ChangeNotifier {
 
   setSelectedLocation(String placeId) async {
     var sLocation = await placesService.getPlace(placeId);
-    selectedLocation!.add(sLocation);
+    selectedLocation.sink.add(sLocation);
+
     selectedLocationStatic = sLocation;
     searchResults = null;
     notifyListeners();
@@ -111,7 +109,7 @@ class ApplicationBloc with ChangeNotifier {
 
       if (markers!.isNotEmpty) {
         var _bounds = markerService.bounds(Set<Marker>.of(markers!));
-        bounds!.add(_bounds!);
+        bounds.sink.add(_bounds);
       }
 
       notifyListeners();
@@ -120,8 +118,8 @@ class ApplicationBloc with ChangeNotifier {
 
   @override
   void dispose() {
-    selectedLocation!.close();
-    bounds!.close();
+    selectedLocation.close();
+    bounds.close();
     super.dispose();
   }
 }

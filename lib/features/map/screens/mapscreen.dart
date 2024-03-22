@@ -33,13 +33,13 @@ class _MapScreenState extends State<MapScreen> {
         Provider.of<ApplicationBloc>(context, listen: false);
 
     locationSubscription =
-        applicationBloc.selectedLocation!.stream.listen((place) {
+        applicationBloc.selectedLocation.stream.listen((place) {
       if (place != null) {
         _goToPlace(place);
       }
     });
 
-    boundsSubscription = applicationBloc.bounds!.stream.listen((bounds) async {
+    boundsSubscription = applicationBloc.bounds.listen((bounds) async {
       if (bounds != null) {
         final GoogleMapController controller = await _mapController.future;
         controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
