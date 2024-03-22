@@ -148,7 +148,7 @@ class _EditprofileState extends State<Editprofile> {
                       )),
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
-                      primary: Colors.red),
+                       backgroundColor: Colors.red),
                 ),
               ],
             ),

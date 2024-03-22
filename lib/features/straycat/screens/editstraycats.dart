@@ -8,11 +8,11 @@ import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 
 class EditStraycats extends StatefulWidget {
-  final String starycatsId; 
+  final String starycatsId;
 
   const EditStraycats({
     Key? key,
-    required this.starycatsId, 
+    required this.starycatsId,
   }) : super(key: key);
 
   @override
@@ -28,7 +28,7 @@ class _EditStraycatsState extends State<EditStraycats> {
   bool isLoading = true;
   List<File> images = []; //รูปใหม่
   List<String> imageUrls = []; //รูปเก่า
-  CatServices catServices = CatServices(); 
+  CatServices catServices = CatServices();
   final List<String> listgender = [
     'ผู้',
     'เมีย',
@@ -81,10 +81,9 @@ class _EditStraycatsState extends State<EditStraycats> {
 
   Future<void> _loadPostData() async {
     try {
-     
       final post =
           await catServices.fetchIdStraycats(context, widget.starycatsId);
-  
+
       breedController.text = post.breed;
       genderController.text = post.gender;
       provinceController.text = post.province;
@@ -290,15 +289,16 @@ class _EditStraycatsState extends State<EditStraycats> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('บันทึก',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
-                  style: ElevatedButton.styleFrom(
+                    onPressed: _submitForm,
+                    child: const Text('บันทึก',
+                        style: TextStyle(
+                          color: Colors.white,
+                        )),
+                    style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
-                      primary: Colors.red),
-                ),
+                      backgroundColor: Colors.red,
+                      // primary: Colors.red
+                    )),
               ],
             ),
           ),

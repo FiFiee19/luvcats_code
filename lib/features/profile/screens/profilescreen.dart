@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setState(() {});
                 }
               },
-              style: ElevatedButton.styleFrom(primary: Colors.grey),
+              style: ElevatedButton.styleFrom( backgroundColor: Colors.grey),
             ),
           ),
         ],

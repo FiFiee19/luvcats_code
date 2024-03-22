@@ -156,7 +156,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                             ),
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(100, 50),
-                              primary: Colors.red,
+                               backgroundColor: Colors.red,
                             )),
                       ],
                     ),

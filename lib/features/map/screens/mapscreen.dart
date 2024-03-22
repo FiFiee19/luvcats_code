@@ -18,7 +18,14 @@ class _MapScreenState extends State<MapScreen> {
   StreamSubscription? locationSubscription;
   StreamSubscription? boundsSubscription;
   final _locationController = TextEditingController();
-  TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    locationSubscription?.cancel();
+    boundsSubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -40,13 +47,6 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    locationSubscription?.cancel();
-    boundsSubscription?.cancel();
-    super.dispose();
-  }
-
   Future<void> _goToPlace(Place place) async {
     final GoogleMapController controller = await _mapController.future;
     controller.animateCamera(
@@ -65,19 +65,7 @@ class _MapScreenState extends State<MapScreen> {
     final applicationBloc = Provider.of<ApplicationBloc>(context);
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: TextField(
-      //     controller: _searchController,
-      //     decoration: InputDecoration(
-      //       hintText: 'Search by City',
-      //       suffixIcon: Icon(Icons.search),
-      //     ),
-      //     onChanged: (value) {
-      //       // Trigger search operation
-      //       applicationBloc.searchPlaces(value);
-      //     },
-      //   ),
-      // ),
+      appBar: AppBar(),
       body: applicationBloc.currentLocation == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -187,7 +175,7 @@ class _MapScreenState extends State<MapScreen> {
     ).then((value) {
       if (value != null) {
         Provider.of<ApplicationBloc>(context, listen: false)
-            .togglePlaceType(value, true, 5);
+            .togglePlaceType(value, true, 4);
       }
     });
   }

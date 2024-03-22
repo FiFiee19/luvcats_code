@@ -304,7 +304,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                     setState(() {}); 
                   }
                 },
-                style: ElevatedButton.styleFrom(primary: Colors.red),
+                style: ElevatedButton.styleFrom( backgroundColor: Colors.red),
               ),
             if (widget.cathotel.reviews.isEmpty)
               ElevatedButton(
@@ -323,7 +323,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                     ),
                   );
                 },
-                style: ElevatedButton.styleFrom(primary: Colors.red),
+                style: ElevatedButton.styleFrom( backgroundColor: Colors.red),
               ),
           ],
         )),

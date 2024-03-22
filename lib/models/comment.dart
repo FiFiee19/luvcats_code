@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/models/user.dart';
 
 class Comment {

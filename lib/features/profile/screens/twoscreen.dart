@@ -346,7 +346,7 @@ class _TwoScreenState extends State<TwoScreen> {
                                     ),
                                     style: ElevatedButton.styleFrom(
                                         minimumSize: const Size(40, 40),
-                                        primary: Colors.red),
+                                        backgroundColor: Colors.red),
                                     child: Text(
                                       'ได้บ้านแล้ว',
                                       style: TextStyle(color: Colors.white),

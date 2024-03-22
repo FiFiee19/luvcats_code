@@ -80,7 +80,7 @@ class _Profile_EntreState extends State<Profile_Entre> {
                         ),
                       );
                     },
-                    style: ElevatedButton.styleFrom(primary: Colors.grey),
+                    style: ElevatedButton.styleFrom( backgroundColor: Colors.grey),
                   ),
                 ),
                 Padding(

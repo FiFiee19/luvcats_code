@@ -49,8 +49,7 @@ class ApplicationBloc with ChangeNotifier {
         ),
       );
     } else {
-      // Handle the situation where currentLocation is null
-      // For example, you can notify users to enable location services
+     
     }
     notifyListeners();
   }
