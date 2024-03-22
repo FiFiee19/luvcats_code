@@ -61,8 +61,8 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
         widget.CathotelId,
         double.parse(priceController.text),
         contactController.text,
-        descriptionController.text,
-        provinceController.text,
+        provinceController.text, // จังหวัด
+        descriptionController.text, // รายละเอียด
         images,
       );
     }

@@ -1,7 +1,7 @@
 import 'package:luvcats_app/models/maps/location.dart';
 
 class Geometry {
-  final Location? location;
+  final Location? location; //ข้อมูลละติจูดและลองจิจูด
 
   Geometry({this.location});
 

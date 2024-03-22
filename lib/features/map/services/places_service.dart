@@ -6,7 +6,7 @@ import 'package:luvcats_app/models/maps/place_search.dart';
 
 class PlacesService {
   final key = 'AIzaSyBZt_71z4Dditm38hvi5DLAz0zfF4EzJK0';
-
+//เรียกใช้ API โดยการ search
   Future<List<PlaceSearch>> getAutocomplete(String search) async {
     var url = Uri.parse(
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$search&types=(cities)&key=$key');

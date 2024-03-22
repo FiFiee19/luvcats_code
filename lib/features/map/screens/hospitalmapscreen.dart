@@ -6,14 +6,14 @@ import 'package:luvcats_app/features/map/screens/application_bloc.dart';
 import 'package:luvcats_app/models/maps/place.dart';
 import 'package:provider/provider.dart';
 
-class MapScreen extends StatefulWidget {
-  MapScreen({Key? key}) : super(key: key);
+class HospitalMapScreen extends StatefulWidget {
+  HospitalMapScreen({Key? key}) : super(key: key);
 
   @override
-  _MapScreenState createState() => _MapScreenState();
+  _HospitalMapScreenState createState() => _HospitalMapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _HospitalMapScreenState extends State<HospitalMapScreen> {
   Completer<GoogleMapController> _mapController = Completer();
   StreamSubscription? locationSubscription;
   StreamSubscription? boundsSubscription;
@@ -31,7 +31,7 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     final applicationBloc =
         Provider.of<ApplicationBloc>(context, listen: false);
-
+    applicationBloc.markers!.clear();
     locationSubscription =
         applicationBloc.selectedLocation.stream.listen((place) {
       if (place != null) {
@@ -65,7 +65,10 @@ class _MapScreenState extends State<MapScreen> {
     final applicationBloc = Provider.of<ApplicationBloc>(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('ค้นหาโรงพยาบาลสัตว์'),
+        centerTitle: true,
+      ),
       body: applicationBloc.currentLocation == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -77,7 +80,7 @@ class _MapScreenState extends State<MapScreen> {
                       controller: _locationController,
                       textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
-                        hintText: 'Search by City',
+                        hintText: 'ค้นหาสถานที่',
                         suffixIcon: Icon(Icons.search),
                       ),
                       onChanged: (value) => applicationBloc.searchPlaces(value),
@@ -87,7 +90,7 @@ class _MapScreenState extends State<MapScreen> {
                   Stack(
                     children: [
                       Container(
-                        height: 540.0,
+                        height: 595.0,
                         child: Expanded(
                           child: GoogleMap(
                             mapType: MapType.normal,
@@ -141,42 +144,18 @@ class _MapScreenState extends State<MapScreen> {
                 ],
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showFilterModal(context),
-        child: Icon(Icons.filter_list),
-        backgroundColor: Theme.of(context).primaryColor,
+      floatingActionButtonLocation: FloatingActionButtonLocation
+          .startFloat, // This line aligns the FAB to the start of the screen.
+      floatingActionButton: Padding(
+        padding:
+            const EdgeInsets.only(left: 10.0), // Adjust the padding as needed
+        child: FloatingActionButton(
+          onPressed: () => Provider.of<ApplicationBloc>(context, listen: false)
+              .togglePlaceType("veterinary_care", true, 5),
+          child: Icon(Icons.filter_list),
+          backgroundColor: Colors.red,
+        ),
       ),
     );
-  }
-
-  void _showFilterModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return Container(
-          height: 200,
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.store),
-                title: Text('Pet Store'),
-                onTap: () => Navigator.pop(context, 'pet_store'),
-              ),
-              ListTile(
-                leading: Icon(Icons.local_hospital),
-                title: Text('Pet Hospital'),
-                onTap: () => Navigator.pop(context, 'veterinary_care'),
-              ),
-              // Add more ListTile rows for other place types
-            ],
-          ),
-        );
-      },
-    ).then((value) {
-      if (value != null) {
-        Provider.of<ApplicationBloc>(context, listen: false)
-            .togglePlaceType(value, true, 4);
-      }
-    });
   }
 }

@@ -1,6 +1,6 @@
 class Location{
-  final double? lat;
-  final double? lng;
+  final double? lat; //ละติจูด
+  final double? lng; //ลองจิจูด
 
   Location({this.lat, this.lng});
 

@@ -66,8 +66,6 @@ class ApplicationBloc with ChangeNotifier {
   }
 
   clearSelectedLocation() {
-    // Do not add null to the stream
-    // selectedLocation!.add(null); // Remove this line
 
     selectedLocationStatic = null;
     searchResults = null;
