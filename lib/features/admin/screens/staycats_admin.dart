@@ -59,7 +59,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
   void _showDeleteDialog(String straycat) {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // ห้ามให้ user ปิด dialog โดยการแตะนอกขอบเขต
+      barrierDismissible: false, 
       builder: (context) => AlertDialog(
         title: const Center(
           child: Text(

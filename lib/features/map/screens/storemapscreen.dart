@@ -32,6 +32,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
     final applicationBloc =
         Provider.of<ApplicationBloc>(context, listen: false);
     applicationBloc.markers!.clear();
+
     locationSubscription =
         applicationBloc.selectedLocation.stream.listen((place) {
       if (place != null) {
@@ -107,7 +108,6 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                             scrollGesturesEnabled: true,
                             zoomGesturesEnabled: true,
                             markers: Set<Marker>.of(applicationBloc.markers!),
-                            // Add more configurations if needed
                           ),
                         ),
                       ),
@@ -144,15 +144,12 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                 ],
               ),
             ),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation
-          .startFloat, // This line aligns the FAB to the start of the screen.
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: Padding(
-        padding:
-            const EdgeInsets.only(left: 10.0), // Adjust the padding as needed
+        padding: const EdgeInsets.only(left: 10.0),
         child: FloatingActionButton(
           onPressed: () => Provider.of<ApplicationBloc>(context, listen: false)
-              .togglePlaceType("pet_store", true, 5),
+              .togglePlaceType("pet_store", true, 3),
           child: Icon(Icons.filter_list),
           backgroundColor: Colors.red,
         ),

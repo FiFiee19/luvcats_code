@@ -11,7 +11,7 @@ class Review {
   final String message;
   final double rating;
   final String? createdAt;
-  Reply? reply; // Add a reply property
+  Reply? reply; 
 
   Review({
     this.user,
@@ -21,7 +21,7 @@ class Review {
     required this.message,
     required this.rating,
     this.createdAt,
-    this.reply, // Initialize in the constructor
+    this.reply, 
   });
 
   Map<String, dynamic> toMap() {
@@ -33,7 +33,7 @@ class Review {
       'message': message,
       'rating': rating,
       'createdAt': createdAt,
-      'reply': reply?.toMap(), // Serialize reply if it's not null
+      'reply': reply?.toMap(), 
     };
   }
 
@@ -48,7 +48,7 @@ class Review {
       createdAt: map['createdAt'],
       reply: map['reply'] != null
           ? Reply.fromMap(map['reply'])
-          : null, // Construct a Reply object if it exists
+          : null, 
     );
   }
 

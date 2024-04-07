@@ -26,11 +26,11 @@ class _SignupScreenState extends State<SignupScreen> {
   String? urlImageProfile;
   bool isImageSelected = false;
   var user = User;
-  File? _image;
+  List<File>? _image;
 
   //เลือกรูปภาพ
   void _pickImage() async {
-    var res = await pickImageGallery();
+    var res = await pickImagesFiles(false);
     setState(() {
       _image = res;
     });
@@ -44,7 +44,7 @@ class _SignupScreenState extends State<SignupScreen> {
       //บันทึกภาพลงCloudinary
       final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
       CloudinaryResponse resimg = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(_image!.path,
+        CloudinaryFile.fromFile(_image![0].path,
             folder: "ImageP/user", publicId: _nameController.text),
       );
       print(resimg.secureUrl);
@@ -145,7 +145,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   : CircleAvatar(
                       radius: 100,
                       backgroundImage: Image.file(
-                        _image!,
+                        _image![0],
                         fit: BoxFit.cover,
                       ).image,
                       backgroundColor: Colors.white,

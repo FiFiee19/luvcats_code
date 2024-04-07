@@ -15,7 +15,6 @@ class ApplicationBloc with ChangeNotifier {
   final placesService = PlacesService();
   final markerService = MarkerService();
 
-  //Variables
   Position? currentLocation;
   List<PlaceSearch>? searchResults;
   BehaviorSubject<Place?> selectedLocation = BehaviorSubject<Place?>();
@@ -27,7 +26,7 @@ class ApplicationBloc with ChangeNotifier {
 
   double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
     var distance = Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
-    return distance / 1000; // distance in kilometers
+    return distance / 1000; 
   }
 
   ApplicationBloc() {
@@ -37,7 +36,7 @@ class ApplicationBloc with ChangeNotifier {
   setCurrentLocation() async {
     currentLocation = await geoLocatorService.getCurrentLocation();
     if (currentLocation != null) {
-      // Check if currentLocation is not null
+    
       selectedLocationStatic = Place(
         name: null,
         geometry: Geometry(
@@ -72,8 +71,7 @@ class ApplicationBloc with ChangeNotifier {
     placeType = null;
     notifyListeners();
   }
-
-  // Add a parameter for the maximum distance in kilometers
+ 
   togglePlaceType(
       String value, bool selected, double maxDistanceInKilometers) async {
     if (selected) {
@@ -88,7 +86,7 @@ class ApplicationBloc with ChangeNotifier {
           selectedLocationStatic!.geometry!.location!.lng!,
           placeType!);
 
-      // Filter the places based on the distance to the user's current location
+     
       var filteredPlaces = places.where((place) {
         var distanceInMeters = Geolocator.distanceBetween(
           selectedLocationStatic!.geometry!.location!.lat!,
@@ -96,11 +94,11 @@ class ApplicationBloc with ChangeNotifier {
           place.geometry!.location!.lat!,
           place.geometry!.location!.lng!,
         );
-        // Convert meters to kilometers and check if within the maxDistanceInKilometers
+        
         return distanceInMeters / 1000 <= maxDistanceInKilometers;
       }).toList();
 
-      markers = []; // Clear markers before adding new ones
+      markers = [];
       for (var place in filteredPlaces) {
         markers!.add(markerService.createMarkerFromPlace(place, false));
       }

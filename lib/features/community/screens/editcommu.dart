@@ -7,11 +7,11 @@ import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class EditCommu extends StatefulWidget {
-  final String commuId; // เพิ่มตัวแปรนี้
+  final String commuId; 
 
   const EditCommu({
     Key? key,
-    required this.commuId, // เพิ่มตัวแปรนี้
+    required this.commuId, 
   }) : super(key: key);
 
   @override
@@ -78,7 +78,7 @@ class _EditCommuState extends State<EditCommu> {
   }
 
   void selectImages() async {
-    var res = await pickImagesFiles();
+    var res = await pickImagesFiles(true);
     setState(() {
       images = res;
     });

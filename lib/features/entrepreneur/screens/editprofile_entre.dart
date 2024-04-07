@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
+import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
@@ -28,11 +29,14 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController provinceController = TextEditingController();
   final TextEditingController contactController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   bool isLoading = true;
   List<File> images = [];
   List<String> imageUrls = [];
+  String? imageUrl;
+  List<File>? imagesP;
   EntreService entreService = EntreService();
-
+  ProfileServices profileServices = ProfileServices();
   @override
   void initState() {
     super.initState();
@@ -50,21 +54,25 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
       priceController.dispose();
       contactController.dispose();
       provinceController.dispose();
+      usernameController.dispose();
     }
     super.dispose();
   }
 
-  void _submitForm() async {
+  void _submitFormProfile() async {
     if (globalFormKey.currentState!.validate()) {
       await entreService.editProfileEntre(
         context,
         widget.CathotelId,
         double.parse(priceController.text),
         contactController.text,
-        provinceController.text, // จังหวัด
-        descriptionController.text, // รายละเอียด
+        provinceController.text, 
+        descriptionController.text, 
         images,
       );
+    }
+    if (globalFormKey.currentState!.validate()) {
+      await profileServices.editUser(context, usernameController.text, imagesP![0]);
     }
   }
 
@@ -73,12 +81,16 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final post =
           await entreService.fetchIdCathotel(context, userProvider.user.id);
-      // นำข้อมูลเดิมมาใส่ใน TextEditingController
       priceController.text = post.price.toString();
       descriptionController.text = post.description;
       contactController.text = post.contact;
       provinceController.text = post.province;
       imageUrls = post.images;
+
+      final profile =
+          await profileServices.fetchIdUser(context, userProvider.user.id);
+      usernameController.text = profile.username;
+      imageUrl = profile.imagesP;
     } catch (e) {
       print('Error loading post data: $e');
     }
@@ -89,10 +101,17 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
     }
   }
 
-  void selectImages() async {
-    var res = await pickImagesFiles();
+  void selectImagesFiles() async {
+    var res = await pickImagesFiles(true);
     setState(() {
       images = res;
+    });
+  }
+
+  void selectImagesGallery() async {
+    var res = await pickImagesFiles(false);
+    setState(() {
+      imagesP = res;
     });
   }
 
@@ -101,6 +120,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
     return Scaffold(
       appBar: AppBar(
         title: Text('แก้ไขโปรไฟล์'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -110,6 +130,50 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: 15),
+                Center(child: Text('เลือกรูปโปรไฟล์')),
+                SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () {
+                    selectImagesGallery(); // Call this method when the avatar is tapped
+                  },
+                  child: CircleAvatar(
+                    radius: 80, // Adjust the radius to fit your design
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage: imagesP != null
+                        ? FileImage(imagesP![0]) as ImageProvider
+                        : imageUrl != null
+                            ? NetworkImage(imageUrl!) as ImageProvider
+                            : null,
+                    child: imagesP == null && imageUrl == null
+                        ? Icon(Icons.camera_alt, color: Colors.grey, size: 50)
+                        : null, 
+                  ),
+                ),
+                Center(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.image,
+                    ),
+                    onPressed: () => selectImagesGallery(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextFormField(
+                  controller: usernameController,
+                  decoration: const InputDecoration(
+                    labelText: 'ชื่อร้าน',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณาชื่อร้าน';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 15),
+                Center(child: Text('เลือกรูปของร้าน')),
+                SizedBox(height: 15),
                 images.isNotEmpty || imageUrls.isNotEmpty
                     ? Column(
                         children: [
@@ -179,7 +243,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     icon: const Icon(
                       Icons.image,
                     ),
-                    onPressed: () => selectImages(),
+                    onPressed: () => selectImagesFiles(),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -263,8 +327,8 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                 ),
                 const SizedBox(height: 30),
                 CustomButton(
-                  text: 'ลงทะเบียน',
-                  onTap: _submitForm,
+                  text: 'บันทึก',
+                  onTap: _submitFormProfile,
                 ),
               ],
             ),

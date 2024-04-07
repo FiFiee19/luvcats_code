@@ -134,8 +134,8 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                 width: 10,
                               ),
                               Text(
-                                catData.user!.username.length > 15
-                                    ? "${catData.user!.username.substring(0, 15)}..."
+                                catData.user!.username.length > 10
+                                    ? "${catData.user!.username.substring(0, 10)}..."
                                     : catData.user!.username,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w700,
@@ -152,6 +152,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                 : catData.description,
                             style: Theme.of(context).textTheme.subtitle2!.merge(
                                   TextStyle(
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.grey.shade900,
                                   ),
@@ -180,8 +181,8 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                     width: 5.0,
                                   ),
                                   Text(
-                                    catData.province.length > 10
-                                        ? "${catData.province.substring(0, 10)}..."
+                                    catData.province.length > 9
+                                        ? "${catData.province.substring(0, 9)}..."
                                         : catData.province,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,

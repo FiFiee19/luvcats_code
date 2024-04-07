@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigateToNextPage() async {
-    await Future.delayed(Duration(seconds: 2)); // Simulate loading process
+    await Future.delayed(Duration(seconds: 2)); 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userToken = prefs.getString('authtoken');
 
@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const SigninScreen()));
     } else {
-      // You might want to validate the token here with your backend
+     
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const Home()));
     }
@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(), // Or any loading widget
+        child: CircularProgressIndicator(),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:luvcats_app/models/user.dart';
 
 class Expense {

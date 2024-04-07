@@ -107,7 +107,6 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
                             scrollGesturesEnabled: true,
                             zoomGesturesEnabled: true,
                             markers: Set<Marker>.of(applicationBloc.markers!),
-                            // Add more configurations if needed
                           ),
                         ),
                       ),
@@ -144,14 +143,12 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
                 ],
               ),
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation
-          .startFloat, // This line aligns the FAB to the start of the screen.
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: Padding(
-        padding:
-            const EdgeInsets.only(left: 10.0), // Adjust the padding as needed
+        padding: const EdgeInsets.only(left: 10.0),
         child: FloatingActionButton(
           onPressed: () => Provider.of<ApplicationBloc>(context, listen: false)
-              .togglePlaceType("veterinary_care", true, 5),
+              .togglePlaceType("veterinary_care", true, 3),
           child: Icon(Icons.filter_list),
           backgroundColor: Colors.red,
         ),

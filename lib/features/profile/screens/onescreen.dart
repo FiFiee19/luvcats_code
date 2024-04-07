@@ -201,7 +201,7 @@ class _OneScreenState extends State<OneScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${commuData.likes.length}', // Display number of likes
+                                  '${commuData.likes.length}',
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 IconButton(
@@ -214,7 +214,7 @@ class _OneScreenState extends State<OneScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${commuData.comments.length}', // Display number of comments
+                                  '${commuData.comments.length}',
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],

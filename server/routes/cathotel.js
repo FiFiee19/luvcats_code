@@ -10,8 +10,8 @@ const {
     editCathotl
 } = require('../controllers/cathotel');
 
-cathotelRouter.get("/getCathotel", auth, list)
-cathotelRouter.get("/getCathotel/:user_id", auth, userId)
-cathotelRouter.get("/getCathotel/:cathotelId", auth, cathotelId)
-cathotelRouter.put("/getCathotel/edit/:id", auth, editCathotl)
+cathotelRouter.get("/getCathotel", auth, list)//
+cathotelRouter.get("/getCathotel/:user_id", auth, userId)//
+// cathotelRouter.get("/getCathotel/:cathotelId", auth, cathotelId)
+cathotelRouter.put("/getCathotel/edit/:id", auth, editCathotl)//
 module.exports = cathotelRouter; 

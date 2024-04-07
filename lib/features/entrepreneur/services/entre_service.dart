@@ -151,10 +151,10 @@ class EntreService {
           },
           body: requestBody);
       if (res.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('สำเร็จ!')),
-        );
-        Navigator.pop(context);
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('สำเร็จ!')),
+        // );
+        // Navigator.pop(context);
       }
 
       if (res.statusCode == 400) {

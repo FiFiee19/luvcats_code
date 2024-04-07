@@ -4,7 +4,7 @@ import 'package:luvcats_app/models/review.dart';
 class DashboardEntre extends StatelessWidget {
   final Future<List<Review>> reviews;
 
-//แย่มาก ไม่ดี ปลานกลาง ดี ดีมาก
+//แย่มาก ไม่ดี ปานกลาง ดี ดีมาก
   DashboardEntre({
     Key? key,
     required this.reviews,
@@ -34,7 +34,7 @@ class DashboardEntre extends StatelessWidget {
       future: reviews,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: const CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {

@@ -62,6 +62,102 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
     } else if (straycatlist!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
+        appBar: AppBar(
+          actions: [
+            SearchProfile(),
+            IconButton(
+              icon: Icon(Icons.filter_list),
+              onPressed: () async {
+                final result = await showDialog<Map<String, String?>>(
+                  context: context,
+                  builder: (context) {
+                    String? tempSelectedProvince = selectedProvince;
+                    String? tempSelectedGender = selectedGender;
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return AlertDialog(
+                          title: Text("กรองข้อมูล"),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                DropdownButtonFormField<String>(
+                                  value: tempSelectedProvince,
+                                  hint: Text("เลือกจังหวัด"),
+                                  items: province.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      tempSelectedProvince = value;
+                                    });
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                DropdownButtonFormField<String>(
+                                  value: tempSelectedGender,
+                                  hint: Text("เลือกเพศ"),
+                                  items: listgender
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      tempSelectedGender = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text("ยกเลิก"),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop({
+                                'province': tempSelectedProvince,
+                                'gender': tempSelectedGender,
+                              }),
+                              child: Text("ตกลง"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+
+                if (result != null) {
+                  setState(() {
+                    selectedProvince = result['province'];
+                    selectedGender = result['gender'];
+                    fetchAllCats();
+                  });
+                }
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.restart_alt_rounded),
+              onPressed: () {
+                setState(() {
+                  selectedProvince = null;
+                  selectedGender = null;
+                  fetchAllCats();
+                });
+              },
+            ),
+          ],
+        ),
         body: Center(
           child: Text(
             'ไม่มีโพสต์',
@@ -98,7 +194,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
             crossAxisCount: 2,
             crossAxisSpacing: 12.0,
             mainAxisSpacing: 12.0,
-            mainAxisExtent: 330,
+            mainAxisExtent: 350,
           ),
           itemBuilder: (context, index) {
             final straycat = straycatlist![index];
@@ -172,6 +268,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               Text(
                                 "สายพันธุ์:  ",
                                 style: TextStyle(
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.grey.shade900,
                                 ),
@@ -181,6 +278,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                     ? "${straycat.breed.substring(0, 10)}..."
                                     : straycat.breed,
                                 style: TextStyle(
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey.shade900,
                                 ),
@@ -192,6 +290,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               Text(
                                 "เพศ:  ",
                                 style: TextStyle(
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.grey.shade900,
                                 ),
@@ -199,6 +298,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               Text(
                                 " ${straycat.gender}",
                                 style: TextStyle(
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey.shade900,
                                 ),
@@ -230,6 +330,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               Text(
                                 "${straycat.province}",
                                 style: TextStyle(
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.grey.shade500,
                                 ),
@@ -240,7 +341,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 child: Text(
                                   formatDateTime(straycat.createdAt),
                                   style: TextStyle(
-                                    fontSize: 8,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.grey.shade600,
                                   ),

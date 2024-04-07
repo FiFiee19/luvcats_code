@@ -77,7 +77,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   padding: EdgeInsets.all(8),
                   child: Text(
                     calculateAverageRating()
-                        .toStringAsFixed(1), // แสดงทศนิยมหนึ่งตำแหน่ง
+                        .toStringAsFixed(1), 
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -212,7 +212,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                               ),
                                             )
                                           : SizedBox
-                                              .shrink(), // If reply is null, display nothing
+                                              .shrink(), 
                                     ),
                                   ],
                                 ),

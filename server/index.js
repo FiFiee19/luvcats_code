@@ -12,6 +12,7 @@ const expenseRouter = require("./routes/expense");
 const PORT = process.env.PORT || 5000;
 const app = express();
 const connectDB = require('./config/db');
+const ngrok = require('ngrok');
 
 //เรียกใช้
 app.use(express.json());
@@ -29,6 +30,13 @@ app.use(expenseRouter);
 connectDB()
 
 //runserver
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`connected at port ${PORT}`);
-});
+app.listen(PORT, () => {
+  console.log(`connected at port:  http://localhost:${PORT}`);
+
+  ngrok.connect(PORT).then(url => {
+    console.log(`Ngrok tunnel at: ${url}`);
+  }).catch(error => {
+    console.log(`${error}`);
+  });
+  
+  })

@@ -121,7 +121,7 @@ class _FormsReviewState extends State<FormsReview> {
                         if (val == null || val.trim().isEmpty) {
                           return 'กรุณาเขียนรีวิว';
                         }
-                        return null; // Return null if the input is valid
+                        return null; 
                       },
                     ),
                   ),
@@ -130,10 +130,10 @@ class _FormsReviewState extends State<FormsReview> {
                     text: 'ส่ง',
                     onTap: () {
                       if (_sendReviewFormKey.currentState!.validate()) {
-                        addReview(); // Call addComment only if the form is valid
+                        addReview(); 
                         messageController.clear();
                         ratingController
-                            .clear(); // Clear the text field after sending the comment
+                            .clear(); 
                       }
                     },
                   ),

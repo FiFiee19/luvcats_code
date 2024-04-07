@@ -31,7 +31,10 @@ class _CommuAdminState extends State<CommuAdmin> {
   //เรียกข้อมูลAllCommuจากcommuServices
   Future<void> fetchAllCommu() async {
     commu = await commuServices.fetchAllCommu(context);
+
     if (mounted) {
+      commu!.sort((a, b) =>
+          DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
       setState(() {});
     }
   }
@@ -40,7 +43,7 @@ class _CommuAdminState extends State<CommuAdmin> {
   void _showDeleteDialog(String commu) {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // ห้ามให้ user ปิด dialog โดยการแตะนอกขอบเขต
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: const Center(
           child: Text(
@@ -199,7 +202,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                                     onPressed: () async {},
                                   ),
                                   Text(
-                                    '${commuData.likes.length}', // แสดงจำนวน likes
+                                    '${commuData.likes.length}',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   IconButton(
@@ -208,7 +211,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                                       ),
                                       onPressed: () {}),
                                   Text(
-                                    '${commuData.comments.length}', // แสดงจำนวน likes
+                                    '${commuData.comments.length}',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                 ],

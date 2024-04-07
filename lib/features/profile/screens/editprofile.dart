@@ -18,7 +18,7 @@ class _EditprofileState extends State<Editprofile> {
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   late TextEditingController usernameController;
   bool isLoading = true;
-  File? imagesP; // รูปภาพที่เลือกใหม่
+  List<File>? imagesP; // รูปภาพที่เลือกใหม่
   String? imageUrl;
 
   ProfileServices profileServices = ProfileServices();
@@ -39,7 +39,8 @@ class _EditprofileState extends State<Editprofile> {
 
   void _submitForm() async {
     if (globalFormKey.currentState!.validate()) {
-      await profileServices.editUser(context, usernameController.text, imagesP);
+      await profileServices.editUser(
+          context, usernameController.text, imagesP![0]);
     }
   }
 
@@ -69,7 +70,7 @@ class _EditprofileState extends State<Editprofile> {
   }
 
   void selectImages() async {
-    var res = await pickImageGallery();
+    var res = await pickImagesFiles(false);
     setState(() {
       imagesP = res;
     });
@@ -91,7 +92,7 @@ class _EditprofileState extends State<Editprofile> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (imagesP != null)
-                  Image.file(imagesP!, fit: BoxFit.cover, height: 200)
+                  Image.file(imagesP![0], fit: BoxFit.cover, height: 200)
                 else if (imageUrl != null)
                   Image.network(imageUrl!, fit: BoxFit.cover, height: 200)
                 else
@@ -148,7 +149,7 @@ class _EditprofileState extends State<Editprofile> {
                       )),
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
-                       backgroundColor: Colors.red),
+                      backgroundColor: Colors.red),
                 ),
               ],
             ),

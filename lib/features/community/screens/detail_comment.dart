@@ -8,7 +8,6 @@ import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
-// import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +46,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
     try {
       if (widget.commu.id != null) {
         comments = await commuServices.fetchComment(context, widget.commu.id!);
-        // print(comments);
+       
       } else {
         print("CommuId is null");
       }
@@ -198,7 +197,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                     height: 30,
                   ),
                   Row(
-                    // mainAxisAlignment: MainAxisAlignment.start, // You can use this to explicitly align to the start
+                    
                     children: [
                       Text(
                         formatDateTime(widget.commu.createdAt),
@@ -208,7 +207,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         ),
                       ),
 
-                      Spacer(), // This will take all available space pushing the following widgets to the end
+                      Spacer(), 
                       LikeAnimation(
                         isAnimating: widget.commu.likes.contains(user),
                         smallLike: true,
@@ -235,7 +234,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         ),
                       ),
                       Text(
-                        '${widget.commu.likes.length}', // แสดงจำนวน likes
+                        '${widget.commu.likes.length}',
                         style: TextStyle(color: Colors.grey),
                       ),
 
@@ -291,7 +290,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                       ),
                                       if (user ==
                                           comment
-                                              .user_id) // Display delete button only if the current user is the owner
+                                              .user_id) 
                                         IconButton(
                                           onPressed: () {
                                             _showDeleteDialog(comment.id!);

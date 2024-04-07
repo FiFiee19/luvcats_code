@@ -40,6 +40,7 @@ class _EditPasswordState extends State<EditPassword> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('แก้ไขรหัสผ่าน'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Form(

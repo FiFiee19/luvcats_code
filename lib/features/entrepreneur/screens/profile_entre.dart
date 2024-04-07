@@ -5,6 +5,7 @@ import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/editprofile_entre.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
+import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:provider/provider.dart';
 
 class Profile_Entre extends StatefulWidget {
@@ -80,7 +81,8 @@ class _Profile_EntreState extends State<Profile_Entre> {
                         ),
                       );
                     },
-                    style: ElevatedButton.styleFrom( backgroundColor: Colors.grey),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
                   ),
                 ),
                 Padding(
@@ -117,51 +119,7 @@ class _Profile_EntreState extends State<Profile_Entre> {
                 SizedBox(
                   height: 20,
                 ),
-                CarouselSlider(
-                  items: cathotelData.images.map(
-                    (i) {
-                      return Builder(
-                        builder: (BuildContext context) => Image.network(
-                          i,
-                          fit: BoxFit.contain,
-                          height: 300,
-                        ),
-                      );
-                    },
-                  ).toList(),
-                  carouselController: buttonCarouselController,
-                  options: CarouselOptions(
-                    viewportFraction: 1,
-                    height: 200,
-                    enableInfiniteScroll: false,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _current = index;
-                      });
-                    },
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: cathotelData.images.asMap().entries.map((entry) {
-                    return GestureDetector(
-                      onTap: () =>
-                          buttonCarouselController.animateToPage(entry.key),
-                      child: Container(
-                        width: 12.0,
-                        height: 12.0,
-                        margin: EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 4.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _current == entry.key
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).primaryColor.withOpacity(0.3),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                CustomCarouselSlider(images: cathotelData.images),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const SizedBox(
                     height: 10.0,
@@ -295,15 +253,20 @@ class _Profile_EntreState extends State<Profile_Entre> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    padding:
+                        const EdgeInsets.only(left: 30, bottom: 20, right: 30),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          cathotelData.contact,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.grey.shade900,
+                        Expanded(
+                          child: Text(
+                            cathotelData.contact,
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey.shade900,
+                            ),
                           ),
                         ),
                       ],

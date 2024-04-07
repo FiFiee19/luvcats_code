@@ -19,6 +19,19 @@ class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
     _carouselController = CarouselController();
   }
 
+  void _showFullScreenImage(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: InteractiveViewer(
+          // InteractiveViewer allows users to zoom in/out the image.
+          child: Image.network(imageUrl),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,10 +39,14 @@ class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
         CarouselSlider(
           items: widget.images.map((image) {
             return Builder(
-              builder: (BuildContext context) => Image.network(
-                image,
-                fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width,
+              builder: (BuildContext context) => GestureDetector(
+                onTap: () =>
+                    _showFullScreenImage(image), // Call the new function here.
+                child: Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width,
+                ),
               ),
             );
           }).toList(),
@@ -38,8 +55,8 @@ class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
             autoPlay: false,
             enlargeCenterPage: true,
             enableInfiniteScroll: false,
-            viewportFraction: 0.9,
-            aspectRatio: 2.0,
+            viewportFraction: 0.7,
+            aspectRatio: 1.8,
             initialPage: 0,
             onPageChanged: (index, reason) {
               setState(() {

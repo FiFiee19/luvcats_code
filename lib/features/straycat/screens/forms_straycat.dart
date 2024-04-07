@@ -4,7 +4,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
@@ -91,7 +90,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
   }
 
   void selectImages() async {
-    var res = await pickImagesFiles();
+    var res = await pickImagesFiles(true);
     setState(() {
       images = res;
     });
@@ -101,18 +100,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: AppBar(
-            title: Center(
-              child: Text(
-                'LuvCats',
-                style: GoogleFonts.kanit(
-                  color: Color.fromARGB(255, 247, 108, 185),
-                  fontSize: 30.0,
-                ),
-              ),
-            ),
-          )),
+          preferredSize: const Size.fromHeight(50), child: AppBar()),
       body: SingleChildScrollView(
         child: Form(
           key: _postCatFormKey,

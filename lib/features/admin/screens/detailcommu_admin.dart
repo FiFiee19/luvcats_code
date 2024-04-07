@@ -41,7 +41,6 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
     try {
       if (widget.commu.id != null) {
         comments = await commuServices.fetchComment(context, widget.commu.id!);
-        // print(comments);
       } else {
         print("CommuId is null");
       }
@@ -194,7 +193,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                         ),
                       ),
 
-                      Spacer(), // This will take all available space pushing the following widgets to the end
+                      Spacer(), 
                       IconButton(
                         icon: widget.commu.likes.contains(user)
                             ? const Icon(
@@ -208,7 +207,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                       ),
 
                       Text(
-                        '${widget.commu.likes.length}', // แสดงจำนวน likes
+                        '${widget.commu.likes.length}',
                         style: TextStyle(color: Colors.grey),
                       ),
                       SizedBox(

@@ -16,8 +16,8 @@ class UserProvider extends ChangeNotifier {
 
   User get user => _user;
 
-  void setUser(String userJson) {
-    var decodedJson = json.decode(userJson);
+  void setUser(String user) {
+    var decodedJson = json.decode(user);
 
     if (decodedJson['user'] != null) {
       _user = User.fromMap(decodedJson['user']);

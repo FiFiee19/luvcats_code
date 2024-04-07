@@ -44,15 +44,10 @@ class Commu {
       throw Exception('Map cannot be null');
     }
     try {
-      // Handling the 'user' field
       User? user;
       if (map['user'] is Map<String, dynamic>) {
-        // If 'user' is a map, create a User object
         user = User.fromMap(map['user']);
       } else if (map['user'] is String) {
-        // If 'user' is a string, you might handle it differently
-        // Depending on your requirements, you might set user to null or use the string value
-        // For now, let's set it to null
         user = null;
       }
 
@@ -61,7 +56,7 @@ class Commu {
         user_id: map['user_id'] ?? '',
         title: map['title'] ?? '',
         description: map['description'] ?? '',
-        id: map['_id'], // Assuming '_id' is the correct field from your backend
+        id: map['_id'], 
         likes: map['likes'] ?? [],
         comments: map['comments'] ?? [],
         images: List<String>.from(map['images'] ?? []),

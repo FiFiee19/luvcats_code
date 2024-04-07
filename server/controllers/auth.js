@@ -102,5 +102,7 @@ exports.list = async (req, res) => {
   res.json({ user, token: req.token });
 }
 
-
+exports.home = async (req, res) => {
+  res.json('Hello');
+}
 

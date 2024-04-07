@@ -158,7 +158,7 @@ class _DetailExpenseState extends State<DetailExpense> {
                                 ),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize
-                                      .min, // ใช้เพื่อให้ Row มีขนาดพอดีกับ children
+                                      .min, 
                                   children: [
                                     Text(
                                       '${expense.amount.toStringAsFixed(2)} บาท',
@@ -167,9 +167,9 @@ class _DetailExpenseState extends State<DetailExpense> {
                                     IconButton(
                                       icon: Icon(Icons.delete_sharp),
                                       onPressed: () async {
-                                        // รายการที่คลิกจะลบที่นี่
+                                       
                                         _showDeleteDialog(expense.id!);
-                                        // เรียก setState หรือใช้ State Management เช่น Provider หรือ bloc เพื่ออัพเดท UI
+                                       
                                       },
                                     ),
                                   ],

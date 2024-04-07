@@ -7,6 +7,7 @@ const {
   signin,
   tokenIsValid,
   list,
+  home
 } = require('../controllers/auth')
 
 // Sign Up
@@ -18,7 +19,9 @@ authRouter.post("/api/signin", signin);
 authRouter.post("/tokenIsValid", tokenIsValid);
 
 // get user data
-authRouter.get("/", auth, list);
+authRouter.get("/",  list);
+
+authRouter.get("/home",home);
 
 
 module.exports = authRouter;

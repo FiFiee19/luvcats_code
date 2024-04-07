@@ -42,12 +42,11 @@ class _EditStraycatsState extends State<EditStraycats> {
     descriptionController = TextEditingController();
     provinceController = TextEditingController();
     genderController = TextEditingController();
-    // ทำการโหลดข้อมูลโพสต์เดิม
     _loadPostData();
   }
 
   void selectImages() async {
-    var res = await pickImagesFiles();
+    var res = await pickImagesFiles(true);
     setState(() {
       images = res;
     });
@@ -194,6 +193,8 @@ class _EditStraycatsState extends State<EditStraycats> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 20),
+                Text('เพศ'),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
@@ -203,7 +204,6 @@ class _EditStraycatsState extends State<EditStraycats> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    // การตกแต่งอื่นๆ...
                   ),
                   hint: const Text(
                     'เพศ',
@@ -233,7 +233,8 @@ class _EditStraycatsState extends State<EditStraycats> {
                     });
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
+                Text('จังหวัด'),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
@@ -243,7 +244,6 @@ class _EditStraycatsState extends State<EditStraycats> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    // การตกแต่งอื่นๆ...
                   ),
                   hint: const Text(
                     'จังหวัด',
@@ -297,7 +297,6 @@ class _EditStraycatsState extends State<EditStraycats> {
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                       backgroundColor: Colors.red,
-                      // primary: Colors.red
                     )),
               ],
             ),

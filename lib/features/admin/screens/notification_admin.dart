@@ -38,7 +38,7 @@ class _NotificationAdminState extends State<NotificationAdmin> {
   void _showDeleteDialog(String report) {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // ห้ามให้ user ปิด dialog โดยการแตะนอกขอบเขต
+      barrierDismissible: false, 
       builder: (context) => AlertDialog(
         title: const Center(
           child: Text(
@@ -110,13 +110,13 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              'ไม่พบโพตส์นี้'), // The message indicating the post was not found.
+                              'ไม่พบโพตส์นี้'), 
                           backgroundColor: Colors.red,
                         ),
                       );
                     }
                   } else {
-                    // Handle the case where commuId is null which means it wasn't provided.
+                   
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('ไม่พบโพตส์นี้'),

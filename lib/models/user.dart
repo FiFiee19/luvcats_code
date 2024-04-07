@@ -24,7 +24,7 @@ class User {
       id: map['_id'] ?? '',
       username: map['username'] ?? '',
       email: map['email'] ?? '',
-      token: map['token'] ?? '', // Ensure token is handled here
+      token: map['token'] ?? '',
       password: map['password'] ?? '',
       type: map['type'] ?? '',
       imagesP: map['imagesP'] ?? '',
@@ -33,7 +33,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      // '_id': id,
+      '_id': id,
       'username': username,
       'email': email,
       'token': token,

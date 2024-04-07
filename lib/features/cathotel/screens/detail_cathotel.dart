@@ -237,15 +237,19 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 30, bottom: 20),
+              padding: const EdgeInsets.only(left: 30, bottom: 20, right: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    widget.cathotel.contact,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.grey.shade900,
+                  Expanded(
+                    child: Text(
+                      widget.cathotel.contact,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.shade900,
+                      ),
                     ),
                   ),
                 ],
@@ -256,7 +260,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 2),
                 child: Text(
-                  'ยังไม่มีการให้คะแนน', 
+                  'ยังไม่มีการให้คะแนน',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -264,8 +268,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 2),
                 child: Text(
-                  calculateAverageRating()
-                      .toStringAsFixed(1), 
+                  calculateAverageRating().toStringAsFixed(1),
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -273,7 +276,6 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               RatingBar.builder(
                 initialRating: calculateAverageRating(),
                 ignoreGestures: true,
-                // minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
@@ -301,10 +303,10 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                             ReviewScreen(cathotel: widget.cathotel)),
                   );
                   if (result != null) {
-                    setState(() {}); 
+                    setState(() {});
                   }
                 },
-                style: ElevatedButton.styleFrom( backgroundColor: Colors.red),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               ),
             if (widget.cathotel.reviews.isEmpty)
               ElevatedButton(
@@ -323,7 +325,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                     ),
                   );
                 },
-                style: ElevatedButton.styleFrom( backgroundColor: Colors.red),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               ),
           ],
         )),

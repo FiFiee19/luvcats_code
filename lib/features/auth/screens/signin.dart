@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/features/auth/screens/signup.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/forms_entre.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/signup_entre.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -45,15 +45,16 @@ class _SigninScreenState extends State<SigninScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
                     children: [
+                      SizedBox(height: 120),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 300),
                           Text(
                             'LuvCats',
                             style: GoogleFonts.gluten(
                                 fontSize: 60.0, color: Colors.red),
                           ),
+                          SizedBox(width: 10),
                           Icon(
                             Icons.pets,
                             color: Colors.red,
@@ -61,6 +62,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 80),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -71,7 +73,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.all(30.0),
                         child: Column(
@@ -108,8 +110,6 @@ class _SigninScreenState extends State<SigninScreen> {
                                 controller: passwordController,
                                 decoration: InputDecoration(
                                   hintText: 'รหัสผ่าน',
-
-                                  // เพิ่มปุ่มเพื่อเปิด/ซ่อน รหัสผ่าน
                                   suffixIcon: IconButton(
                                     onPressed: _toggle,
                                     icon: Icon(
@@ -194,35 +194,29 @@ class _SigninScreenState extends State<SigninScreen> {
                         ],
                       ),
                       SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "เป็นผู้ประกอบการไหม?",
-                            style: TextStyle(color: Colors.black, fontSize: 15),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FormsEntre()));
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "สมัครเป็นผู้ประกอบการ",
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 15),
-                                ),
-                              ],
+                      Text(
+                        "เป็นผู้ประกอบการไหม?",
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FormsEntre()));
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "สมัครเป็นผู้ประกอบการ",
+                              style: TextStyle(color: Colors.red, fontSize: 15),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

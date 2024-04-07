@@ -57,7 +57,7 @@ class CatServices {
       );
     }
   }
-  
+
   //ดึงข้อมูลแมวจรทั้งหมด
   Future<List<Straycat>> fetchAllCats(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -92,7 +92,7 @@ class CatServices {
     }
     return catList;
   }
-  
+
   //ดึงข้อมูลแมวจรจากidที่กำหนด
   Future<Straycat> fetchIdStraycats(
       BuildContext context, String straycatsId) async {
@@ -128,7 +128,7 @@ class CatServices {
       throw Exception('Error fetching data: $e');
     }
   }
-  
+
   //อัพเดตการได้บ้านของแมวจร
   Future<void> updateCatStatus(
       BuildContext context, String StraycatId, String newStatus) async {
@@ -145,14 +145,14 @@ class CatServices {
           'status': newStatus,
         }),
       );
-      
+
       if (res.statusCode == 200) {
-         ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('อัพเดตสำเร็จ!')),
         );
       }
     } catch (e) {
-     ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
           backgroundColor: Colors.red,
@@ -162,7 +162,7 @@ class CatServices {
       );
     }
   }
-  
+
   //แก้ไขโพสต์แมวจร
   Future<void> editPostCat(
     BuildContext context,
@@ -212,15 +212,15 @@ class CatServices {
           'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
         }),
       );
-      
-    if (res.statusCode == 200) {
-         ScaffoldMessenger.of(context).showSnackBar(
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('แก้ไขสำเร็จ!')),
         );
-         Navigator.pop(context);
+        Navigator.pop(context);
       }
     } catch (e) {
-     ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),
           backgroundColor: Colors.red,

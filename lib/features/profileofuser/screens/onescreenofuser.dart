@@ -226,7 +226,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                       ),
                                     ),
                                     Text(
-                                      '${commuData.likes.length}', // แสดงจำนวน likes
+                                      '${commuData.likes.length}', 
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                     IconButton(
@@ -244,7 +244,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                       ),
                                     ),
                                     Text(
-                                      '${commuData.comments.length}', // แสดงจำนวน likes
+                                      '${commuData.comments.length}', 
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                   ],
@@ -265,7 +265,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                       onPressed: () async {},
                                     ),
                                     Text(
-                                      '${commuData.likes.length}', // แสดงจำนวน likes
+                                      '${commuData.likes.length}', 
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                     IconButton(
@@ -274,7 +274,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                         ),
                                         onPressed: () {}),
                                     Text(
-                                      '${commuData.comments.length}', // แสดงจำนวน likes
+                                      '${commuData.comments.length}',
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                   ],

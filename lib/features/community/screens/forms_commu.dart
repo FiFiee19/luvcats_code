@@ -1,17 +1,16 @@
 import 'dart:io';
-import 'package:uuid/uuid.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
-// import 'package:luvcat_app/services/auth_services.dart';
+import 'package:uuid/uuid.dart';
 
 class FormsCommu extends StatefulWidget {
   const FormsCommu({super.key});
@@ -75,7 +74,7 @@ class _FormsCommuState extends State<FormsCommu> {
   }
 
   void selectImages() async {
-    var res = await pickImagesFiles();
+    var res = await pickImagesFiles(true);
     setState(() {
       images = res;
     });
@@ -134,7 +133,7 @@ class _FormsCommuState extends State<FormsCommu> {
                               children: [
                                 const SizedBox(height: 15),
                                 Text(
-                                  'Select Images',
+                                  'เลือกรูปภาพ',
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.grey.shade400,

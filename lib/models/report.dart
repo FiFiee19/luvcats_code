@@ -29,7 +29,7 @@ class Report {
       user_id: map['user_id'] ?? '',
       commu_id: map['commu_id'] != null ? Commu.fromMap(map['commu_id']) : null,
       message: map['message'] ?? '',
-      id: map['_id'], // Assuming '_id' is the correct field from your backend
+      id: map['_id'], 
       createdAt: map['createdAt'],
       
     );

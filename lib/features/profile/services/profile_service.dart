@@ -381,34 +381,34 @@ class ProfileServices {
     }
   }
 
-  //ค้นหาร้านค้าจากชื่อ
-  Future<List<User>?> searchEntre(BuildContext context, String username) async {
-    try {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final response = await http.get(
-        Uri.parse('$url/searchE/$username'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'authtoken': userProvider.user.token,
-        },
-      );
+  // //ค้นหาร้านค้าจากชื่อ
+  // Future<List<User>?> searchEntre(BuildContext context, String username) async {
+  //   try {
+  //     final userProvider = Provider.of<UserProvider>(context, listen: false);
+  //     final response = await http.get(
+  //       Uri.parse('$url/searchE/$username'),
+  //       headers: {
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //         'authtoken': userProvider.user.token,
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> dataList = jsonDecode(response.body);
-        final List<User> users =
-            dataList.map((data) => User.fromMap(data)).toList();
-        return users;
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(30),
-        ),
-      );
-      return null;
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> dataList = jsonDecode(response.body);
+  //       final List<User> users =
+  //           dataList.map((data) => User.fromMap(data)).toList();
+  //       return users;
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text(e.toString()),
+  //         backgroundColor: Colors.red,
+  //         behavior: SnackBarBehavior.floating,
+  //         margin: EdgeInsets.all(30),
+  //       ),
+  //     );
+  //     return null;
+  //   }
+  // }
 }

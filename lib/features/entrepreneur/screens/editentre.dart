@@ -32,7 +32,6 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
     addressController = TextEditingController();
     phoneController = TextEditingController();
 
-    // ทำการโหลดข้อมูลโพสต์เดิม
     _loadPostData();
   }
 
@@ -64,7 +63,6 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final post =
           await entreService.fetchIdEntre(context, userProvider.user.id);
-      // นำข้อมูลเดิมมาใส่ใน TextEditingController
       nameController.text = post.name;
       addressController.text = post.store_address;
       phoneController.text = post.phone;
@@ -83,6 +81,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('แก้ไขข้อมูลผู้ประกอบการ'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -133,7 +132,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
                 const SizedBox(height: 10),
                 const SizedBox(height: 20),
                 CustomButton(
-                  text: 'ลงทะเบียน',
+                  text: 'บันทึก',
                   onTap: _submitForm,
                 ),
               ],

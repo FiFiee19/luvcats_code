@@ -21,13 +21,23 @@ class HomeSreenAdmin extends StatelessWidget {
           ),
           backgroundColor: Colors.red,
           actions: [
-            ElevatedButton.icon(
+            TextButton(
                 onPressed: () {
                   _signOutUser(context);
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.logout),
-                label: Text(''))
+                child: Text(
+                  'ออกจากระบบ',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w600),
+                )),
+            // ElevatedButton.icon(
+            //     onPressed: () {
+            //       _signOutUser(context);
+            //       Navigator.pop(context);
+            //     },
+            //     icon: Icon(Icons.logout),
+            //     label: Text(''))
           ],
         ),
         body: TabBar_admin());

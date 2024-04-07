@@ -114,7 +114,7 @@ class _CommuScreenState extends State<CommuScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // User info and post metadata, always shown
+                      
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -190,7 +190,7 @@ class _CommuScreenState extends State<CommuScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${commuData.likes.length}', // Display number of likes
+                                  '${commuData.likes.length}',
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 IconButton(
@@ -203,7 +203,7 @@ class _CommuScreenState extends State<CommuScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${commuData.comments.length}', // Display number of comments
+                                  '${commuData.comments.length}', 
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],

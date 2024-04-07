@@ -18,8 +18,8 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ButtonTheme(
-              minWidth: double.infinity, // To make the button full width
-              height: 60.0, // Adjust the height to your preference
+              minWidth: double.infinity, 
+              height: 60.0, 
               child: OutlinedButton.icon(
                 icon: Icon(Icons.local_hospital, color: Colors.black),
                 label: Text(
@@ -27,7 +27,7 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize:
-                        20, // Increase font size for better visibility on large buttons
+                        20, 
                   ),
                 ),
                 onPressed: () async {
@@ -41,17 +41,17 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
                   side: BorderSide(color: Colors.black),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
-                        10), // This removes the rounded corners
+                        10),
                   ),
                   padding: EdgeInsets.symmetric(
-                      vertical: 40.0, horizontal: 40), // Add vertical padding
+                      vertical: 40.0, horizontal: 40),
                 ),
               ),
             ),
             SizedBox(height: 20),
             ButtonTheme(
-              minWidth: double.infinity, // To make the button full width
-              height: 60.0, // Adjust the height to your preference
+              minWidth: double.infinity, 
+              height: 60.0, 
               child: OutlinedButton.icon(
                 icon: Icon(Icons.store, color: Colors.black),
                 label: Text(
@@ -59,7 +59,7 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize:
-                        20, // Increase font size for better visibility on large buttons
+                        20, 
                   ),
                 ),
                 onPressed: () async {
@@ -72,10 +72,10 @@ class _HomeScreenMapState extends State<HomeScreenMap> {
                   side: BorderSide(color: Colors.black),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
-                        10), // This removes the rounded corners
+                        10), 
                   ),
                   padding: EdgeInsets.symmetric(
-                      vertical: 40.0, horizontal: 40), // Add vertical padding
+                      vertical: 40.0, horizontal: 40), 
                 ),
               ),
             ),
