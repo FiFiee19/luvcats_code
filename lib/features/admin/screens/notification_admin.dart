@@ -7,7 +7,7 @@ import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/models/report.dart';
 
 class NotificationAdmin extends StatefulWidget {
-  const NotificationAdmin({super.key});
+  const NotificationAdmin({Key? key}) : super(key: key);
 
   @override
   State<NotificationAdmin> createState() => _NotificationAdminState();
@@ -38,7 +38,7 @@ class _NotificationAdminState extends State<NotificationAdmin> {
   void _showDeleteDialog(String report) {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: const Center(
           child: Text(
@@ -72,11 +72,11 @@ class _NotificationAdminState extends State<NotificationAdmin> {
   @override
   Widget build(BuildContext context) {
     if (reports == null) {
-      return Center(child: const CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     } else if (reports!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
-        body: Center(
+        body: const Center(
           child: Text(
             'ไม่มีการรายงาน',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -106,27 +106,11 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                           builder: (context) => DetailCommuAdmin(commu: commu),
                         ),
                       );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              'ไม่พบโพตส์นี้'), 
-                          backgroundColor: Colors.red,
-                        ),
-                      );
                     }
-                  } else {
-                   
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('ไม่พบโพตส์นี้'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
                   }
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
@@ -139,7 +123,7 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -150,7 +134,7 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                                       reportData.user!.imagesP,
                                     ),
                                     radius: 15),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text(
                                   reportData.user!.username,
                                   style: TextStyle(
@@ -161,9 +145,9 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                                 ),
                               ],
                             ),
-                            Padding(
+                            const Padding(
                               padding:
-                                  const EdgeInsets.only(left: 40, bottom: 10),
+                                  EdgeInsets.only(left: 40, bottom: 10),
                               child: Row(
                                 children: [
                                   Text(
@@ -182,7 +166,7 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                                       left: 40, right: 40, bottom: 10),
                                   child: Text(
                                     '"' + reportData.message + '"',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
                                     ),
@@ -203,12 +187,12 @@ class _NotificationAdminState extends State<NotificationAdmin> {
                                     ),
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 IconButton(
                                   onPressed: () {
                                     _showDeleteDialog(reportData.id!);
                                   },
-                                  icon: Icon(Icons.delete_sharp),
+                                  icon: const Icon(Icons.delete_sharp),
                                 )
                               ],
                             ),

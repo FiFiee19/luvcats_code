@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class FormsEntre extends StatefulWidget {
-  const FormsEntre({super.key});
+  const FormsEntre({Key? key,
+  }) : super(key: key);
 
   @override
   State<FormsEntre> createState() => _FormsEntreState();

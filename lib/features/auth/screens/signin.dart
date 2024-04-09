@@ -45,7 +45,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
                     children: [
-                      SizedBox(height: 120),
+                      const SizedBox(height: 120),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -54,15 +54,15 @@ class _SigninScreenState extends State<SigninScreen> {
                             style: GoogleFonts.gluten(
                                 fontSize: 60.0, color: Colors.red),
                           ),
-                          SizedBox(width: 10),
-                          Icon(
+                          const SizedBox(width: 10),
+                          const Icon(
                             Icons.pets,
                             color: Colors.red,
                             size: 30.0,
                           ),
                         ],
                       ),
-                      SizedBox(height: 80),
+                      const SizedBox(height: 80),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -73,7 +73,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.all(30.0),
                         child: Column(
@@ -97,13 +97,13 @@ class _SigninScreenState extends State<SigninScreen> {
                                   hintText: 'อีเมล',
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.black38,
                                       )),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Padding(
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
@@ -120,7 +120,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                       color: Colors.black38,
                                     ),
                                   ),
@@ -137,7 +137,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -153,7 +153,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               alignment: Alignment.center,
-                              child: Text(
+                              child: const Text(
                                 "เข้าสู่ระบบ",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
@@ -162,15 +162,15 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             "คุณมีบัญชีหรือยัง?",
                             style: TextStyle(color: Colors.black, fontSize: 15),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 15,
                           ),
                           GestureDetector(
@@ -178,9 +178,9 @@ class _SigninScreenState extends State<SigninScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SignupScreen()));
+                                      builder: (context) => const SignupScreen()));
                             },
-                            child: Column(
+                            child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
@@ -193,12 +193,12 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      Text(
+                      const SizedBox(height: 20),
+                      const Text(
                         "เป็นผู้ประกอบการไหม?",
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       GestureDetector(
@@ -206,9 +206,9 @@ class _SigninScreenState extends State<SigninScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FormsEntre()));
+                                  builder: (context) => const FormsEntre()));
                         },
-                        child: Column(
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(

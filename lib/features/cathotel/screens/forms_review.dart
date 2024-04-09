@@ -19,22 +19,17 @@ class FormsReview extends StatefulWidget {
 }
 
 class _FormsReviewState extends State<FormsReview> {
-  final _sendReviewFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> sendReviewFormKey = GlobalKey<FormState>();
   final TextEditingController messageController = TextEditingController();
   final TextEditingController ratingController = TextEditingController();
-  final cathotelServices = CathotelServices();
+  final CathotelServices cathotelServices = CathotelServices();
   bool isLoading = true;
 
   List<Review> reviews = [];
-  @override
-  void initState() {
-    super.initState();
-    print(widget.cathotel);
-  }
+
 
   void addReview() async {
-    print("Attempting to add review");
-    if (_sendReviewFormKey.currentState?.validate() ?? false) {
+    if (sendReviewFormKey.currentState?.validate() ?? false) {
       final userId = Provider.of<UserProvider>(context, listen: false).user.id;
       final double rating = ratingController.text.isNotEmpty
           ? double.parse(ratingController.text)
@@ -73,10 +68,10 @@ class _FormsReviewState extends State<FormsReview> {
         child: Column(
           children: [
             Form(
-              key: _sendReviewFormKey,
+              key: sendReviewFormKey,
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
                   RatingBar.builder(
@@ -85,8 +80,8 @@ class _FormsReviewState extends State<FormsReview> {
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
+                    itemPadding:const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
                       Icons.star,
                       color: Colors.amber,
                     ),
@@ -94,11 +89,11 @@ class _FormsReviewState extends State<FormsReview> {
                       ratingController.text = rating.toString();
                     },
                   ),
-                  SizedBox(
+                 const SizedBox(
                     height: 50,
                   ),
-                  Divider(),
-                  SizedBox(
+                 const Divider(),
+                 const SizedBox(
                     height: 50,
                   ),
                   Padding(
@@ -107,13 +102,13 @@ class _FormsReviewState extends State<FormsReview> {
                       controller: messageController,
                       scrollPadding: const EdgeInsets.all(20.0),
                       maxLines: 7,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "เขียนรีวิว",
-                        border: const OutlineInputBorder(
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.black38),
                         ),
-                        enabledBorder: const OutlineInputBorder(
+                        enabledBorder:  OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black38),
                         ),
                       ),
@@ -125,11 +120,11 @@ class _FormsReviewState extends State<FormsReview> {
                       },
                     ),
                   ),
-                  SizedBox(height: 20),
+                 const SizedBox(height: 20),
                   CustomButton(
                     text: 'ส่ง',
                     onTap: () {
-                      if (_sendReviewFormKey.currentState!.validate()) {
+                      if (sendReviewFormKey.currentState!.validate()) {
                         addReview(); 
                         messageController.clear();
                         ratingController
@@ -140,7 +135,7 @@ class _FormsReviewState extends State<FormsReview> {
                 ],
               ),
             ),
-            SizedBox(
+           const SizedBox(
               height: 10,
             ),
           ],

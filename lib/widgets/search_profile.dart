@@ -7,7 +7,7 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class SearchProfile extends StatelessWidget {
-  const SearchProfile({super.key});
+  const SearchProfile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class CustomSearchDelegate extends SearchDelegate<User?> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileScreen(),
+                          builder: (context) =>const ProfileScreen(),
                         ),
                       );
                     } else {

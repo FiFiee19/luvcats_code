@@ -5,14 +5,16 @@ import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class FormsExpense extends StatefulWidget {
-  const FormsExpense({super.key});
+  const FormsExpense({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<FormsExpense> createState() => _FormsExpenseState();
 }
 
 class _FormsExpenseState extends State<FormsExpense> {
-  final _expenseFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> expenseFormKey = GlobalKey<FormState>();
   final ExpenseServices expenseServices = ExpenseServices();
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -26,14 +28,14 @@ class _FormsExpenseState extends State<FormsExpense> {
   ];
 
   void addExpense() async {
-    if (_expenseFormKey.currentState!.validate()) {
+    if (expenseFormKey.currentState!.validate()) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
-      final String user_id = userProvider.user.id;
+      final String userId = userProvider.user.id;
       if (!mounted) return;
 
       expenseServices.addExpense(
-          user_id: user_id,
+          user_id: userId,
           context: context,
           category: categoryController.text,
           description: descriptionController.text,
@@ -41,7 +43,7 @@ class _FormsExpenseState extends State<FormsExpense> {
     }
   }
 
-  List<Widget> buildRadioList() {
+  List<Widget> radioList() {
     return listcategory.asMap().entries.map((entry) {
       int idx = entry.key;
       String category = entry.value;
@@ -53,8 +55,7 @@ class _FormsExpenseState extends State<FormsExpense> {
           onChanged: (int? value) {
             setState(() {
               selectedOption = value;
-              categoryController.text =
-                  listcategory[value!]; 
+              categoryController.text = listcategory[value!];
             });
           },
         ),
@@ -77,25 +78,25 @@ class _FormsExpenseState extends State<FormsExpense> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('บันทึกค่าใช้จ่าย'),
+        title: const Text('บันทึกค่าใช้จ่าย'),
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: _expenseFormKey,
+          key: expenseFormKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Divider(),
-              Text('ประเภทค่าใช้จ่าย',
+              const Divider(),
+              const Text('ประเภทค่าใช้จ่าย',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-              ...buildRadioList(),
-              Divider(),
-              SizedBox(height: 20),
-              Text(
+              ...radioList(),
+              const Divider(),
+              const SizedBox(height: 20),
+              const Text(
                 'อธิบายเพิ่มเติม',
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: TextFormField(
@@ -109,21 +110,21 @@ class _FormsExpenseState extends State<FormsExpense> {
                     hintText: 'อธิบายเพิ่มเติม',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.black38,
                       ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Divider(),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Divider(),
+              const SizedBox(height: 20),
+              const Text(
                 'จำนวนเงิน',
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: TextFormField(
@@ -137,7 +138,7 @@ class _FormsExpenseState extends State<FormsExpense> {
                     hintText: 'จำนวนเงิน',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.black38,
                       ),
                     ),
@@ -145,7 +146,7 @@ class _FormsExpenseState extends State<FormsExpense> {
                   keyboardType: TextInputType.number,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CustomButton(
                 text: 'บันทึก',
                 onTap: () {

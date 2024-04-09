@@ -4,21 +4,21 @@ import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dar
 import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
 
 
-class TabBar_entre extends StatefulWidget {
-  const TabBar_entre({Key? key}) : super(key: key);
+class TabBarEntre extends StatefulWidget {
+  const TabBarEntre({Key? key}) : super(key: key);
 
   @override
-  State<TabBar_entre> createState() => _TabBar_entreState();
+  State<TabBarEntre> createState() => _TabBarEntreState();
 }
 
-class _TabBar_entreState extends State<TabBar_entre> {
+class _TabBarEntreState extends State<TabBarEntre> {
   int currentIndex = 0;
-  late PageController pageController;
+  final PageController pageController=PageController();
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController();
+    pageController;
   }
 
   @override
@@ -42,19 +42,19 @@ class _TabBar_entreState extends State<TabBar_entre> {
     return Scaffold(
       body: PageView(
         children: <Widget>[
-          Profile_Entre(),
-          Notification_Entre(),
-          Report_Entre(),
+          ProfileEntre(),
+          NotificationEntre(),
+          ReportEntre(),
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
-        physics: NeverScrollableScrollPhysics(),
+        physics:const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         backgroundColor: Colors.white,
         onTap: onTap,
-        items: [
+        items:const [
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'โปรไฟล์'),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications), label: 'การแจ้งเตือน'),

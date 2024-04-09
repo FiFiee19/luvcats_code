@@ -8,7 +8,9 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -16,13 +18,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   User? users;
-  ProfileServices profileServices = ProfileServices();
+  final ProfileServices profileServices = ProfileServices();
   bool isLoading = true;
   int _selectedIndex = 0;
+  User? fetchedUser;
   final List<Widget> _pages = [
     OneScreen1(),
     TwoScreen2(),
   ];
+
   void onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -37,7 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-  
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
     if (userId != null) {
       fetchProfile(userId);
@@ -45,16 +48,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> fetchProfile(String userId) async {
-    try {
-      User? fetchedUser = await profileServices.fetchIdUser(context, userId);
-      if (fetchedUser != null && mounted) {
-        setState(() {
-          users = fetchedUser;
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-     
+    fetchedUser = await profileServices.fetchIdUser(context, userId);
+    if (fetchedUser != null && mounted) {
+      setState(() {
+        users = fetchedUser;
+        isLoading = false;
+      });
     }
   }
 
@@ -76,15 +75,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 final result = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Editprofile()),
+                  MaterialPageRoute(builder: (context) => const Editprofile()),
                 );
                 if (result != null && users != null) {
-                  await fetchProfile(
-                      users!.id); 
+                  await fetchProfile(users!.id);
                   setState(() {});
                 }
               },
-              style: ElevatedButton.styleFrom( backgroundColor: Colors.grey),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
             ),
           ),
         ],
@@ -96,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 CircleAvatar(
@@ -105,22 +103,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       users != null ? NetworkImage(users!.imagesP) : null,
                   radius: 50,
                 ),
-                SizedBox(width: 30),
+                const SizedBox(width: 30),
                 Text(
-                  users?.username ??
-                      '', 
-                  style: 
-                        const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                      ),
-                
+                  users?.username ?? '',
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black),
+                ),
               ],
             ),
           ),
           BottomNavigationBar(
-            items: [
+            items: const [
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.view_module_outlined,
@@ -151,13 +146,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class OneScreen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return OneScreen();
+    return const OneScreen();
   }
 }
 
 class TwoScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return TwoScreen();
+    return const TwoScreen();
   }
 }

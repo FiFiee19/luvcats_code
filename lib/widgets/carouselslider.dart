@@ -11,12 +11,12 @@ class CustomCarouselSlider extends StatefulWidget {
 
 class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
   int _current = 0;
-  late CarouselController _carouselController;
+  final CarouselController _carouselController = CarouselController();
 
   @override
   void initState() {
     super.initState();
-    _carouselController = CarouselController();
+    _carouselController;
   }
 
   void _showFullScreenImage(String imageUrl) {
@@ -25,7 +25,6 @@ class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: InteractiveViewer(
-          // InteractiveViewer allows users to zoom in/out the image.
           child: Image.network(imageUrl),
         ),
       ),
@@ -40,8 +39,7 @@ class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
           items: widget.images.map((image) {
             return Builder(
               builder: (BuildContext context) => GestureDetector(
-                onTap: () =>
-                    _showFullScreenImage(image), // Call the new function here.
+                onTap: () => _showFullScreenImage(image),
                 child: Image.network(
                   image,
                   fit: BoxFit.cover,
@@ -73,7 +71,8 @@ class _CustomCarouselSliderState extends State<CustomCarouselSlider> {
               child: Container(
                 width: 12.0,
                 height: 12.0,
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: _current == entry.key

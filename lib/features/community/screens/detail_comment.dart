@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
-import 'package:luvcats_app/features/report/screens/reportscreen.dart';
+import 'package:luvcats_app/features/report/screens/forms_report.dart';
 import 'package:luvcats_app/models/comment.dart';
 import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
@@ -29,40 +29,30 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
   List<Comment> comments = [];
   final ProfileServices profileService = ProfileServices();
 
-  final _sendCommentFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> commentFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    loadComments();
-    widget.commu.comments;
+    fetchComments();
   }
 
   //เรียกข้อมูลCommentsจากcommuServices
-  Future<void> loadComments() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      if (widget.commu.id != null) {
-        comments = await commuServices.fetchComment(context, widget.commu.id!);
-       
-      } else {
-        print("CommuId is null");
+  Future<void> fetchComments() async {
+    if (widget.commu.id != null) {
+      comments = await commuServices.fetchComment(context, widget.commu.id!);
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
       }
-    } catch (e) {
-      print(e.toString());
-    }
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
   //แสดงความคิดเห็น
   void addComment() async {
-    if (_sendCommentFormKey.currentState?.validate() ?? false) {
+    if (commentFormKey.currentState?.validate() ?? false) {
       final userId = Provider.of<UserProvider>(context, listen: false).user.id;
       await commuServices.addComment(
         user_id: userId,
@@ -70,14 +60,11 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
         message: commentController.text,
         commu_id: widget.commu.id!,
       );
+      fetchComments();
     }
   }
 
   //ลบCommu
-  void delete(String commu) {
-    profileService.deleteCommu(context, commu);
-  }
-
   void _showDeleteDialog(String cemment) {
     showDialog<void>(
       context: context,
@@ -124,20 +111,17 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBar(
-          title: Center(
-            child: Padding(
-                padding: const EdgeInsets.only(left: 220),
-                child: ReportScreen(
-                  commu: widget.commu,
-                )),
-          ),
+      appBar: AppBar(
+        title: Center(
+          child: Padding(
+              padding: const EdgeInsets.only(left: 220),
+              child: FormsReport(
+                commu: widget.commu,
+              )),
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: loadComments,
+        onRefresh: fetchComments,
         child: SingleChildScrollView(
             child: Column(
           children: [
@@ -145,7 +129,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
               padding: const EdgeInsets.only(left: 10, bottom: 10),
               child: Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   CircleAvatar(
@@ -155,17 +139,17 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                     ),
                     radius: 20,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Text(
-                    "${widget.commu.user!.username}",
+                    widget.commu.user!.username,
                     style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: Colors.black),
                   ),
-                  Spacer(),
+                  const Spacer(),
                 ],
               ),
             ),
@@ -179,7 +163,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.commu.title}",
+                    widget.commu.title,
                     style: const TextStyle(
                         fontWeight: FontWeight.w700, color: Colors.black),
                   ),
@@ -187,17 +171,16 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                     height: 10.0,
                   ),
                   Text(
-                    "${widget.commu.description}",
+                    widget.commu.description,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.grey.shade500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Row(
-                    
                     children: [
                       Text(
                         formatDateTime(widget.commu.createdAt),
@@ -206,8 +189,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                           color: Colors.grey.shade600,
                         ),
                       ),
-
-                      Spacer(), 
+                      const Spacer(),
                       LikeAnimation(
                         isAnimating: widget.commu.likes.contains(user),
                         smallLike: true,
@@ -234,11 +216,10 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         ),
                       ),
                       Text(
-                        '${widget.commu.likes.length}',
-                        style: TextStyle(color: Colors.grey),
+                        "${widget.commu.likes.length}",
+                        style: const TextStyle(color: Colors.grey),
                       ),
-
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                     ],
@@ -250,12 +231,12 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                       children: [
                         Text(
                           "${widget.commu.comments.length} ความคิดเห็น",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
@@ -279,7 +260,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                             comment.user!.imagesP,
                                           ),
                                           radius: 15),
-                                      SizedBox(width: 10),
+                                      const SizedBox(width: 10),
                                       Text(
                                         comment.user!.username,
                                         style: TextStyle(
@@ -288,23 +269,21 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                           color: Colors.grey.shade500,
                                         ),
                                       ),
-                                      if (user ==
-                                          comment
-                                              .user_id) 
+                                      if (user == comment.user_id)
                                         IconButton(
                                           onPressed: () {
                                             _showDeleteDialog(comment.id!);
                                           },
-                                          icon: Icon(Icons.delete_sharp),
+                                          icon: const Icon(Icons.delete_sharp),
                                         )
                                     ],
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 40, bottom: 10),
+                                        left: 40, right: 20, bottom: 10),
                                     child: Text(
                                       comment.message,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
                                       ),
@@ -315,15 +294,10 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                         left: 5, bottom: 10),
                                     child: Text(
                                       formatDateTime(comment.createdAt),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle2!
-                                          .merge(
-                                            TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey.shade600,
-                                            ),
-                                          ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -334,20 +308,20 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         .toList(),
                   ),
                   Form(
-                    key: _sendCommentFormKey,
+                    key: commentFormKey,
                     child: Column(
                       children: [
                         TextFormField(
                           controller: commentController,
                           scrollPadding: const EdgeInsets.all(20.0),
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "แสดงความคิดเห็น",
-                            border: const OutlineInputBorder(
+                            border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
                               borderSide: BorderSide(color: Colors.black38),
                             ),
-                            enabledBorder: const OutlineInputBorder(
+                            enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black38),
                             ),
                           ),
@@ -358,11 +332,11 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         CustomButton(
                           text: 'ส่ง',
                           onTap: () {
-                            if (_sendCommentFormKey.currentState!.validate()) {
+                            if (commentFormKey.currentState!.validate()) {
                               addComment();
                               commentController.clear();
                             }
@@ -371,7 +345,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                 ],

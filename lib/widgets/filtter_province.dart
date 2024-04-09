@@ -4,7 +4,8 @@ import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 
 class FilterProvince extends StatefulWidget {
-  const FilterProvince({super.key});
+  const FilterProvince({Key? key,
+  }) : super(key: key);
 
   @override
   State<FilterProvince> createState() => _FilterProvinceState();

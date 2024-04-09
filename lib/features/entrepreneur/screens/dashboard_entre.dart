@@ -4,16 +4,16 @@ import 'package:luvcats_app/features/dashborad/screens/dashboard_entre.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class Report_Entre extends StatefulWidget {
-  const Report_Entre({
+class ReportEntre extends StatefulWidget {
+  const ReportEntre({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<Report_Entre> createState() => _Report_EntreState();
+  State<ReportEntre> createState() => _ReportEntreState();
 }
 
-class _Report_EntreState extends State<Report_Entre> {
+class _ReportEntreState extends State<ReportEntre> {
   final CathotelServices cathotelServices = CathotelServices();
 
   @override

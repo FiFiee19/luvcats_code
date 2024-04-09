@@ -10,7 +10,7 @@ import 'package:luvcats_app/widgets/search_commu.dart';
 import 'package:provider/provider.dart';
 
 class CommuAdmin extends StatefulWidget {
-  const CommuAdmin({super.key});
+  const CommuAdmin({Key? key}) : super(key: key);
 
   @override
   State<CommuAdmin> createState() => _CommuAdminState();
@@ -78,11 +78,11 @@ class _CommuAdminState extends State<CommuAdmin> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return Center(child: const CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     } else if (commu!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
-        body: Center(
+        body: const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -93,7 +93,7 @@ class _CommuAdminState extends State<CommuAdmin> {
       return Scaffold(
         appBar: AppBar(actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               showSearch(
                 context: context,
@@ -120,7 +120,8 @@ class _CommuAdminState extends State<CommuAdmin> {
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
@@ -132,7 +133,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             CircleAvatar(
@@ -142,23 +143,23 @@ class _CommuAdminState extends State<CommuAdmin> {
                               ),
                               radius: 20,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Text(
-                              "${commuData.user!.username}",
-                              style: TextStyle(
+                              commuData.user!.username,
+                              style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 96.0,
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       if (commuData.images.isNotEmpty)
@@ -169,7 +170,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${commuData.title}",
+                                commuData.title,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Colors.black),
@@ -178,7 +179,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                                 height: 10.0,
                               ),
                               Text(
-                                "${commuData.description}",
+                                commuData.description,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: Colors.grey.shade500,
@@ -202,8 +203,8 @@ class _CommuAdminState extends State<CommuAdmin> {
                                     onPressed: () async {},
                                   ),
                                   Text(
-                                    '${commuData.likes.length}',
-                                    style: TextStyle(color: Colors.grey),
+                                    "${commuData.likes.length}",
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                   IconButton(
                                       icon: const Icon(
@@ -211,8 +212,8 @@ class _CommuAdminState extends State<CommuAdmin> {
                                       ),
                                       onPressed: () {}),
                                   Text(
-                                    '${commuData.comments.length}',
-                                    style: TextStyle(color: Colors.grey),
+                                    "${commuData.comments.length}",
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -223,7 +224,7 @@ class _CommuAdminState extends State<CommuAdmin> {
                                       onPressed: () {
                                         _showDeleteDialog(commuData.id!);
                                       },
-                                      icon: Icon(Icons.delete_sharp)),
+                                      icon: const Icon(Icons.delete_sharp)),
                                 ],
                               ),
                               Padding(

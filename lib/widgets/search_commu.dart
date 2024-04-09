@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
 import 'package:luvcats_app/models/postcommu.dart';
-import 'package:luvcats_app/widgets/show_search.dart';
+import 'package:luvcats_app/widgets/showsearch_commu.dart';
 
 class CommuSearchDelegate extends SearchDelegate<Commu?> {
   final List<Commu> commulist;
@@ -41,10 +41,6 @@ class CommuSearchDelegate extends SearchDelegate<Commu?> {
 
     final titles = titleMap.keys.toList();
 
-    void delete(String commu) {
-      profileServices.deleteCommu(context, commu);
-    }
-
     final results = commulist.where((commu) {
       return commu.title.toLowerCase().contains(query.toLowerCase());
     }).toList();
@@ -59,7 +55,7 @@ class CommuSearchDelegate extends SearchDelegate<Commu?> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ShowSearcher(query: title, commulist: results)),
+                    ShowSearchCommu(query: title, commulist: results)),
           ),
         );
       },

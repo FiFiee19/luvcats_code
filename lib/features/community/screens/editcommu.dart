@@ -1,17 +1,17 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class EditCommu extends StatefulWidget {
-  final String commuId; 
+  final String commuId;
 
   const EditCommu({
     Key? key,
-    required this.commuId, 
+    required this.commuId,
   }) : super(key: key);
 
   @override
@@ -19,9 +19,9 @@ class EditCommu extends StatefulWidget {
 }
 
 class _EditCommuState extends State<EditCommu> {
-  final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController titleController;
-  late TextEditingController descriptionController;
+  final GlobalKey<FormState> commuFormKey = GlobalKey<FormState>();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   bool isLoading = true;
   List<File> images = [];
   List<String> imageUrls = [];
@@ -30,9 +30,9 @@ class _EditCommuState extends State<EditCommu> {
   @override
   void initState() {
     super.initState();
-    _loadCommu();
-    titleController = TextEditingController();
-    descriptionController = TextEditingController();
+    fetchCommu();
+    titleController.text;
+    descriptionController.text;
     print(widget.commuId);
   }
 
@@ -46,8 +46,8 @@ class _EditCommuState extends State<EditCommu> {
   }
 
   //แก้ไขข้อมูล
-  void _submitForm() async {
-    if (globalFormKey.currentState!.validate()) {
+  void submitForm() async {
+    if (commuFormKey.currentState!.validate()) {
       await commuServices.editPost(
         context,
         widget.commuId,
@@ -59,14 +59,12 @@ class _EditCommuState extends State<EditCommu> {
   }
 
   //เรียกข้อมูลCommuจากcommuServices
-  Future<void> _loadCommu() async {
+  Future<void> fetchCommu() async {
     try {
-      final post = await commuServices.fetchIdCommu(context, widget.commuId);
-      print('Loading data for commuId: ${widget.commuId}, got post: $post');
-
-      titleController.text = post.title;
-      descriptionController.text = post.description;
-      imageUrls = post.images;
+      final data = await commuServices.fetchIdCommu(context, widget.commuId);
+      titleController.text = data.title;
+      descriptionController.text = data.description;
+      imageUrls = data.images;
     } catch (e) {
       print('Error loading post data: $e');
     }
@@ -93,7 +91,7 @@ class _EditCommuState extends State<EditCommu> {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: globalFormKey,
+          key: commuFormKey,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -148,7 +146,7 @@ class _EditCommuState extends State<EditCommu> {
                           children: [
                             const SizedBox(height: 15),
                             Text(
-                              'Select Images',
+                              'เลือกรูปภาพ',
                               style: TextStyle(
                                 fontSize: 15,
                                 color: Colors.grey.shade400,
@@ -194,14 +192,14 @@ class _EditCommuState extends State<EditCommu> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('บันทึก',
+                  onPressed: submitForm,
+                  child: Text('บันทึก',
                       style: TextStyle(
                         color: Colors.white,
                       )),
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
-                       backgroundColor: Colors.red),
+                      backgroundColor: Colors.red),
                 ),
               ],
             ),

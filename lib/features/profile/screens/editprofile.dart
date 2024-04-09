@@ -8,25 +8,26 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class Editprofile extends StatefulWidget {
-  const Editprofile({super.key});
+  const Editprofile({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Editprofile> createState() => _EditprofileState();
 }
 
 class _EditprofileState extends State<Editprofile> {
-  final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController usernameController;
+  final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
+  final TextEditingController usernameController = TextEditingController();
   bool isLoading = true;
   List<File>? imagesP; // รูปภาพที่เลือกใหม่
   String? imageUrl;
-
-  ProfileServices profileServices = ProfileServices();
+  final ProfileServices profileServices = ProfileServices();
 
   @override
   void initState() {
     super.initState();
-    usernameController = TextEditingController();
+    usernameController.text;
   }
 
   @override
@@ -37,8 +38,8 @@ class _EditprofileState extends State<Editprofile> {
     super.dispose();
   }
 
-  void _submitForm() async {
-    if (globalFormKey.currentState!.validate()) {
+  void submitForm() async {
+    if (editFormKey.currentState!.validate()) {
       await profileServices.editUser(
           context, usernameController.text, imagesP![0]);
     }
@@ -47,14 +48,13 @@ class _EditprofileState extends State<Editprofile> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
     if (userId != null) {
-      _loadProfile(userId);
+      fetchProfile(userId);
     }
   }
 
-  Future<void> _loadProfile(String userId) async {
+  Future<void> fetchProfile(String userId) async {
     try {
       final profile = await profileServices.fetchIdUser(context, userId);
       usernameController.text = profile.username;
@@ -85,14 +85,14 @@ class _EditprofileState extends State<Editprofile> {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: globalFormKey,
+          key: editFormKey,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (imagesP != null)
-                  Image.file(imagesP![0], fit: BoxFit.cover, height: 200)
+                if (imagesP != null && imagesP!.isNotEmpty)
+                  Image.file(imagesP!.first, fit: BoxFit.cover, height: 200)
                 else if (imageUrl != null)
                   Image.network(imageUrl!, fit: BoxFit.cover, height: 200)
                 else
@@ -109,9 +109,9 @@ class _EditprofileState extends State<Editprofile> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Column(
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(Icons.camera_alt,
                                 color: Colors.grey, size: 50),
                             SizedBox(height: 15),
@@ -123,7 +123,7 @@ class _EditprofileState extends State<Editprofile> {
                 Center(
                   child: IconButton(
                     icon: const Icon(
-                      Icons.upload_sharp,
+                      Icons.image,
                     ),
                     onPressed: () => selectImages(),
                   ),
@@ -142,8 +142,8 @@ class _EditprofileState extends State<Editprofile> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('บันทึก',
+                  onPressed: submitForm,
+                  child: Text('บันทึก',
                       style: TextStyle(
                         color: Colors.white,
                       )),

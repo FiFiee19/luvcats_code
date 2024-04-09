@@ -54,7 +54,7 @@ exports.create = async (req, res) => {
 
         await newEntre.save();
         console.log(req.body)
-        res.send('Register Success!!');
+        res.send('ลงทะเบียนสำเร็จ!!');
 
     } catch (e) {
         console.log(e)

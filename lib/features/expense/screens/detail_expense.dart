@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/expense/services/expense_service.dart';
 import 'package:luvcats_app/models/expense.dart';
 
@@ -25,7 +25,7 @@ class _DetailExpenseState extends State<DetailExpense> {
   final ExpenseServices expenseService = ExpenseServices();
   List<Expense> expenses = [];
   bool isLoading = true;
-
+  List<Expense>? fetchedExpenses;
   @override
   void initState() {
     super.initState();
@@ -33,15 +33,10 @@ class _DetailExpenseState extends State<DetailExpense> {
   }
 
   Future<void> fetchExpense(String userId) async {
-    setState(() {
-      isLoading = true;
-    });
-
     try {
-      final List<Expense> fetchedExpenses =
-          await expenseService.fetchExpense(context, userId);
+      fetchedExpenses = await expenseService.fetchExpense(context, userId);
 
-      final filteredExpenses = fetchedExpenses.where((expense) {
+      final filteredExpenses = fetchedExpenses!.where((expense) {
         final expenseDate = DateTime.parse(expense.createdAt!);
         return expense.category == widget.category &&
             expenseDate.month == widget.selectedMonth &&
@@ -55,11 +50,6 @@ class _DetailExpenseState extends State<DetailExpense> {
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
       print("Error fetching expenses: $e");
     }
   }
@@ -108,25 +98,25 @@ class _DetailExpenseState extends State<DetailExpense> {
         title: Text('รายละเอียดค่าใช้จ่าย: ${widget.category}'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: () => fetchExpense(widget.userId),
               child: Column(
                 children: [
                   Container(
-                    color: Color.fromRGBO(201, 201, 201, 0.89),
-                    padding: EdgeInsets.all(18),
+                    color: const Color.fromRGBO(201, 201, 201, 0.89),
+                    padding: const EdgeInsets.all(18),
                     child: Row(
                       children: [
                         Text(
-                          '${widget.category}',
-                          style: TextStyle(
+                          widget.category,
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
                           'รวม ${totalAmount.toStringAsFixed(2)} บาท',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600),
                         ),
                       ],
@@ -134,49 +124,46 @@ class _DetailExpenseState extends State<DetailExpense> {
                   ),
                   Expanded(
                     child: expenses.isEmpty
-                        ? Center(
+                        ? const Center(
                             child: Text('ไม่มีรายการค่าใช้จ่ายในหมวดหมู่นี้'))
                         : ListView.separated(
                             itemCount: expenses.length,
                             itemBuilder: (context, index) {
                               final expense = expenses[index];
                               final formattedDate = expense.createdAt != null
-                                  ? DateFormat('yyyy-MM-dd').format(
-                                      DateTime.parse(expense.createdAt!))
+                                  ? formatDateTime(expense.createdAt)
                                   : 'ไม่ทราบวันที่';
                               return ListTile(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 16.0),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
                                 title: Text(
                                   expense.description,
-                                  style: TextStyle(fontSize: 15.0),
+                                  style: const TextStyle(fontSize: 15.0),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
                                   formattedDate,
-                                  style: TextStyle(fontSize: 12.0),
+                                  style: const TextStyle(fontSize: 12.0),
                                 ),
                                 trailing: Row(
-                                  mainAxisSize: MainAxisSize
-                                      .min, 
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
                                       '${expense.amount.toStringAsFixed(2)} บาท',
-                                      style: TextStyle(fontSize: 15.0),
+                                      style: const TextStyle(fontSize: 15.0),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.delete_sharp),
+                                      icon: const Icon(Icons.delete_sharp),
                                       onPressed: () async {
-                                       
                                         _showDeleteDialog(expense.id!);
-                                       
                                       },
                                     ),
                                   ],
                                 ),
                               );
                             },
-                            separatorBuilder: (context, index) => Divider(),
+                            separatorBuilder: (context, index) =>
+                                const Divider(),
                           ),
                   ),
                 ],

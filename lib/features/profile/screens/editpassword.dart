@@ -10,16 +10,16 @@ class EditPassword extends StatefulWidget {
 }
 
 class _EditPasswordState extends State<EditPassword> {
-  final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController newPasswordController;
-  late TextEditingController confirmPasswordController;
-  ProfileServices profileServices = ProfileServices();
+  final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final ProfileServices profileServices = ProfileServices();
 
   @override
   void initState() {
     super.initState();
-    newPasswordController = TextEditingController();
-    confirmPasswordController = TextEditingController();
+    newPasswordController.text;
+    confirmPasswordController.text;
   }
 
   @override
@@ -29,8 +29,8 @@ class _EditPasswordState extends State<EditPassword> {
     super.dispose();
   }
 
-  void _submitForm() async {
-    if (globalFormKey.currentState!.validate()) {
+  void submitForm() async {
+    if (editFormKey.currentState!.validate()) {
       await profileServices.editPassword(context, newPasswordController.text);
     }
   }
@@ -44,7 +44,7 @@ class _EditPasswordState extends State<EditPassword> {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: globalFormKey,
+          key: editFormKey,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -80,7 +80,7 @@ class _EditPasswordState extends State<EditPassword> {
                 CustomButton(
                   text: 'บันทึก',
                   onTap: () {
-                    _submitForm();
+                    submitForm();
                   },
                 )
               ],

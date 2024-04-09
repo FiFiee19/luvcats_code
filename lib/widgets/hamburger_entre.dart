@@ -9,7 +9,9 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class HamburgerEntre extends StatefulWidget {
-  const HamburgerEntre({super.key});
+  const HamburgerEntre({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<HamburgerEntre> createState() => _HamburgerEntreState();
@@ -17,7 +19,7 @@ class HamburgerEntre extends StatefulWidget {
 
 class _HamburgerEntreState extends State<HamburgerEntre> {
   Entrepreneur? entre;
-  EntreService entreServices = EntreService();
+  final EntreService entreServices = EntreService();
 
   @override
   void initState() {
@@ -45,12 +47,12 @@ class _HamburgerEntreState extends State<HamburgerEntre> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.grey,
               ),
               child: Center(child: Text(user.email))),
           ListTile(
-              leading: Icon(Icons.person),
+              leading: const Icon(Icons.person),
               title: const Text('ข้อมูลผู้ประกอบการ'),
               onTap: () {
                 if (entre != null) {
@@ -63,9 +65,9 @@ class _HamburgerEntreState extends State<HamburgerEntre> {
                   );
                 }
               }),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.star),
+            leading: const Icon(Icons.star),
             title: const Text('รีวิวของร้าน'),
             onTap: () {
               if (entre != null) {
@@ -81,21 +83,21 @@ class _HamburgerEntreState extends State<HamburgerEntre> {
               }
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.key),
-            title: Text('เปลี่ยนรหัสผ่าน'),
+            leading: const Icon(Icons.key),
+            title: const Text('เปลี่ยนรหัสผ่าน'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EditPassword()),
+                MaterialPageRoute(builder: (context) => const EditPassword()),
               );
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text(
+            leading: const Icon(Icons.logout),
+            title: const Text(
               'ออกจากระบบ',
             ),
             onTap: () {

@@ -59,8 +59,8 @@ class _SignupScreenState extends State<SignupScreen> {
     } else {
       if (!passwordConfirmed()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('รหัสผ่านไม่ตรงกัน'),
+          const SnackBar(
+            content: Text('รหัสผ่านไม่ตรงกัน'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -70,8 +70,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
       if (_image == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('กรุณาเลือกรูปภาพ'),
+          const SnackBar(
+            content: Text('กรุณาเลือกรูปภาพ'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -111,14 +111,14 @@ class _SignupScreenState extends State<SignupScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 200),
+                  const SizedBox(height: 200),
                   Text(
                     'LuvCats',
                     style:
                         GoogleFonts.gluten(fontSize: 60.0, color: Colors.red),
                   ),
-                  SizedBox(height: 10),
-                  Icon(
+                  const SizedBox(height: 10),
+                  const Icon(
                     Icons.pets,
                     color: Colors.red,
                     size: 30.0,
@@ -136,9 +136,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _image == null
-                  ? CircleAvatar(
+                  ? const CircleAvatar(
                       radius: 100,
                       backgroundColor: Colors.grey,
                     )
@@ -156,12 +156,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     onTap: () {
                       _pickImage();
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.image,
                       color: Colors.black,
                     ),
                   )),
-              SizedBox(height: 80),
+              const SizedBox(height: 80),
               Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: TextFormField(
@@ -175,13 +175,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'ชื่อ',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.black38,
                         )),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+             const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: TextFormField(
@@ -201,13 +201,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'อีเมล',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.black38,
                         )),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: TextFormField(
@@ -225,15 +225,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'รหัสผ่าน',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.black38,
                         )),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
-                padding: EdgeInsets.all(3.0),
+                padding: const EdgeInsets.all(3.0),
                 child: TextFormField(
                   controller: _cpasswordController,
                   validator: (value) {
@@ -245,7 +245,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: 'ยืนยันรหัสผ่าน',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.black38,
                         )),
                   ),

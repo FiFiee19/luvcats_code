@@ -3,7 +3,8 @@ import 'package:luvcats_app/features/map/screens/hospitalmapscreen.dart';
 import 'package:luvcats_app/features/map/screens/storemapscreen.dart';
 
 class HomeScreenMap extends StatefulWidget {
-  const HomeScreenMap({super.key});
+  const HomeScreenMap({Key? key,
+  }) : super(key: key);
 
   @override
   State<HomeScreenMap> createState() => _HomeScreenMapState();

@@ -3,8 +3,6 @@ import 'package:luvcats_app/models/review.dart';
 
 class DashboardEntre extends StatelessWidget {
   final Future<List<Review>> reviews;
-
-//แย่มาก ไม่ดี ปานกลาง ดี ดีมาก
   DashboardEntre({
     Key? key,
     required this.reviews,
@@ -34,7 +32,7 @@ class DashboardEntre extends StatelessWidget {
       future: reviews,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
@@ -49,18 +47,18 @@ class DashboardEntre extends StatelessWidget {
             child: Column(
               children: [
                 Card(
-                  margin: EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.all(20.0),
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 8.0),
-                        Center(
+                        const SizedBox(height: 8.0),
+                        const Center(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -81,15 +79,15 @@ class DashboardEntre extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Center(
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 12.0),
                             child: Text(
                               ratingMessage(totalReviews, avgRating),
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 25.0,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -102,18 +100,18 @@ class DashboardEntre extends StatelessWidget {
                   ),
                 ),
                 Card(
-                  margin: EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.all(20.0),
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 8.0),
-                        Center(
+                        const SizedBox(height: 8.0),
+                        const Center(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -134,15 +132,15 @@ class DashboardEntre extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Center(
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 12.0),
                             child: Text(
                               avgRating.toStringAsFixed(1),
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 25.0,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -158,7 +156,7 @@ class DashboardEntre extends StatelessWidget {
             ),
           );
         } else {
-          return Text('No data available');
+          return const Text('No data available');
         }
       },
     );

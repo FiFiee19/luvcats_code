@@ -8,7 +8,9 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseScreen extends StatefulWidget {
-  const ExpenseScreen({super.key});
+  const ExpenseScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ExpenseScreen> createState() => _ExpenseScreenState();
@@ -17,10 +19,10 @@ class ExpenseScreen extends StatefulWidget {
 class _ExpenseScreenState extends State<ExpenseScreen> {
   final ExpenseServices expenseService = ExpenseServices();
   List<Expense> expenses = [];
-
   bool isLoading = true;
   int? selectedMonth;
   int? selectedYear;
+  List<Expense>? fetchedExpenses;
   List<int> years = List.generate(10, (index) => DateTime.now().year - index);
   List<String> monthNames = [
     'มกราคม',
@@ -61,11 +63,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
   Future<void> fetchExpense(String userId) async {
     try {
-      final List<Expense> fetchedExpenses =
-          await expenseService.fetchExpense(context, userId);
+      fetchedExpenses = await expenseService.fetchExpense(context, userId);
       if (mounted) {
         setState(() {
-          expenses = fetchedExpenses.where((expense) {
+          expenses = fetchedExpenses!.where((expense) {
             final expenseDate = DateTime.parse(expense.createdAt!);
             return expenseDate.month == selectedMonth &&
                 expenseDate.year == selectedYear;
@@ -83,29 +84,28 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     }
   }
 
-  Map<String, double> aggregateAmount(List<Expense> expenses) {
-    Map<String, double> aggregated = {
+  Map<String, double> totalAmount(List<Expense> expenses) {
+    Map<String, double> categories = {
       'อาหาร': 0,
       'ยาและการรักษา': 0,
       'อาบน้ำตัดขน': 0,
       'ของใช้อื่นๆ': 0,
     };
 
-    for (var expense in expenses) {
-      if (aggregated.containsKey(expense.category)) {
-        aggregated[expense.category] =
-            (aggregated[expense.category] ?? 0.0) + expense.amount;
+    for (var i in expenses) {
+      if (categories.containsKey(i.category)) {
+        categories[i.category] = (categories[i.category] ?? 0.0) + i.amount;
       } else {
-        aggregated[expense.category] = expense.amount;
+        categories[i.category] = i.amount;
       }
     }
-    return aggregated;
+    return categories;
   }
 
-  Map<String, double> calculatePercentage(Map<String, double> aggregated) {
-    double totalAmount = aggregated.values.reduce((a, b) => a + b);
+  Map<String, double> calculatePercentage(Map<String, double> total) {
+    double totalAmount = total.values.fold(0, (sum, element) => sum + element);
     Map<String, double> percentages = {};
-    aggregated.forEach((category, amount) {
+    total.forEach((category, amount) {
       double percentage = (amount / totalAmount) * 100;
       percentages[category] = percentage;
     });
@@ -114,9 +114,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final aggregated = aggregateAmount(expenses);
-
-    final percentages = calculatePercentage(aggregated);
+    final total = totalAmount(expenses);
+    final percentages = calculatePercentage(total);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -127,7 +126,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         backgroundColor: Colors.red,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: () async {
                 final userId =
@@ -137,17 +136,17 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("รวมค่าใช้จ่ายรายเดือน"),
+                        const Text("รวมค่าใช้จ่ายรายเดือน"),
                         ElevatedButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => FormsExpense()),
+                                    builder: (context) => const FormsExpense()),
                               );
                             },
                             child: Text(
@@ -156,7 +155,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                             ),
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(100, 50),
-                               backgroundColor: Colors.red,
+                              backgroundColor: Colors.red,
                             )),
                       ],
                     ),
@@ -191,7 +190,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         });
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 50,
                     ),
                     DropdownButton<int>(
@@ -220,7 +219,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       },
                     ),
                   ]),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   PieChart(
@@ -245,10 +244,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     ),
                   ),
                   Container(
-                    color: Color.fromRGBO(201, 201, 201, 0.89),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 18),
+                    color: const Color.fromRGBO(201, 201, 201, 0.89),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 18),
                       child: Row(
                         children: [
                           Text('ประวัติค่าใช้จ่าย'),
@@ -258,23 +257,23 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                   ),
                   Expanded(
                       child: ListView.separated(
-                    itemCount: aggregated.length,
+                    itemCount: total.length,
                     itemBuilder: (context, index) {
-                      final category = aggregated.keys.elementAt(index);
-                      final totalAmount = aggregated.values.elementAt(index);
+                      final category = total.keys.elementAt(index);
+                      final totalAmount = total.values.elementAt(index);
                       final userId =
                           Provider.of<UserProvider>(context, listen: false)
                               .user
                               .id;
                       return Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 18),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0, horizontal: 18),
                         child: ListTile(
                           contentPadding: EdgeInsets.zero,
-                          visualDensity: VisualDensity(vertical: -4),
+                          visualDensity: const VisualDensity(vertical: -4),
                           title: Text(
                             category,
-                            style: TextStyle(fontSize: 12.0),
+                            style: const TextStyle(fontSize: 12.0),
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: TextButton(
@@ -292,14 +291,14 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                             },
                             child: Text(
                               '${totalAmount.toStringAsFixed(2)} บาท',
-                              style:
-                                  TextStyle(fontSize: 12.0, color: Colors.red),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.red),
                             ),
                           ),
                         ),
                       );
                     },
-                    separatorBuilder: (context, index) => Divider(),
+                    separatorBuilder: (context, index) => const Divider(),
                   )),
                 ],
               ),

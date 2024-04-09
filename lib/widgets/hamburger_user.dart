@@ -18,55 +18,53 @@ class HamburgerUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CatServices catServices = CatServices();
-
     final user = Provider.of<UserProvider>(context).user;
-    final userId = user.id;
-    print('userProvider=>$userId');
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.grey,
               ),
               child: Center(child: Text(user.email))),
           ListTile(
-            leading: Icon(Icons.notifications),
+            leading: const Icon(Icons.notifications),
             title: const Text('การแจ้งเตือน'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotificationUser()),
+                MaterialPageRoute(
+                    builder: (context) => const NotificationUser()),
               );
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.calculate),
+            leading: const Icon(Icons.calculate),
             title: const Text('บันทึกค่าใช้จ่าย'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ExpenseScreen()),
+                MaterialPageRoute(builder: (context) => const ExpenseScreen()),
               );
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.key),
-            title: Text('เปลี่ยนรหัสผ่าน'),
+            leading: const Icon(Icons.key),
+            title: const Text('เปลี่ยนรหัสผ่าน'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EditPassword()),
+                MaterialPageRoute(builder: (context) => const EditPassword()),
               );
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text(
+            leading: const Icon(Icons.logout),
+            title: const Text(
               'ออกจากระบบ',
             ),
             onTap: () {
@@ -74,10 +72,10 @@ class HamburgerUser extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          Center(
+          const Center(
               child: Text(
             'สถิติ',
             style: TextStyle(fontSize: 20),

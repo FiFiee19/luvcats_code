@@ -12,22 +12,21 @@ AppBar customAppBar(BuildContext context) {
       child: Text(
         'LuvCats',
         style: GoogleFonts.kanit(
-          color: Color.fromARGB(255, 247, 108, 185),
+          color: const Color.fromARGB(255, 247, 108, 185),
           fontSize: 30.0,
         ),
       ),
     ),
-   
     actions: [
       TextButton(
         onPressed: () {
           signOutUser(context);
         },
-        child: Row(
+        child: const Row(
           children: [
-            Icon(Icons.logout), 
-            SizedBox(width: 5), 
-            Text('Sign Out'), 
+            Icon(Icons.logout),
+            SizedBox(width: 5),
+            Text('Sign Out'),
           ],
         ),
       ),

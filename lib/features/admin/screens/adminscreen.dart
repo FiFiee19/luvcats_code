@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/widgets/tab_bar_admin.dart';
 
-class HomeSreenAdmin extends StatelessWidget {
-  const HomeSreenAdmin({super.key});
+class HomeScreenAdmin extends StatelessWidget {
+  const HomeScreenAdmin({Key? key}) : super(key: key);
 
   //ออกจากระบบ
   void _signOutUser(BuildContext context) {
@@ -26,20 +26,13 @@ class HomeSreenAdmin extends StatelessWidget {
                   _signOutUser(context);
                   Navigator.pop(context);
                 },
-                child: Text(
+                child: const Text(
                   'ออกจากระบบ',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.w600),
                 )),
-            // ElevatedButton.icon(
-            //     onPressed: () {
-            //       _signOutUser(context);
-            //       Navigator.pop(context);
-            //     },
-            //     icon: Icon(Icons.logout),
-            //     label: Text(''))
           ],
         ),
-        body: TabBar_admin());
+        body: const TabBarAdmin());
   }
 }

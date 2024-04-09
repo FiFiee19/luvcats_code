@@ -29,14 +29,13 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
     });
   }
 
-  
   @override
   void initState() {
     super.initState();
-    
+
     _pages = [
-      OneScreen1(user: widget.user), 
-      TwoScreen2(user: widget.user), 
+      OneScreen1(user: widget.user),
+      TwoScreen2(user: widget.user),
     ];
     print('User ID: $widget.user');
   }
@@ -44,7 +43,6 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-  
     final userId = Provider.of<UserProvider>(context, listen: false).user.id;
     if (userId != null) {
       fetchProfile(userId);
@@ -52,16 +50,12 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
   }
 
   Future<void> fetchProfile(String userId) async {
-    try {
-      User? fetchedUser = await profileServices.fetchIdUser(context, userId);
-      if (fetchedUser != null && mounted) {
-        setState(() {
-          users = fetchedUser;
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-     
+    User? fetchedUser = await profileServices.fetchIdUser(context, userId);
+    if (fetchedUser != null && mounted) {
+      setState(() {
+        users = fetchedUser;
+        isLoading = false;
+      });
     }
   }
 
@@ -76,7 +70,7 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 CircleAvatar(
@@ -86,23 +80,21 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
                   ),
                   radius: 50,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 30,
                 ),
                 Text(
                   widget.user.username,
-                  style: 
-                        const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                      
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black),
                 ),
               ],
             ),
           ),
           BottomNavigationBar(
-            items: [
+            items: const [
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.view_module_outlined,
@@ -132,9 +124,7 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
 
 class OneScreen1 extends StatelessWidget {
   final User user;
-
   const OneScreen1({Key? key, required this.user}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return OneScreenOfUser(user: user);
@@ -143,9 +133,7 @@ class OneScreen1 extends StatelessWidget {
 
 class TwoScreen2 extends StatelessWidget {
   final User user;
-
   const TwoScreen2({Key? key, required this.user}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return TwoSreenOfUser(user: user);

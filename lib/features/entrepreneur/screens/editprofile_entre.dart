@@ -24,7 +24,7 @@ class EditProfileEntre extends StatefulWidget {
 }
 
 class _EditProfileEntreState extends State<EditProfileEntre> {
-  final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController provinceController = TextEditingController();
@@ -44,7 +44,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
     priceController;
     contactController;
     provinceController;
-    _loadPostData();
+    fetchEntre();
   }
 
   @override
@@ -59,33 +59,34 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
     super.dispose();
   }
 
-  void _submitFormProfile() async {
-    if (globalFormKey.currentState!.validate()) {
+  void submitFormProfile() async {
+    if (editFormKey.currentState!.validate()) {
       await entreService.editProfileEntre(
         context,
         widget.CathotelId,
         double.parse(priceController.text),
         contactController.text,
-        provinceController.text, 
-        descriptionController.text, 
+        provinceController.text,
+        descriptionController.text,
         images,
       );
     }
-    if (globalFormKey.currentState!.validate()) {
-      await profileServices.editUser(context, usernameController.text, imagesP![0]);
+    if (editFormKey.currentState!.validate()) {
+      await profileServices.editUser(
+          context, usernameController.text, imagesP![0]);
     }
   }
 
-  Future<void> _loadPostData() async {
+  Future<void> fetchEntre() async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final post =
+      final data =
           await entreService.fetchIdCathotel(context, userProvider.user.id);
-      priceController.text = post.price.toString();
-      descriptionController.text = post.description;
-      contactController.text = post.contact;
-      provinceController.text = post.province;
-      imageUrls = post.images;
+      priceController.text = data.price.toString();
+      descriptionController.text = data.description;
+      contactController.text = data.contact;
+      provinceController.text = data.province;
+      imageUrls = data.images;
 
       final profile =
           await profileServices.fetchIdUser(context, userProvider.user.id);
@@ -101,53 +102,61 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
     }
   }
 
-  void selectImagesFiles() async {
+  void selectImages() async {
     var res = await pickImagesFiles(true);
-    setState(() {
-      images = res;
-    });
+    if (res != null) {
+      // ตรวจสอบว่าผู้ใช้เลือกรูปหรือไม่
+      setState(() {
+        images = res;
+      });
+    }
   }
 
-  void selectImagesGallery() async {
+  void selectImagesMulti() async {
     var res = await pickImagesFiles(false);
-    setState(() {
-      imagesP = res;
-    });
+    if (res != null) {
+      // เช่นเดียวกัน
+      setState(() {
+        imagesP = res;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('แก้ไขโปรไฟล์'),
+        title: const Text('แก้ไขโปรไฟล์'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: globalFormKey,
+          key: editFormKey,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 15),
-                Center(child: Text('เลือกรูปโปรไฟล์')),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
+                const Center(child: Text('เลือกรูปโปรไฟล์')),
+                const SizedBox(height: 15),
                 GestureDetector(
                   onTap: () {
-                    selectImagesGallery(); // Call this method when the avatar is tapped
+                    selectImagesMulti();
                   },
                   child: CircleAvatar(
-                    radius: 80, // Adjust the radius to fit your design
+                    radius: 80,
                     backgroundColor: Colors.grey.shade200,
-                    backgroundImage: imagesP != null
-                        ? FileImage(imagesP![0]) as ImageProvider
+                    backgroundImage: imagesP != null && imagesP!.isNotEmpty
+                        ? FileImage(imagesP!.first) as ImageProvider
                         : imageUrl != null
                             ? NetworkImage(imageUrl!) as ImageProvider
                             : null,
-                    child: imagesP == null && imageUrl == null
-                        ? Icon(Icons.camera_alt, color: Colors.grey, size: 50)
-                        : null, 
+                    child:
+                        imagesP == null || imagesP!.isEmpty && imageUrl == null
+                            ? const Icon(Icons.camera_alt,
+                                color: Colors.grey, size: 50)
+                            : null,
                   ),
                 ),
                 Center(
@@ -155,10 +164,10 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     icon: const Icon(
                       Icons.image,
                     ),
-                    onPressed: () => selectImagesGallery(),
+                    onPressed: () => selectImagesMulti(),
                   ),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 TextFormField(
                   controller: usernameController,
                   decoration: const InputDecoration(
@@ -171,9 +180,9 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     return null;
                   },
                 ),
-                SizedBox(height: 15),
-                Center(child: Text('เลือกรูปของร้าน')),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
+                const Center(child: Text('เลือกรูปของร้าน')),
+                const SizedBox(height: 15),
                 images.isNotEmpty || imageUrls.isNotEmpty
                     ? Column(
                         children: [
@@ -243,7 +252,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                     icon: const Icon(
                       Icons.image,
                     ),
-                    onPressed: () => selectImagesFiles(),
+                    onPressed: () => selectImages(),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -328,7 +337,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                 const SizedBox(height: 30),
                 CustomButton(
                   text: 'บันทึก',
-                  onTap: _submitFormProfile,
+                  onTap: submitFormProfile,
                 ),
               ],
             ),

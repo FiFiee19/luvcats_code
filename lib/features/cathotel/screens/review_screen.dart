@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
+import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/cathotel/screens/forms_review.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
@@ -25,18 +25,14 @@ class _ReviewScreenState extends State<ReviewScreen> {
   @override
   void initState() {
     super.initState();
-    loadReviews();
+    fetchReviews();
     calculateAverageRating();
   }
 
-  Future<void> loadReviews() async {
-    setState(() {
-      isLoading = true;
-    });
+  Future<void> fetchReviews() async {
     try {
       reviews =
           await cathotelServices.fetchReviews(context, widget.cathotel.id);
-      print(reviews);
     } catch (e) {
       print(e.toString());
     }
@@ -52,8 +48,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
       return 0.0;
     }
     double sum = 0;
-    for (var review in reviews) {
-      sum += double.parse(review.rating.toString());
+    for (var i in reviews) {
+      sum += double.parse(i.rating.toString());
     }
     return sum / reviews.length;
   }
@@ -69,16 +65,16 @@ class _ReviewScreenState extends State<ReviewScreen> {
         ),
       ),
       body: RefreshIndicator(
-          onRefresh: loadReviews,
+          onRefresh: fetchReviews,
           child: SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Text(
-                    calculateAverageRating()
-                        .toStringAsFixed(1), 
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    calculateAverageRating().toStringAsFixed(1),
+                    style: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                 ),
                 RatingBar.builder(
@@ -87,21 +83,22 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   direction: Axis.horizontal,
                   allowHalfRating: true,
                   itemCount: 5,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => const Icon(
                     Icons.star,
                     color: Colors.amber,
                   ),
                   onRatingUpdate: (rating) {},
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Text(
                     "( ${reviews.length} )",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Divider(),
+                const Divider(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: reviews
@@ -124,7 +121,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                               review.user!.imagesP,
                                             ),
                                             radius: 15),
-                                        SizedBox(width: 10),
+                                        const SizedBox(width: 10),
                                         Text(
                                           review.user!.username,
                                           style: TextStyle(
@@ -144,9 +141,9 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                         allowHalfRating: true,
                                         itemCount: 5,
                                         itemSize: 20.0,
-                                        itemPadding: EdgeInsets.symmetric(
+                                        itemPadding: const EdgeInsets.symmetric(
                                             horizontal: 2.0),
-                                        itemBuilder: (context, _) => Icon(
+                                        itemBuilder: (context, _) => const Icon(
                                           Icons.star,
                                           color: Colors.amber,
                                         ),
@@ -158,7 +155,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                           left: 40, bottom: 10),
                                       child: Text(
                                         review.message,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black,
                                         ),
@@ -168,11 +165,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                       padding: const EdgeInsets.only(
                                           left: 6, bottom: 10),
                                       child: Text(
-                                        review.createdAt != null
-                                            ? DateFormat('yyyy-MM-dd').format(
-                                                DateTime.parse(
-                                                    review.createdAt!))
-                                            : 'ไม่ทราบวันที่',
+                                        formatDateTime(review.createdAt),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade600,
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -184,7 +181,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                                   const EdgeInsets.fromLTRB(
                                                       8.0, 8.0, 18.0, 8.0),
                                               decoration: BoxDecoration(
-                                                color: Color.fromARGB(
+                                                color: const Color.fromARGB(
                                                     255, 216, 212, 212),
                                                 borderRadius:
                                                     BorderRadius.circular(8.0),
@@ -193,7 +190,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
+                                                  const Text(
                                                     'การตอบกลับของร้าน',
                                                     style: TextStyle(
                                                       fontWeight:
@@ -201,22 +198,21 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                                       fontSize: 14.0,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 8.0),
+                                                  const SizedBox(height: 8.0),
                                                   Text(
                                                     review.reply!.message,
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontSize: 14.0,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             )
-                                          : SizedBox
-                                              .shrink(), 
+                                          : const SizedBox.shrink(),
                                     ),
                                   ],
                                 ),
-                                Divider()
+                                const Divider()
                               ],
                             ),
                           ),
@@ -230,7 +226,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
         child: FloatingActionButton(
-          child: const Icon(
+          child: Icon(
             Icons.add,
             color: Colors.white,
           ),

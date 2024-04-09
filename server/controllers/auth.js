@@ -36,6 +36,8 @@ exports.signup = async (req, res) => {
 
     // Send success message
     res.status(201).send('ลงทะเบียนสำเร็จ');
+
+    
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -67,12 +69,6 @@ exports.signin = async (req, res) => {
     //   // const refreshToken = jwt.sign({ id: user._id }, 'refresh_jwt_secret', { expiresIn: '7d' });
 
     res.json({ token, user })
-
-
-
-
-    // const token = jwt.sign(payload, "jwtsecret", { expiresIn: '1h' });
-    // res.json({ token, user });
 
   } catch (err) {
     console.error(err);

@@ -8,19 +8,19 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:provider/provider.dart';
 
-class Profile_Entre extends StatefulWidget {
-  const Profile_Entre({super.key});
+class ProfileEntre extends StatefulWidget {
+  const ProfileEntre({Key? key,
+  }) : super(key: key);
 
   @override
-  State<Profile_Entre> createState() => _Profile_EntreState();
+  State<ProfileEntre> createState() => _ProfileEntreState();
 }
 
-class _Profile_EntreState extends State<Profile_Entre> {
+class _ProfileEntreState extends State<ProfileEntre> {
   Cathotel? cathotel;
   final CathotelServices cathotelServices = CathotelServices();
   final AuthService authService = AuthService();
   CarouselController buttonCarouselController = CarouselController();
-  int _current = 0;
 
   @override
   void initState() {

@@ -30,23 +30,13 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
   @override
   void initState() {
     super.initState();
-    loadComments();
+    fetchComments();
   }
 
   //เรียกข้อมูลCommentsจากcommuServices
-  Future<void> loadComments() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      if (widget.commu.id != null) {
-        comments = await commuServices.fetchComment(context, widget.commu.id!);
-      } else {
-        print("CommuId is null");
-      }
-    } catch (e) {
-      print(e.toString());
-    }
+  Future<void> fetchComments() async {
+    comments = await commuServices.fetchComment(context, widget.commu.id!);
+
     if (mounted) {
       setState(() {
         isLoading = false;
@@ -118,7 +108,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
     return Scaffold(
       appBar: AppBar(),
       body: RefreshIndicator(
-        onRefresh: loadComments,
+        onRefresh: fetchComments,
         child: SingleChildScrollView(
             child: Column(
           children: [
@@ -126,7 +116,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
               padding: const EdgeInsets.only(left: 10, bottom: 10),
               child: Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   CircleAvatar(
@@ -136,23 +126,23 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                     ),
                     radius: 20,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Text(
-                    "${widget.commu.user!.username}",
-                    style: TextStyle(
+                    widget.commu.user!.username,
+                    style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: Colors.black),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   if (userType == 'admin')
                     IconButton(
                         onPressed: () {
                           _showDeleteDialog(widget.commu.id!);
                         },
-                        icon: Icon(Icons.delete_sharp)),
+                        icon: const Icon(Icons.delete_sharp)),
                 ],
               ),
             ),
@@ -166,21 +156,21 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.commu.title}",
-                    style: TextStyle(
+                    widget.commu.title,
+                    style: const TextStyle(
                         fontWeight: FontWeight.w700, color: Colors.black),
                   ),
                   const SizedBox(
                     height: 10.0,
                   ),
                   Text(
-                    "${widget.commu.description}",
+                    widget.commu.description,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.grey.shade500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Row(
@@ -192,8 +182,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                           color: Colors.grey.shade600,
                         ),
                       ),
-
-                      Spacer(), 
+                      const Spacer(),
                       IconButton(
                         icon: widget.commu.likes.contains(user)
                             ? const Icon(
@@ -205,12 +194,11 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                               ),
                         onPressed: () async {},
                       ),
-
                       Text(
-                        '${widget.commu.likes.length}',
-                        style: TextStyle(color: Colors.grey),
+                        "${widget.commu.likes.length}",
+                        style: const TextStyle(color: Colors.grey),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                     ],
@@ -222,12 +210,12 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                       children: [
                         Text(
                           "${widget.commu.comments.length} ความคิดเห็น",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
@@ -251,7 +239,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                                             comment.user!.imagesP,
                                           ),
                                           radius: 15),
-                                      SizedBox(width: 10),
+                                      const SizedBox(width: 10),
                                       Text(
                                         comment.user!.username,
                                         style: TextStyle(
@@ -267,7 +255,7 @@ class _DetailCommuAdminState extends State<DetailCommuAdmin> {
                                         left: 40, bottom: 10),
                                     child: Text(
                                       comment.message,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
                                       ),

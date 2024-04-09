@@ -19,10 +19,9 @@ class StrayCatAdmin extends StatefulWidget {
 
 class _StrayCatAdminState extends State<StrayCatAdmin> {
   List<Straycat>? straycatlist;
-  Straycat? straycat;
+  List<Straycat>? allCats;
   final CatServices catServices = CatServices();
-
-  ProfileServices profileService = ProfileServices();
+  final ProfileServices profileService = ProfileServices();
   String? selectedProvince;
   String? selectedGender;
   final List<String> listgender = [
@@ -38,14 +37,14 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
 
   //เรียกข้อมูลAllCatsจากcatServices
   Future<void> fetchAllCats() async {
-    List<Straycat>? allCats = await catServices.fetchAllCats(context);
+    allCats = await catServices.fetchAllCats(context);
 
     if (allCats != null && mounted) {
-      allCats.sort((a, b) =>
+      allCats!.sort((a, b) =>
           DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
 
       setState(() {
-        straycatlist = allCats.where((cat) {
+        straycatlist = allCats!.where((cat) {
           final bool matchProvince =
               selectedProvince == null || cat.province == selectedProvince;
           final bool matchGender =
@@ -59,7 +58,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
   void _showDeleteDialog(String straycat) {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: const Center(
           child: Text(
@@ -94,11 +93,107 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
   Widget build(BuildContext context) {
     Widget bodyContent;
     if (straycatlist == null) {
-      bodyContent = Center(child: const CircularProgressIndicator());
+      bodyContent = const Center(child: CircularProgressIndicator());
     } else if (straycatlist!.isEmpty) {
       return Scaffold(
+        appBar: AppBar(
+          actions: [
+            const SearchProfile(),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: () async {
+                final result = await showDialog<Map<String, String?>>(
+                  context: context,
+                  builder: (context) {
+                    String? tempSelectedProvince = selectedProvince;
+                    String? tempSelectedGender = selectedGender;
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return AlertDialog(
+                          title: const Text("กรองข้อมูล"),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                DropdownButtonFormField<String>(
+                                  value: tempSelectedProvince,
+                                  hint: const Text("เลือกจังหวัด"),
+                                  items: province.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      tempSelectedProvince = value;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(height: 10),
+                                DropdownButtonFormField<String>(
+                                  value: tempSelectedGender,
+                                  hint: const Text("เลือกเพศ"),
+                                  items: listgender
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      tempSelectedGender = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text("ยกเลิก"),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop({
+                                'province': tempSelectedProvince,
+                                'gender': tempSelectedGender,
+                              }),
+                              child: const Text("ตกลง"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+
+                if (result != null) {
+                  setState(() {
+                    selectedProvince = result['province'];
+                    selectedGender = result['gender'];
+                    fetchAllCats();
+                  });
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.restart_alt_rounded),
+              onPressed: () {
+                setState(() {
+                  selectedProvince = null;
+                  selectedGender = null;
+                  fetchAllCats();
+                });
+              },
+            ),
+          ],
+        ),
         backgroundColor: Colors.grey[200],
-        body: Center(
+        body: const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -169,7 +264,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                                 ),
                                 radius: 10,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(
@@ -235,7 +330,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                               const EdgeInsets.only(left: 8.0, bottom: 8.0),
                           child: Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.place,
                                 size: 18,
                                 color: Colors.grey,
@@ -250,12 +345,12 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                                   color: Colors.grey.shade500,
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               IconButton(
                                   onPressed: () {
                                     _showDeleteDialog(straycat.id!);
                                   },
-                                  icon: Icon(Icons.delete_sharp)),
+                                  icon: const Icon(Icons.delete_sharp)),
                             ],
                           ),
                         ),
@@ -272,9 +367,9 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
 
     return Scaffold(
       appBar: AppBar(actions: [
-        SearchProfile(),
+        const SearchProfile(),
         IconButton(
-          icon: Icon(Icons.filter_list),
+          icon: const Icon(Icons.filter_list),
           onPressed: () async {
             final result = await showDialog<Map<String, String?>>(
               context: context,
@@ -284,14 +379,14 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                 return StatefulBuilder(
                   builder: (context, setState) {
                     return AlertDialog(
-                      title: Text("กรองข้อมูล"),
+                      title: const Text("กรองข้อมูล"),
                       content: SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             DropdownButtonFormField<String>(
                               value: tempSelectedProvince,
-                              hint: Text("เลือกจังหวัด"),
+                              hint: const Text("เลือกจังหวัด"),
                               items: province.map<DropdownMenuItem<String>>(
                                   (String value) {
                                 return DropdownMenuItem<String>(
@@ -305,10 +400,10 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                                 });
                               },
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             DropdownButtonFormField<String>(
                               value: tempSelectedGender,
-                              hint: Text("เลือกเพศ"),
+                              hint: const Text("เลือกเพศ"),
                               items: listgender.map<DropdownMenuItem<String>>(
                                   (String value) {
                                 return DropdownMenuItem<String>(
@@ -328,14 +423,14 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text("ยกเลิก"),
+                          child: const Text("ยกเลิก"),
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop({
                             'province': tempSelectedProvince,
                             'gender': tempSelectedGender,
                           }),
-                          child: Text("ตกลง"),
+                          child: const Text("ตกลง"),
                         ),
                       ],
                     );
@@ -354,7 +449,7 @@ class _StrayCatAdminState extends State<StrayCatAdmin> {
           },
         ),
         IconButton(
-          icon: Icon(Icons.restart_alt_rounded),
+          icon: const Icon(Icons.restart_alt_rounded),
           onPressed: () {
             setState(() {
               selectedProvince = null;

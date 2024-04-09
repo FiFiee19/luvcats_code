@@ -21,14 +21,14 @@ class EditStraycats extends StatefulWidget {
 
 class _EditStraycatsState extends State<EditStraycats> {
   final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController breedController;
-  late TextEditingController descriptionController;
-  late TextEditingController provinceController;
-  late TextEditingController genderController;
+  final TextEditingController breedController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController provinceController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
   bool isLoading = true;
   List<File> images = []; //รูปใหม่
   List<String> imageUrls = []; //รูปเก่า
-  CatServices catServices = CatServices();
+  final CatServices catServices = CatServices();
   final List<String> listgender = [
     'ผู้',
     'เมีย',
@@ -38,11 +38,11 @@ class _EditStraycatsState extends State<EditStraycats> {
   @override
   void initState() {
     super.initState();
-    breedController = TextEditingController();
-    descriptionController = TextEditingController();
-    provinceController = TextEditingController();
-    genderController = TextEditingController();
-    _loadPostData();
+    breedController.text;
+    descriptionController.text;
+    provinceController.text;
+    genderController.text;
+    fetchStraycat();
   }
 
   void selectImages() async {
@@ -78,7 +78,7 @@ class _EditStraycatsState extends State<EditStraycats> {
     }
   }
 
-  Future<void> _loadPostData() async {
+  Future<void> fetchStraycat() async {
     try {
       final post =
           await catServices.fetchIdStraycats(context, widget.starycatsId);
@@ -175,7 +175,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                 Center(
                   child: IconButton(
                     icon: const Icon(
-                      Icons.upload_sharp,
+                      Icons.image,
                     ),
                     onPressed: () => selectImages(),
                   ),
@@ -194,7 +194,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Text('เพศ'),
+                const Text('เพศ'),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
@@ -234,7 +234,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Text('จังหวัด'),
+                const Text('จังหวัด'),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
@@ -290,7 +290,7 @@ class _EditStraycatsState extends State<EditStraycats> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                     onPressed: _submitForm,
-                    child: const Text('บันทึก',
+                    child: Text('บันทึก',
                         style: TextStyle(
                           color: Colors.white,
                         )),

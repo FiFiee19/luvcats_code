@@ -11,7 +11,9 @@ import 'package:luvcats_app/widgets/search_commu.dart';
 import 'package:provider/provider.dart';
 
 class CommuScreen extends StatefulWidget {
-  const CommuScreen({super.key});
+  const CommuScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<CommuScreen> createState() => _CommuScreenState();
@@ -43,20 +45,20 @@ class _CommuScreenState extends State<CommuScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return Center(child: const CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     } else if (commu!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
-        body: Center(
+        body: const Center(
           child: Text(
-            'No Post',
+            'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
           child: FloatingActionButton(
-            child: const Icon(
+            child: Icon(
               Icons.add,
               color: Colors.white,
             ),
@@ -65,7 +67,7 @@ class _CommuScreenState extends State<CommuScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FormsCommu(),
+                  builder: (context) => const FormsCommu(),
                 ),
               );
             },
@@ -106,7 +108,8 @@ class _CommuScreenState extends State<CommuScreen> {
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
@@ -114,19 +117,18 @@ class _CommuScreenState extends State<CommuScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             CircleAvatar(
                               backgroundColor: Colors.grey,
                               backgroundImage:
                                   NetworkImage(commuData.user!.imagesP),
                               radius: 20,
                             ),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             Text(
                               commuData.user!.username,
                               style:
@@ -137,15 +139,13 @@ class _CommuScreenState extends State<CommuScreen> {
                                             color: Colors.black),
                                       ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                       ),
-                      SizedBox(height: 10),
-
+                      const SizedBox(height: 10),
                       if (commuData.images.isNotEmpty)
                         CustomCarouselSlider(images: commuData.images),
-
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -190,8 +190,8 @@ class _CommuScreenState extends State<CommuScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${commuData.likes.length}',
-                                  style: TextStyle(color: Colors.grey),
+                                  "${commuData.likes.length}",
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.comment),
@@ -203,8 +203,8 @@ class _CommuScreenState extends State<CommuScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${commuData.comments.length}', 
-                                  style: TextStyle(color: Colors.grey),
+                                  "${commuData.comments.length}",
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -232,7 +232,7 @@ class _CommuScreenState extends State<CommuScreen> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
           child: FloatingActionButton(
-            child: const Icon(
+            child: Icon(
               Icons.add,
               color: Colors.white,
             ),
@@ -241,7 +241,7 @@ class _CommuScreenState extends State<CommuScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FormsCommu(),
+                  builder: (context) => const FormsCommu(),
                 ),
               );
             },

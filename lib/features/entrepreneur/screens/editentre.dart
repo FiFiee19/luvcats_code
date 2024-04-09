@@ -17,22 +17,20 @@ class EditEntreScreen extends StatefulWidget {
 }
 
 class _EditEntreScreenState extends State<EditEntreScreen> {
-  final GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  late TextEditingController nameController = TextEditingController();
-  late TextEditingController addressController = TextEditingController();
-  late TextEditingController phoneController = TextEditingController();
+  final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   bool isLoading = true;
-
-  EntreService entreService = EntreService();
+  final EntreService entreService = EntreService();
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController();
-    addressController = TextEditingController();
-    phoneController = TextEditingController();
-
-    _loadPostData();
+    nameController.text;
+    addressController.text;
+    phoneController.text;
+    fetchEntre();
   }
 
   @override
@@ -45,8 +43,8 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
     super.dispose();
   }
 
-  void _submitForm() async {
-    if (globalFormKey.currentState!.validate()) {
+  void submitForm() async {
+    if (editFormKey.currentState!.validate()) {
       await entreService.editEntre(
         context,
         widget.entreId,
@@ -57,17 +55,17 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
     }
   }
 
-  //โหลดข้อมูลผู้ประกอบการ
-  Future<void> _loadPostData() async {
+  //เรียกข้อมูลผู้ประกอบการ
+  Future<void> fetchEntre() async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final post =
+      final data =
           await entreService.fetchIdEntre(context, userProvider.user.id);
-      nameController.text = post.name;
-      addressController.text = post.store_address;
-      phoneController.text = post.phone;
+      nameController.text = data.name;
+      addressController.text = data.store_address;
+      phoneController.text = data.phone;
     } catch (e) {
-      print('Error loading post data: $e');
+      print('Error loading data: $e');
     }
     if (mounted) {
       setState(() {
@@ -85,7 +83,7 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: globalFormKey,
+          key: editFormKey,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -129,11 +127,10 @@ class _EditEntreScreenState extends State<EditEntreScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 CustomButton(
                   text: 'บันทึก',
-                  onTap: _submitForm,
+                  onTap: submitForm,
                 ),
               ],
             ),

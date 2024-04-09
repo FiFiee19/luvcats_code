@@ -13,7 +13,9 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class FormsStrayCat extends StatefulWidget {
-  const FormsStrayCat({super.key});
+  const FormsStrayCat({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<FormsStrayCat> createState() => _FormsStrayCatState();
@@ -27,7 +29,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
   final TextEditingController genderController = TextEditingController();
   final CatServices catServices = CatServices();
   List<File> images = [];
-  final _postCatFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> postCatFormKey = GlobalKey<FormState>();
   String selectedGender = 'ไม่ทราบ';
   String selectedProvince = 'กรุงเทพมหานคร';
   final List<String> listgender = [
@@ -48,7 +50,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
   }
 
   void postcat() async {
-    if (_postCatFormKey.currentState!.validate()) {
+    if (postCatFormKey.currentState!.validate()) {
       if (images.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -103,7 +105,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
           preferredSize: const Size.fromHeight(50), child: AppBar()),
       body: SingleChildScrollView(
         child: Form(
-          key: _postCatFormKey,
+          key: postCatFormKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
@@ -158,7 +160,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
                 Center(
                   child: IconButton(
                     icon: const Icon(
-                      Icons.upload_sharp,
+                      Icons.image,
                     ),
                     onPressed: () => selectImages(),
                   ),
@@ -177,7 +179,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
                       hintText: 'สายพันธุ์',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -268,7 +270,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
                       hintText: 'รายละเอียด',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),

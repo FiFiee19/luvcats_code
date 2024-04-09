@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
@@ -7,9 +6,12 @@ import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/straycat/screens/editstraycats.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/widgets/carouselslider.dart';
 
 class TwoScreen extends StatefulWidget {
-  const TwoScreen({super.key});
+  const TwoScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<TwoScreen> createState() => _TwoScreenState();
@@ -22,7 +24,6 @@ class _TwoScreenState extends State<TwoScreen> {
   final ProfileServices profileService = ProfileServices();
   Map<String, bool> statusCats = {};
 
-  CarouselController buttonCarouselController = CarouselController();
   int _current = 0;
 
   @override
@@ -85,11 +86,11 @@ class _TwoScreenState extends State<TwoScreen> {
   @override
   Widget build(BuildContext context) {
     if (straycats == null) {
-      return Center(child: const CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     } else if (straycats!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
-        body: Center(
+        body: const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -117,7 +118,8 @@ class _TwoScreenState extends State<TwoScreen> {
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
@@ -125,58 +127,12 @@ class _TwoScreenState extends State<TwoScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CarouselSlider(
-                        items: catData.images.map(
-                          (i) {
-                            return Builder(
-                              builder: (BuildContext context) => Image.network(
-                                i,
-                                fit: BoxFit.contain,
-                                height: 300,
-                              ),
-                            );
-                          },
-                        ).toList(),
-                        carouselController: buttonCarouselController,
-                        options: CarouselOptions(
-                          viewportFraction: 1,
-                          height: 200,
-                          enableInfiniteScroll: false,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _current = index;
-                            });
-                          },
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: catData.images.asMap().entries.map((entry) {
-                          return GestureDetector(
-                            onTap: () => buttonCarouselController
-                                .animateToPage(entry.key),
-                            child: Container(
-                              width: 12.0,
-                              height: 12.0,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 4.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _current == entry.key
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.3),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                      CustomCarouselSlider(images: catData.images),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             CircleAvatar(
@@ -186,11 +142,11 @@ class _TwoScreenState extends State<TwoScreen> {
                               ),
                               radius: 20,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Text(
-                              "${catData.user!.username}",
+                              catData.user!.username,
                               style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
@@ -319,21 +275,18 @@ class _TwoScreenState extends State<TwoScreen> {
                                         );
                                       } else {}
                                     },
-                                    icon: Icon(Icons.edit),
+                                    icon: const Icon(Icons.edit),
                                   ),
                                   IconButton(
                                     onPressed: () {
                                       _showDeleteDialog(catData.id!);
                                     },
-                                    icon: Icon(Icons.delete_sharp),
+                                    icon: const Icon(Icons.delete_sharp),
                                   )
                                 ],
                               ),
                               const SizedBox(
-                                height: 10.0,
-                              ),
-                              const SizedBox(
-                                height: 10.0,
+                                height: 20.0,
                               ),
                               if (!(statusCats[catData.id] ?? false))
                                 Center(
@@ -347,20 +300,20 @@ class _TwoScreenState extends State<TwoScreen> {
                                     style: ElevatedButton.styleFrom(
                                         minimumSize: const Size(40, 40),
                                         backgroundColor: Colors.red),
-                                    child: Text(
+                                    child: const Text(
                                       'ได้บ้านแล้ว',
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
                                 ),
                               if (statusCats[catData.id] ?? false)
-                                Center(
+                                const Center(
                                   child: Text('ได้บ้านแล้ว',
                                       style: TextStyle(color: Colors.red)),
                                 ),
                             ]),
                       ),
-                      SizedBox(
+                     const SizedBox(
                         height: 20,
                       ),
                     ],

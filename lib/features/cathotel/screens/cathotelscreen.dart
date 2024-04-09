@@ -20,6 +20,7 @@ class CatHotelScreen extends StatefulWidget {
 class _CatHotelScreenState extends State<CatHotelScreen> {
   List<Cathotel>? cathotellist;
   Cathotel? cathotel;
+  List<Cathotel>? allcathotel;
   final CathotelServices cathotelServices = CathotelServices();
   final AuthService authService = AuthService();
   String? selectedProvince;
@@ -38,11 +39,11 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
 
   //เรียกข้อมูลAllCathotelในcathotelServices
   Future<void> fetchAllCathotel() async {
-    List<Cathotel>? allcathotel =
+     allcathotel =
         await cathotelServices.fetchAllCathotel(context);
     if (allcathotel != null && mounted) {
       setState(() {
-        cathotellist = allcathotel.where((cathotel) {
+        cathotellist = allcathotel!.where((cathotel) {
           final bool matchProvince =
               selectedProvince == null || cathotel.province == selectedProvince;
           final bool matchPrice = cathotel.price >= _currentRangeStart &&
@@ -58,9 +59,9 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
     Widget bodyContent;
 
     if (cathotellist == null) {
-      bodyContent = Center(child: const CircularProgressIndicator());
+      bodyContent = const Center(child: CircularProgressIndicator());
     } else if (cathotellist!.isEmpty) {
-      bodyContent = Center(
+      bodyContent = const Center(
         child: Text(
           'ไม่มีโรงแรมแมว',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -130,7 +131,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                 ),
                                 radius: 10,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(
@@ -172,7 +173,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.place,
                                     size: 18,
                                     color: Colors.grey,
@@ -192,19 +193,19 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   ),
                                 ],
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: Text(
                                   "${catData.price}/คืน",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 12,
                                     color: Colors.red,
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 3,
                               )
                             ],
@@ -224,7 +225,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               showSearch(
                 context: context,
@@ -233,7 +234,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list),
             onPressed: () async {
               final result = await showDialog<Map<String, String?>>(
                 context: context,
@@ -242,14 +243,14 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                   return StatefulBuilder(
                     builder: (context, setState) {
                       return AlertDialog(
-                        title: Text("กรองข้อมูล"),
+                        title: const Text("กรองข้อมูล"),
                         content: SingleChildScrollView(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               DropdownButtonFormField<String>(
                                 value: tempSelectedProvince,
-                                hint: Text("เลือกจังหวัด"),
+                                hint: const Text("เลือกจังหวัด"),
                                 items: province.map<DropdownMenuItem<String>>(
                                     (String value) {
                                   return DropdownMenuItem<String>(
@@ -263,19 +264,19 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                                   });
                                 },
                               ),
-                              SizedBox(height: 10),
-                              Text('เลือกช่วงราคา'),
+                              const SizedBox(height: 10),
+                              const Text('เลือกช่วงราคา'),
                               TextField(
-                                decoration:
-                                    InputDecoration(hintText: "ราคาเริ่มต้น"),
+                                decoration: const InputDecoration(
+                                    hintText: "ราคาเริ่มต้น"),
                                 keyboardType: TextInputType.number,
                                 onChanged: (value) {
                                   startPrice = value;
                                 },
                               ),
                               TextField(
-                                decoration:
-                                    InputDecoration(hintText: "ราคาสิ้นสุด"),
+                                decoration: const InputDecoration(
+                                    hintText: "ราคาสิ้นสุด"),
                                 keyboardType: TextInputType.number,
                                 onChanged: (value) {
                                   endPrice = value;
@@ -287,7 +288,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            child: Text("ยกเลิก"),
+                            child: const Text("ยกเลิก"),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop({
@@ -295,7 +296,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
                               'startPrice': startPrice,
                               'endPrice': endPrice,
                             }),
-                            child: Text("ตกลง"),
+                            child: const Text("ตกลง"),
                           ),
                         ],
                       );
@@ -323,7 +324,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.restart_alt_rounded),
+            icon: const Icon(Icons.restart_alt_rounded),
             onPressed: () {
               setState(() {
                 fetchAllCathotel();

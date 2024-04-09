@@ -58,15 +58,15 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
   Widget build(BuildContext context) {
     Widget bodyContent;
     if (straycatlist == null) {
-      bodyContent = Center(child: const CircularProgressIndicator());
+      bodyContent = const Center(child: CircularProgressIndicator());
     } else if (straycatlist!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           actions: [
-            SearchProfile(),
+            const SearchProfile(),
             IconButton(
-              icon: Icon(Icons.filter_list),
+              icon: const Icon(Icons.filter_list),
               onPressed: () async {
                 final result = await showDialog<Map<String, String?>>(
                   context: context,
@@ -76,14 +76,14 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                     return StatefulBuilder(
                       builder: (context, setState) {
                         return AlertDialog(
-                          title: Text("กรองข้อมูล"),
+                          title: const Text("กรองข้อมูล"),
                           content: SingleChildScrollView(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 DropdownButtonFormField<String>(
                                   value: tempSelectedProvince,
-                                  hint: Text("เลือกจังหวัด"),
+                                  hint: const Text("เลือกจังหวัด"),
                                   items: province.map<DropdownMenuItem<String>>(
                                       (String value) {
                                     return DropdownMenuItem<String>(
@@ -97,10 +97,10 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                     });
                                   },
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 DropdownButtonFormField<String>(
                                   value: tempSelectedGender,
-                                  hint: Text("เลือกเพศ"),
+                                  hint: const Text("เลือกเพศ"),
                                   items: listgender
                                       .map<DropdownMenuItem<String>>(
                                           (String value) {
@@ -121,14 +121,14 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: Text("ยกเลิก"),
+                              child: const Text("ยกเลิก"),
                             ),
                             TextButton(
                               onPressed: () => Navigator.of(context).pop({
                                 'province': tempSelectedProvince,
                                 'gender': tempSelectedGender,
                               }),
-                              child: Text("ตกลง"),
+                              child: const Text("ตกลง"),
                             ),
                           ],
                         );
@@ -147,7 +147,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.restart_alt_rounded),
+              icon: const Icon(Icons.restart_alt_rounded),
               onPressed: () {
                 setState(() {
                   selectedProvince = null;
@@ -158,7 +158,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
             ),
           ],
         ),
-        body: Center(
+        body: const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -167,7 +167,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
           child: FloatingActionButton(
-            child: const Icon(
+            child: Icon(
               Icons.add,
               color: Colors.white,
             ),
@@ -176,7 +176,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FormsStrayCat(),
+                  builder: (context) => const FormsStrayCat(),
                 ),
               );
             },
@@ -249,7 +249,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 ),
                                 radius: 10,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(
@@ -296,7 +296,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 ),
                               ),
                               Text(
-                                " ${straycat.gender}",
+                                straycat.gender,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -319,7 +319,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                               const EdgeInsets.only(left: 8.0, bottom: 8.0),
                           child: Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.place,
                                 size: 18,
                                 color: Colors.grey,
@@ -328,14 +328,14 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 width: 5.0,
                               ),
                               Text(
-                                "${straycat.province}",
+                                straycat.province,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.grey.shade500,
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: Text(
@@ -363,9 +363,9 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
 
     return Scaffold(
       appBar: AppBar(actions: [
-        SearchProfile(),
+        const SearchProfile(),
         IconButton(
-          icon: Icon(Icons.filter_list),
+          icon: const Icon(Icons.filter_list),
           onPressed: () async {
             final result = await showDialog<Map<String, String?>>(
               context: context,
@@ -375,14 +375,14 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                 return StatefulBuilder(
                   builder: (context, setState) {
                     return AlertDialog(
-                      title: Text("กรองข้อมูล"),
+                      title: const Text("กรองข้อมูล"),
                       content: SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             DropdownButtonFormField<String>(
                               value: tempSelectedProvince,
-                              hint: Text("เลือกจังหวัด"),
+                              hint: const Text("เลือกจังหวัด"),
                               items: province.map<DropdownMenuItem<String>>(
                                   (String value) {
                                 return DropdownMenuItem<String>(
@@ -396,10 +396,10 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                                 });
                               },
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             DropdownButtonFormField<String>(
                               value: tempSelectedGender,
-                              hint: Text("เลือกเพศ"),
+                              hint: const Text("เลือกเพศ"),
                               items: listgender.map<DropdownMenuItem<String>>(
                                   (String value) {
                                 return DropdownMenuItem<String>(
@@ -419,14 +419,14 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text("ยกเลิก"),
+                          child: const Text("ยกเลิก"),
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop({
                             'province': tempSelectedProvince,
                             'gender': tempSelectedGender,
                           }),
-                          child: Text("ตกลง"),
+                          child: const Text("ตกลง"),
                         ),
                       ],
                     );
@@ -445,7 +445,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
           },
         ),
         IconButton(
-          icon: Icon(Icons.restart_alt_rounded),
+          icon: const Icon(Icons.restart_alt_rounded),
           onPressed: () {
             setState(() {
               selectedProvince = null;
@@ -458,7 +458,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
       backgroundColor: Colors.grey[200],
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Expanded(
@@ -469,7 +469,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
         child: FloatingActionButton(
-          child: const Icon(
+          child: Icon(
             Icons.add,
             color: Colors.white,
           ),
@@ -478,7 +478,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FormsStrayCat(),
+                builder: (context) => const FormsStrayCat(),
               ),
             );
           },

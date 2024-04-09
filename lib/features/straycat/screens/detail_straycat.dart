@@ -20,8 +20,39 @@ class DetailStraycatScreen extends StatefulWidget {
 class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
   final ProfileServices profileService = ProfileServices();
   //ลบStrayCat
-  void delete(String straycat) {
-    profileService.deleteStrayCat(context, straycat);
+
+  void _showDeleteDialog(String straycat) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteStrayCat(context, straycat);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -29,17 +60,14 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userType = userProvider.user.type;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBar(title: Text('')),
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
           child: Column(
         children: [
           CustomCarouselSlider(
             images: widget.straycat.images,
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -49,7 +77,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     CircleAvatar(
@@ -59,7 +87,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                       ),
                       radius: 16,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Text(
@@ -74,7 +102,7 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Padding(
@@ -179,9 +207,9 @@ class _DetailStraycatScreenState extends State<DetailStraycatScreen> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        delete(widget.straycat.id!);
+                        _showDeleteDialog(widget.straycat.id!);
                       },
-                      icon: Icon(Icons.delete_sharp)),
+                      icon: const Icon(Icons.delete_sharp)),
                 ],
               ),
             ),

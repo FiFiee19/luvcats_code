@@ -7,7 +7,9 @@ import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class NotificationUser extends StatefulWidget {
-  const NotificationUser({super.key});
+  const NotificationUser({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<NotificationUser> createState() => _NotificationUserState();
@@ -47,7 +49,7 @@ class _NotificationUserState extends State<NotificationUser> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('การแจ้งเดือน'),
+        title: const Text('การแจ้งเดือน'),
       ),
       backgroundColor: Colors.grey[200],
       body: comment == null
@@ -60,8 +62,6 @@ class _NotificationUserState extends State<NotificationUser> {
                     itemCount: comment!.length,
                     itemBuilder: (context, index) {
                       final commentData = comment![index];
-                      print(commentData.commu_id);
-                      print(commentData.id);
                       if (commentData.user!.id == userProvider.id) {
                         // ไม่แสดงคอมเมนต์ของตนเอง
                         return Container();
@@ -78,10 +78,8 @@ class _NotificationUserState extends State<NotificationUser> {
     return InkWell(
       onTap: () async {
         final commuId = commentData.commu_id;
-        print(commuId);
         if (commuId != null) {
           final commu = await commuServices.fetchIdCommu(context, commuId);
-          print(commu);
           if (commu != null) {
             Navigator.push(
               context,
@@ -93,7 +91,7 @@ class _NotificationUserState extends State<NotificationUser> {
         }
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.white,
@@ -106,7 +104,7 @@ class _NotificationUserState extends State<NotificationUser> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -117,7 +115,7 @@ class _NotificationUserState extends State<NotificationUser> {
                             commentData.user!.imagesP,
                           ),
                           radius: 15),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Text(
                         commentData.user!.username,
                         style: TextStyle(
@@ -132,21 +130,21 @@ class _NotificationUserState extends State<NotificationUser> {
                     padding: const EdgeInsets.only(left: 40, bottom: 10),
                     child: Row(
                       children: [
-                        Text('แสดงความคิดเห็น'),
-                        SizedBox(
+                        const Text('แสดงความคิดเห็น'),
+                        const SizedBox(
                           width: 5,
                         ),
-                        Text('"'),
+                        const Text('"'),
                         Text(
                           commentData.message.length > 10
                               ? "${commentData.message.substring(0, 10)}..."
                               : commentData.message,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                         ),
-                        Text('"'),
+                        const Text('"'),
                       ],
                     ),
                   ),
@@ -156,12 +154,10 @@ class _NotificationUserState extends State<NotificationUser> {
                         padding: const EdgeInsets.only(left: 5, bottom: 10),
                         child: Text(
                           formatDateTime(commentData.createdAt),
-                          style: Theme.of(context).textTheme.subtitle2!.merge(
-                                TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
                       ),
                     ],

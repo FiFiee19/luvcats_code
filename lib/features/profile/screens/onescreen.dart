@@ -15,7 +15,8 @@ import 'package:luvcats_app/widgets/like_animation.dart';
 import 'package:provider/provider.dart';
 
 class OneScreen extends StatefulWidget {
-  const OneScreen({super.key});
+  const OneScreen({Key? key,
+  }) : super(key: key);
 
   @override
   State<OneScreen> createState() => _OneScreenState();
@@ -28,8 +29,6 @@ class _OneScreenState extends State<OneScreen> {
   final ProfileServices profileService = ProfileServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  CarouselController buttonCarouselController = CarouselController();
-
   bool isLiked = false;
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _OneScreenState extends State<OneScreen> {
 
   Future<void> fetchCommuProfile() async {
     commu = await profileService.fetchCommuProfile(context);
-
     if (mounted) {
       commu!.sort((a, b) =>
           DateTime.parse(b.createdAt!).compareTo(DateTime.parse(a.createdAt!)));
@@ -90,11 +88,11 @@ class _OneScreenState extends State<OneScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: false).user.id;
     if (commu == null) {
-      return Center(child: const CircularProgressIndicator());
+      return const Center(child:  CircularProgressIndicator());
     } else if (commu!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
-        body: Center(
+        body:const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -111,7 +109,6 @@ class _OneScreenState extends State<OneScreen> {
             itemCount: commu!.length,
             itemBuilder: (context, index) {
               final commuData = commu![index];
-
               return InkWell(
                 onTap: () {
                   Navigator.push(
@@ -123,7 +120,7 @@ class _OneScreenState extends State<OneScreen> {
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  margin:const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
@@ -135,14 +132,14 @@ class _OneScreenState extends State<OneScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            SizedBox(width: 10),
+                           const SizedBox(width: 10),
                             CircleAvatar(
                               backgroundColor: Colors.grey,
                               backgroundImage:
                                   NetworkImage(commuData.user!.imagesP),
                               radius: 20,
                             ),
-                            SizedBox(width: 20),
+                           const SizedBox(width: 20),
                             Text(
                               commuData.user!.username,
                               style: const TextStyle(
@@ -150,11 +147,11 @@ class _OneScreenState extends State<OneScreen> {
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black),
                             ),
-                            Spacer(),
+                           const Spacer(),
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                     const SizedBox(height: 20),
                       if (commuData.images.isNotEmpty)
                         CustomCarouselSlider(images: commuData.images),
                       Padding(
@@ -202,7 +199,7 @@ class _OneScreenState extends State<OneScreen> {
                                 ),
                                 Text(
                                   '${commuData.likes.length}',
-                                  style: TextStyle(color: Colors.grey),
+                                  style:const TextStyle(color: Colors.grey),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.comment),
@@ -215,7 +212,7 @@ class _OneScreenState extends State<OneScreen> {
                                 ),
                                 Text(
                                   '${commuData.comments.length}',
-                                  style: TextStyle(color: Colors.grey),
+                                  style:const TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -249,13 +246,13 @@ class _OneScreenState extends State<OneScreen> {
                                 );
                               } else {}
                             },
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                           ),
                           IconButton(
                             onPressed: () {
                               _showDeleteDialog(commuData.id!);
                             },
-                            icon: Icon(Icons.delete_sharp),
+                            icon:const Icon(Icons.delete_sharp),
                           )
                         ],
                       ),

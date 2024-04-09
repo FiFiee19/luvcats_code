@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class FormsCommu extends StatefulWidget {
-  const FormsCommu({super.key});
+  const FormsCommu({Key? key,
+  }) : super(key: key);
 
   @override
   State<FormsCommu> createState() => _FormsCommuState();
@@ -24,7 +25,7 @@ class _FormsCommuState extends State<FormsCommu> {
   final TextEditingController descriptionController = TextEditingController();
   final CommuServices commuServices = CommuServices();
   List<File> images = [];
-  final _postCommuFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> postCommuFormKey = GlobalKey<FormState>();
   List<Commu>? commu;
 
   @override
@@ -38,7 +39,7 @@ class _FormsCommuState extends State<FormsCommu> {
 
   //โพสต์Commu
   void postcommu() async {
-    if (_postCommuFormKey.currentState!.validate()) {
+    if (postCommuFormKey.currentState!.validate()) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String user_id = userProvider.user.id;
@@ -92,7 +93,7 @@ class _FormsCommuState extends State<FormsCommu> {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: _postCommuFormKey,
+          key: postCommuFormKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
@@ -187,7 +188,7 @@ class _FormsCommuState extends State<FormsCommu> {
                       hintText: 'รายละเอียด',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -197,7 +198,7 @@ class _FormsCommuState extends State<FormsCommu> {
                 CustomButton(
                   text: 'โพสต์',
                   onTap: () {
-                    if (_postCommuFormKey.currentState!.validate()) {
+                    if (postCommuFormKey.currentState!.validate()) {
                       postcommu();
                     }
                   },

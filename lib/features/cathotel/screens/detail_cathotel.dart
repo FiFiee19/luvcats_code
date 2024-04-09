@@ -27,20 +27,18 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
   @override
   void initState() {
     super.initState();
-    loadReviews();
+    fetchReviews();
     calculateAverageRating();
   }
 
-  Future<void> loadReviews() async {
-    setState(() => isLoading = true);
+  Future<void> fetchReviews() async {
     try {
-      final fetchedReviews =
+      reviews =
           await cathotelServices.fetchReviews(context, widget.cathotel.id);
       if (mounted) {
         setState(() {
-          reviews = fetchedReviews;
+          reviews;
           totalRating = calculateAverageRating();
-          isLoading = false;
         });
       }
     } catch (e) {
@@ -55,8 +53,8 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
       return 0.0;
     }
     double sum = 0;
-    for (var review in reviews) {
-      sum += double.parse(review.rating.toString());
+    for (var i in reviews) {
+      sum += double.parse(i.rating.toString());
     }
     return sum / reviews.length;
   }
@@ -66,14 +64,14 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: RefreshIndicator(
-        onRefresh: loadReviews,
+        onRefresh: fetchReviews,
         child: SingleChildScrollView(
             child: Column(
           children: [
             CustomCarouselSlider(
               images: widget.cathotel.images,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -83,7 +81,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       CircleAvatar(
@@ -93,7 +91,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                         ),
                         radius: 16,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       Text(
@@ -108,7 +106,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(
@@ -146,8 +144,8 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 ],
               ),
             ),
-            Divider(),
-            SizedBox(
+            const Divider(),
+            const SizedBox(
               height: 15,
             ),
             Padding(
@@ -181,8 +179,8 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 ],
               ),
             ),
-            Divider(),
-            SizedBox(
+            const Divider(),
+            const SizedBox(
               height: 15,
             ),
             Padding(
@@ -216,8 +214,8 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 ],
               ),
             ),
-            Divider(),
-            SizedBox(
+            const Divider(),
+            const SizedBox(
               height: 15,
             ),
             Padding(
@@ -255,9 +253,9 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 ],
               ),
             ),
-            Divider(),
+            const Divider(),
             if (widget.cathotel.reviews.isEmpty)
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(right: 2),
                 child: Text(
                   'ยังไม่มีการให้คะแนน',
@@ -266,10 +264,11 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
               ),
             if (widget.cathotel.reviews.isNotEmpty)
               Padding(
-                padding: EdgeInsets.only(right: 2),
+                padding: const EdgeInsets.only(right: 2),
                 child: Text(
                   calculateAverageRating().toStringAsFixed(1),
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
             if (widget.cathotel.reviews.isNotEmpty)
@@ -280,7 +279,7 @@ class _DetailCathotelScreenState extends State<DetailCathotelScreen> {
                 allowHalfRating: true,
                 itemCount: 5,
                 itemSize: 20.0,
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
                   color: Colors.amber,

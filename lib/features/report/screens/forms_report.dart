@@ -4,24 +4,24 @@ import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class ReportScreen extends StatefulWidget {
+class FormsReport extends StatefulWidget {
   final Commu commu;
-  const ReportScreen({
+  const FormsReport({
     Key? key,
     required this.commu,
   }) : super(key: key);
 
   @override
-  State<ReportScreen> createState() => _ReportScreenState();
+  State<FormsReport> createState() => _FormsReportState();
 }
 
-class _ReportScreenState extends State<ReportScreen> {
-  final _formKey = GlobalKey<FormState>();
+class _FormsReportState extends State<FormsReport> {
+  final GlobalKey<FormState> reportformKey = GlobalKey<FormState>();
   final CommuServices commuServices = CommuServices();
   final TextEditingController reportController = TextEditingController();
 
   void report() async {
-    if (_formKey.currentState?.validate() ?? false) {
+    if (reportformKey.currentState?.validate() ?? false) {
       final userId = Provider.of<UserProvider>(context, listen: false).user.id;
       await commuServices.report(
         user_id: userId,
@@ -29,8 +29,6 @@ class _ReportScreenState extends State<ReportScreen> {
         message: reportController.text,
         commu_id: widget.commu.id!,
       );
-      print(widget.commu.id!);
-
       Navigator.of(context).pop();
     }
   }
@@ -55,7 +53,7 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         ),
         content: Form(
-          key: _formKey,
+          key: reportformKey,
           child: TextFormField(
             controller: reportController,
             decoration: const InputDecoration(

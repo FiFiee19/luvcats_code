@@ -235,7 +235,7 @@ exports.deletePost = async (req, res) => {
         // ลบโพสต์จากคอลเลกชัน Commu
         const deletedPost = await Commu.findByIdAndDelete(commuId);
         if (!deletedPost) {
-            return res.status(404).json({ message: "โพสต์ไม่พบ!" });
+            return res.status(404).json({ message: "ไม่พบโพสต์!" });
         }
 
         // ลบรายงานที่เกี่ยวข้องจากคอลเลกชัน Report

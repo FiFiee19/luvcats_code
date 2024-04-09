@@ -38,19 +38,14 @@ class AuthService {
       );
 
       if (res.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ลงทะเบียนสำเร็จ!')),
+        );
         await navigator.pushAndRemoveUntil(
           CupertinoPageRoute(
             builder: (context) => const SigninScreen(),
           ),
           (route) => false,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
         );
       }
 
@@ -60,7 +55,7 @@ class AuthService {
             content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
+            margin: const EdgeInsets.all(30),
           ),
         );
       }
@@ -71,7 +66,7 @@ class AuthService {
             content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
+            margin: const EdgeInsets.all(30),
           ),
         );
       }
@@ -83,7 +78,7 @@ class AuthService {
           content: Text(e.toString()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(30),
+          margin: const EdgeInsets.all(30),
         ),
       );
     }
@@ -122,7 +117,7 @@ class AuthService {
         if (userData['user']['type'] == 'admin') {
           navigator.pushAndRemoveUntil(
             CupertinoPageRoute(
-              builder: (context) => const HomeSreenAdmin(),
+              builder: (context) => const HomeScreenAdmin(),
             ),
             (route) => false,
           );
@@ -149,7 +144,7 @@ class AuthService {
             content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
+            margin: const EdgeInsets.all(30),
           ),
         );
       }
@@ -160,7 +155,7 @@ class AuthService {
             content: Text(res.body.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
+            margin: const EdgeInsets.all(30),
           ),
         );
       }
@@ -173,13 +168,13 @@ class AuthService {
           content: Text(e.toString()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(30),
+          margin: const EdgeInsets.all(30),
         ),
       );
     }
   }
 
-  void getUserData(BuildContext context, String user_id) async {
+  void getUserData(BuildContext context) async {
     try {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       SharedPreferences prefs = await SharedPreferences.getInstance();

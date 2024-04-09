@@ -6,14 +6,15 @@ import 'package:luvcats_app/models/review.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class Notification_Entre extends StatefulWidget {
-  const Notification_Entre({super.key});
+class NotificationEntre extends StatefulWidget {
+  const NotificationEntre({Key? key,
+  }) : super(key: key);
 
   @override
-  State<Notification_Entre> createState() => _Notification_EntreState();
+  State<NotificationEntre> createState() => _NotificationEntreState();
 }
 
-class _Notification_EntreState extends State<Notification_Entre> {
+class _NotificationEntreState extends State<NotificationEntre> {
   final CathotelServices cathotelServices = CathotelServices();
   List<Review>? reviews;
 
@@ -26,11 +27,10 @@ class _Notification_EntreState extends State<Notification_Entre> {
 
   Future<void> fetchReview(String userId) async {
     try {
-      var fetchedReviews =
+      reviews =
           await cathotelServices.fetchReviewsUser(context, userId);
       if (mounted) {
         setState(() {
-          reviews = fetchedReviews;
           reviews?.sort((a, b) => DateTime.parse(b.createdAt!)
               .compareTo(DateTime.parse(a.createdAt!)));
         });

@@ -1,5 +1,3 @@
-import 'package:carousel_slider/carousel_controller.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
@@ -27,18 +25,12 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
   List<Commu>? commu;
   final CommuServices commuServices = CommuServices();
   final ProfileServices profileService = ProfileServices();
-
-  CarouselController buttonCarouselController = CarouselController();
   bool isLiked = false;
 
   @override
   void initState() {
     super.initState();
     fetchCommuId();
-    print(commu);
-    print("Fetching data for user ID: ${widget.user.id}");
-    final userss = Provider.of<UserProvider>(context, listen: false).user.id;
-    print(userss);
   }
 
   Future<void> fetchCommuId() async {
@@ -88,11 +80,11 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
     final user = userProvider.user.id;
     final userType = userProvider.user.type;
     if (commu == null) {
-      return Center(child: const CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     } else if (commu!.isEmpty) {
       return Scaffold(
         backgroundColor: Colors.grey[200],
-        body: Center(
+        body: const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -119,7 +111,8 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
@@ -131,7 +124,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             CircleAvatar(
@@ -141,23 +134,20 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                               ),
                               radius: 20,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Text(
-                              "${commuData.user!.username}",
-                              style:
-                                  
-                                        const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
-                            
+                              commuData.user!.username,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       if (commuData.images.isNotEmpty)
@@ -170,24 +160,20 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${commuData.title}",
-                                style:
-                                      const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.black),
-                                    
+                                commuData.title,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black),
                               ),
                               const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
-                                "${commuData.description}",
-                                style: 
-                                      TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade500,
-                                      
-                                    ),
+                                commuData.description,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 10.0,
@@ -226,7 +212,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                       ),
                                     ),
                                     Text(
-                                      '${commuData.likes.length}', 
+                                      '${commuData.likes.length}',
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                     IconButton(
@@ -244,8 +230,9 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                       ),
                                     ),
                                     Text(
-                                      '${commuData.comments.length}', 
-                                      style: TextStyle(color: Colors.grey),
+                                      '${commuData.comments.length}',
+                                      style:
+                                          const TextStyle(color: Colors.grey),
                                     ),
                                   ],
                                 ),
@@ -265,7 +252,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                       onPressed: () async {},
                                     ),
                                     Text(
-                                      '${commuData.likes.length}', 
+                                      '${commuData.likes.length}',
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                     IconButton(
@@ -287,7 +274,7 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
                                         onPressed: () {
                                           _showDeleteDialog(commuData.id!);
                                         },
-                                        icon: Icon(Icons.delete_sharp)),
+                                        icon: const Icon(Icons.delete_sharp)),
                                   ],
                                 ),
                             ]),

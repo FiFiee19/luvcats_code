@@ -5,14 +5,14 @@ import 'package:luvcats_app/features/map/screens/homescreen_map.dart';
 import 'package:luvcats_app/features/profile/screens/profilescreen.dart';
 import 'package:luvcats_app/features/straycat/screens/straycatscreen.dart';
 
-class tab_Bar extends StatefulWidget {
-  const tab_Bar({Key? key}) : super(key: key);
+class Tab_Bar extends StatefulWidget {
+  const Tab_Bar({Key? key}) : super(key: key);
 
   @override
-  State<tab_Bar> createState() => _tab_BarState();
+  State<Tab_Bar> createState() => _Tab_BarState();
 }
 
-class _tab_BarState extends State<tab_Bar> {
+class _Tab_BarState extends State<Tab_Bar> {
   int currentIndex = 0;
   late PageController pageController;
 
@@ -51,13 +51,13 @@ class _tab_BarState extends State<tab_Bar> {
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
-        physics: NeverScrollableScrollPhysics(),
+        physics:const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         backgroundColor: Colors.white,
         onTap: onTap,
-        items: [
+        items:const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'หน้าแรก'),
           BottomNavigationBarItem(icon: Icon(Icons.store), label: 'ร้านค้า'),
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: 'คอมมูนิตี้'),
