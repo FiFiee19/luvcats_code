@@ -32,7 +32,16 @@ class _FormsExpenseState extends State<FormsExpense> {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
       final String userId = userProvider.user.id;
-      if (!mounted) return;
+
+      if (selectedOption == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('กรุณาเลือกประเภทค่าใช้จ่าย'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
 
       expenseServices.addExpense(
           user_id: userId,
@@ -45,12 +54,12 @@ class _FormsExpenseState extends State<FormsExpense> {
 
   List<Widget> radioList() {
     return listcategory.asMap().entries.map((entry) {
-      int idx = entry.key;
+      int index = entry.key;
       String category = entry.value;
       return ListTile(
         title: Text(category),
         leading: Radio(
-          value: idx,
+          value: index,
           groupValue: selectedOption,
           onChanged: (int? value) {
             setState(() {

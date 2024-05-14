@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/features/auth/screens/signup.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/signup_entre.dart';
+import 'package:luvcats_app/widgets/custom_button.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -12,10 +13,10 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final AuthService authService = AuthService();
-  final _signinFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> signinFormKey = GlobalKey<FormState>();
   bool _obscureText = true;
 
   void _toggle() {
@@ -26,11 +27,11 @@ class _SigninScreenState extends State<SigninScreen> {
 
   //เข้าสู่ระบบ
   void signinUser() {
-    if (_signinFormKey.currentState!.validate()) {
+    if (signinFormKey.currentState!.validate()) {
       authService.signInUser(
         context: context,
-        email: emailController.text,
-        password: passwordController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
       );
     }
   }
@@ -40,7 +41,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Form(
-                key: _signinFormKey,
+                key: signinFormKey,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
@@ -81,7 +82,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             Padding(
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
-                                controller: emailController,
+                                controller: _emailController,
                                 validator: (val) {
                                   if (val!.isEmpty) {
                                     return 'กรุณากรอกอีเมล';
@@ -107,7 +108,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             Padding(
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
-                                controller: passwordController,
+                                controller: _passwordController,
                                 decoration: InputDecoration(
                                   hintText: 'รหัสผ่าน',
                                   suffixIcon: IconButton(
@@ -130,37 +131,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                     return 'กรุณากรอกรหัสผ่าน';
                                   }
                                 },
-                                obscureText:
-                                    _obscureText, // ใช้งานค่า _obscureText เพื่อซ่อนรหัสผ่าน
+                                obscureText: _obscureText,
                               ),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              signinUser();
-                            },
-                            child: Container(
-                              width: 200.0,
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "เข้าสู่ระบบ",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            ),
-                          ),
-                        ],
+                      CustomButton(
+                        text: 'เข้าสู่ระบบ',
+                        onTap: signinUser,
                       ),
                       const SizedBox(height: 20),
                       Row(
@@ -178,7 +158,8 @@ class _SigninScreenState extends State<SigninScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const SignupScreen()));
+                                      builder: (context) =>
+                                          const SignupScreen()));
                             },
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,

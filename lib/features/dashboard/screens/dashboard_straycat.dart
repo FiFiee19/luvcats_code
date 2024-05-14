@@ -15,19 +15,15 @@ class DashboardStraycat extends StatelessWidget {
       future: catData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child:
-                  CircularProgressIndicator()); 
+          return const LinearProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}'); 
+          return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          
           final cats = snapshot.data ?? [];
           final totalCats = cats.length;
           final adoptedCats = cats.where((cat) => cat.status == 'yes').length;
           final waitingCats = totalCats - adoptedCats;
 
-          
           return Column(
             children: [
               _buildDashboardTile(
@@ -48,8 +44,7 @@ class DashboardStraycat extends StatelessWidget {
             ],
           );
         } else {
-          return Text(
-              'No data available'); 
+          return Text('No data available');
         }
       },
     );
@@ -63,7 +58,7 @@ class DashboardStraycat extends StatelessWidget {
       trailing: Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.red, 
+          color: Colors.red,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(

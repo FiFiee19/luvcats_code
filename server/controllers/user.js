@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 
 exports.editPassword = async (req, res) => {
 
@@ -12,22 +11,18 @@ exports.editPassword = async (req, res) => {
             return res.status(400).send('Password is required');
         }
 
-        // ค้นหาผู้ใช้จากฐานข้อมูลด้วย ID
         const user = await User.findById(user_id);
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        // สร้างรหัสผ่านที่ถูกเข้ารหัส
         const salt = await bcrypt.genSalt(8);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // อัปเดตรหัสผ่านของผู้ใช้
         user.password = hashedPassword;
         await user.save();
 
-        res.send('Password updated successfully');
-        console.log(user)
+        res.status(200).json({ message: "แก้ไขสำเร็จ!" });
     } catch (e) {
         console.log(e);
         res.status(500).send('Server Error');
@@ -52,7 +47,7 @@ exports.editUser = async (req, res) => {
             return res.status(404).send('User not found');
         }
 
-        res.json({ user: updatedUser, message: "User updated successfully" });
+        res.json({ user: updatedUser, message: "แก้ไขสำเร็จ!" });
 
     } catch (e) {
         console.log(e);

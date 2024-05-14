@@ -26,6 +26,7 @@ const userSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
+  
 
   type: {
     required: true,

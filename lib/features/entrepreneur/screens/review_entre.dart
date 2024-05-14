@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
+import 'package:luvcats_app/config/datetime.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/models/review.dart';
 
@@ -65,21 +65,21 @@ class _ReviewEntreState extends State<ReviewEntre> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ตอบกลับรีวิว'),
+          title: const Text('ตอบกลับรีวิว'),
           content: TextField(
             controller: replyController,
             decoration:
-                InputDecoration(hintText: "กรอกข้อความตอบกลับที่นี่..."),
+                const InputDecoration(hintText: "กรอกข้อความตอบกลับที่นี่..."),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('ยกเลิก'),
+              child: const Text('ยกเลิก'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('ส่ง'),
+              child: const Text('ส่ง'),
               onPressed: () async {
                 final message = replyController.text;
 
@@ -87,11 +87,11 @@ class _ReviewEntreState extends State<ReviewEntre> {
                   await cathotelServices.replyToReview(
                     context: context,
                     reviewId: reviewId,
-                    replyMessage: message,
+                    message: message,
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('กรุณากรอกข้อความตอบกลับ'),
                     ),
                   );
@@ -121,196 +121,207 @@ class _ReviewEntreState extends State<ReviewEntre> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: RefreshIndicator(
-            onRefresh: loadReviews,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  if (reviews.isEmpty)
-                    Padding(
-                      padding: EdgeInsets.only(right: 2),
-                      child: Text(
-                        'ยังไม่มีการให้คะแนน',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+        body: isLoading
+            ? const LinearProgressIndicator()
+            : RefreshIndicator(
+                onRefresh: loadReviews,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      if (reviews.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.only(right: 2),
+                          child: Text(
+                            'ยังไม่มีการให้คะแนน',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      if (reviews.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            calculateAverageRating().toStringAsFixed(1),
+                            style: const TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      if (reviews.isNotEmpty)
+                        RatingBar.builder(
+                          initialRating: calculateAverageRating(),
+                          ignoreGestures: true,
+                          // minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemSize: 20.0,
+                          itemPadding:
+                              const EdgeInsets.symmetric(horizontal: 4.0),
+                          itemBuilder: (context, _) => const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          onRatingUpdate: (rating) {},
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          "( ${reviews.length} )",
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  if (reviews.isNotEmpty)
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        calculateAverageRating().toStringAsFixed(1),
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  if (reviews.isNotEmpty)
-                    RatingBar.builder(
-                      initialRating: calculateAverageRating(),
-                      ignoreGestures: true,
-                      // minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemSize: 20.0,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) {},
-                    ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      "( ${reviews.length} )",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Divider(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: reviews
-                        .map(
-                          (review) => Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 10, bottom: 20),
-                              child: Column(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                      const Divider(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: reviews
+                            .map(
+                              (review) => Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 10, bottom: 20),
+                                  child: Column(
                                     children: [
-                                      Row(
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          CircleAvatar(
-                                              backgroundColor: Colors.grey,
-                                              backgroundImage: NetworkImage(
-                                                review.user!.imagesP,
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                  backgroundColor: Colors.grey,
+                                                  backgroundImage: NetworkImage(
+                                                    review.user!.imagesP,
+                                                  ),
+                                                  radius: 15),
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                review.user!.username,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16,
+                                                  color: Colors.grey.shade500,
+                                                ),
                                               ),
-                                              radius: 15),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            review.user!.username,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 16,
-                                              color: Colors.grey.shade500,
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 30),
+                                            child: RatingBar.builder(
+                                              initialRating: review.rating,
+                                              ignoreGestures: true,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              itemCount: 5,
+                                              itemSize: 20.0,
+                                              itemPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2.0),
+                                              itemBuilder: (context, _) =>
+                                                  const Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                              ),
+                                              onRatingUpdate: (rating) {},
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 30),
-                                        child: RatingBar.builder(
-                                          initialRating: review.rating,
-                                          ignoreGestures: true,
-                                          direction: Axis.horizontal,
-                                          allowHalfRating: true,
-                                          itemCount: 5,
-                                          itemSize: 20.0,
-                                          itemPadding: EdgeInsets.symmetric(
-                                              horizontal: 2.0),
-                                          itemBuilder: (context, _) => Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                          ),
-                                          onRatingUpdate: (rating) {},
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 40, bottom: 10),
-                                        child: Text(
-                                          review.message,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 6, bottom: 10),
+                                                left: 40, bottom: 10),
                                             child: Text(
-                                              review.createdAt != null
-                                                  ? DateFormat('yyyy-MM-dd')
-                                                      .format(DateTime.parse(
-                                                          review.createdAt!))
-                                                  : 'ไม่ทราบวันที่',
+                                              review.message,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
-                                          Spacer(),
-                                          if (review.reply == null)
-                                            Padding(
-                                              padding: EdgeInsets.only(),
-                                              child: TextButton(
-                                                child: Text('ตอบกลับ'),
-                                                onPressed: () {
-                                                  showReplyDialog(
-                                                      context, review.id!);
-                                                },
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 6, bottom: 10),
+                                                child: Text(
+                                                  formatDateTime(
+                                                      review.createdAt),
+                                                ),
                                               ),
-                                            )
+                                              const Spacer(),
+                                              if (review.reply == null)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(),
+                                                  child: TextButton(
+                                                    child:
+                                                        const Text('ตอบกลับ'),
+                                                    onPressed: () {
+                                                      showReplyDialog(
+                                                          context, review.id!);
+                                                    },
+                                                  ),
+                                                )
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: review.reply != null
+                                                ? Container(
+                                                    width: double.infinity,
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(
+                                                        8.0, 8.0, 18.0, 8.0),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              216,
+                                                              212,
+                                                              212),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        const Text(
+                                                          'การตอบกลับของร้าน',
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 8.0),
+                                                        Text(
+                                                          review.reply!.message,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 14.0,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : const SizedBox.shrink(),
+                                          ),
+                                          const Divider(),
                                         ],
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: review.reply != null
-                                            ? Container(
-                                                width: double.infinity,
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        8.0, 8.0, 18.0, 8.0),
-                                                decoration: BoxDecoration(
-                                                  color: Color.fromARGB(
-                                                      255, 216, 212, 212),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'การตอบกลับของร้าน',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14.0,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 8.0),
-                                                    Text(
-                                                      review.reply!.message,
-                                                      style: TextStyle(
-                                                        fontSize: 14.0,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : SizedBox.shrink(),
-                                      ),
-                                      Divider(),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                            )
+                            .toList(),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )));
+                )));
   }
 }

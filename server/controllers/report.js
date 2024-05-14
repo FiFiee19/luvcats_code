@@ -15,14 +15,14 @@ exports.create = async (req,res) => {
             commu_id: commu
         })
         await newReport.save();
-        var report = await Commu.findById(commuId);
+        let report = await Commu.findById(commuId);
         report = await Commu.findByIdAndUpdate(
             commuId,
             { $push: { reports: newReport } },
             { new: true }
         );
         
-        return res.status(200).json(await report.populate('user_id'));
+        res.json(report);
 
     }catch (e){
         console.log(e)
@@ -30,28 +30,28 @@ exports.create = async (req,res) => {
 
     }
 }
-exports.list = async (req, res) => {
-    try {
+// exports.list = async (req, res) => {
+//     try {
         
-        const { commuId } = req.params;   
-        const commu = await Commu.findById(commuId)
-            .populate({
-                path: 'reports',
-                populate: { path: 'user' }
-            });  
-        if (!commu) {
-            return res.status(404).json({ msg: 'Post not found' });
-        }
+//         const { commuId } = req.params;   
+//         const commu = await Commu.findById(commuId)
+//             .populate({
+//                 path: 'reports',
+//                 populate: { path: 'user' }
+//             });  
+//         if (!commu) {
+//             return res.status(404).json({ msg: 'Post not found' });
+//         }
 
-        res.json(commu.reports); // ส่งคอมเมนต์กลับไปยัง client
-    } catch (e) {
-        console.log(e);
-        res.status(500).send('Server Error');
-    }
-};
+//         res.json(commu.reports); // ส่งคอมเมนต์กลับไปยัง client
+//     } catch (e) {
+//         console.log(e);
+//         res.status(500).send('Server Error');
+//     }
+// };
 
 
-exports.listall = async (req, res) => {
+exports.list = async (req, res) => {
     try {
         const report = await Report.find({}).populate('user').populate('commu_id');
         console.log(report); // Log the report data
@@ -69,20 +69,15 @@ exports.deleteReport = async (req, res) => {
         if (!report) {
             return res.status(404).json({ message: "Report not found" });
         }
-        const commuId = report.commu_id; // หรือ req.params.commu_id ถ้ารายงานมี field commu_id ที่เก็บ ObjectId ของ Commu
+        const commuId = report.commu_id; 
 
-        // ลบรายงาน
         await Report.findByIdAndDelete(reportId);
-
-        // ลบอ้างอิงรายงานออกจาก Commu
+        
         const updatedCommu = await Commu.findByIdAndUpdate(
             commuId,
             { $pull: { reports: reportId } },
             { new: true }
         );
-        if (!updatedCommu) {
-            return res.status(404).json({ message: "Commu not found" });
-        }
 
         return res.status(200).json({ message: "Report deleted successfully" });
     } catch (e) {

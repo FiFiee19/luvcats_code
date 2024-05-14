@@ -4,10 +4,10 @@ class PlaceSearch {
 
   PlaceSearch({this.description, this.placeId});
 
-  factory PlaceSearch.fromJson(Map<String,dynamic> json){
+  factory PlaceSearch.fromJson(Map<String,dynamic> map){
     return PlaceSearch(
-        description: json['description'],
-        placeId: json['place_id']
+        description: map['description'],
+        placeId: map['place_id']
     );
   }
 }

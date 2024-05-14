@@ -30,9 +30,7 @@ class CathotelServices {
             ),
           );
         }
-      } else {
-        throw Exception('เกิดข้อผิดพลาด');
-      }
+      } 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -47,10 +45,10 @@ class CathotelServices {
   }
 
   //ดึงข้อมูลโปรไฟล์ของCathotelที่มี user_id ที่กำหนด
-  Future<Cathotel?> fetchCatIdProfile(
+  Future<Cathotel?> fetchCathotelProfile(
       BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    Cathotel? catprofile;
+    Cathotel? profile;
 
     try {
       final http.Response res = await http.get(
@@ -64,18 +62,9 @@ class CathotelServices {
       if (res.statusCode == 200) {
         final List<dynamic> body = jsonDecode(res.body);
         if (body.isNotEmpty) {
-          catprofile = Cathotel.fromMap(body.first);
+          profile = Cathotel.fromMap(body.first);
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${res.statusCode}'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
-      }
+      } 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -86,8 +75,7 @@ class CathotelServices {
         ),
       );
     }
-
-    return catprofile;
+    return profile;
   }
 
   //ดึงข้อมูลรีวิวร้านฝากเลี้ยงตามidของร้านที่กำหนด
@@ -102,10 +90,9 @@ class CathotelServices {
           'authtoken': userProvider.user.token,
         },
       );
-
       if (res.statusCode == 200) {
         List<dynamic> commentsData = jsonDecode(res.body);
-        print(commentsData);
+
         return commentsData.map((data) {
           return Review.fromMap(data as Map<String, dynamic>);
         }).toList();
@@ -178,8 +165,6 @@ class CathotelServices {
           SnackBar(content: Text('รีวิวสำเร็จ!')),
         );
         Navigator.pop(context);
-      } else {
-        throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -196,7 +181,7 @@ class CathotelServices {
   Future<void> replyToReview({
     required BuildContext context,
     required String reviewId,
-    required String replyMessage,
+    required String message,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -209,7 +194,7 @@ class CathotelServices {
         },
         body: jsonEncode({
           'message':
-              replyMessage, // อาจจะต้องเปลี่ยนเป็น 'message' ถ้า API ของคุณคาดหวัง key นี้
+              message, 
         }),
       );
 
@@ -217,15 +202,7 @@ class CathotelServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('ตอบกลับรีวิวสำเร็จ!')),
         );
-      } else {
-        // อาจจะมีการแสดงข้อความเฉพาะตามสถานะข้อผิดพลาดที่ได้รับจาก API
-        final Map<String, dynamic> responseBody = jsonDecode(res.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Failed to reply to review: ${responseBody['message']}')),
-        );
-      }
+      } 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

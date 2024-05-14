@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/entrepreneur/screens/dashboard_entre.dart';
+import 'package:luvcats_app/features/entrepreneur/screens/dashboardscreen.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/notification_entre.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/profile_entre.dart';
-
 
 class TabBarEntre extends StatefulWidget {
   const TabBarEntre({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class TabBarEntre extends StatefulWidget {
 
 class _TabBarEntreState extends State<TabBarEntre> {
   int currentIndex = 0;
-  final PageController pageController=PageController();
+  final PageController pageController = PageController();
 
   @override
   void initState() {
@@ -44,17 +43,17 @@ class _TabBarEntreState extends State<TabBarEntre> {
         children: <Widget>[
           ProfileEntre(),
           NotificationEntre(),
-          ReportEntre(),
+          DashboardScreen(),
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
-        physics:const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         backgroundColor: Colors.white,
         onTap: onTap,
-        items:const [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'โปรไฟล์'),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications), label: 'การแจ้งเตือน'),

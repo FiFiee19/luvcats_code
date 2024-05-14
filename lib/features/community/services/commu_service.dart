@@ -10,6 +10,7 @@ import 'package:luvcats_app/models/postcommu.dart';
 import 'package:luvcats_app/models/report.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CommuServices {
   //โพสต์community
@@ -29,7 +30,7 @@ class CommuServices {
         description: description,
         likes: [],
         comments: [],
-        images: [],
+        images: images,
       );
 
       http.Response res = await http.post(
@@ -46,8 +47,6 @@ class CommuServices {
           SnackBar(content: Text('โพสต์สำเร็จ!')),
         );
         Navigator.pop(context);
-      } else {
-        throw Exception('เกิข้อผิดพลาด');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,8 +79,6 @@ class CommuServices {
             ),
           );
         }
-      } else {
-        throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,15 +97,13 @@ class CommuServices {
   Future<void> likesCommu(BuildContext context, String commuId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      http.Response res = await http.put(
+      await http.put(
         Uri.parse('$url/likesCommu/$commuId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
       );
-
-      if (res.statusCode == 200) {}
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -249,7 +244,7 @@ class CommuServices {
     required BuildContext context,
     required String user_id,
     required String message,
-    required String commu_id, // ถ้า post_id เป็นค่าที่จำเป็น ควรลบ ? ออก
+    required String commu_id,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -268,8 +263,6 @@ class CommuServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('คอมเมนต์สำเร็จ!')),
         );
-      } else {
-        throw Exception('Failed to add comment');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -318,16 +311,20 @@ class CommuServices {
     String commuId,
     String title,
     String description,
-    List<File> images, // รูปภาพใหม่เป็น File
+    List<File> images, 
   ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user_id = userProvider.user.id;
     List<String> imageUrls = [];
+    var uuid = Uuid();
+    String folderPath = "Commu/${user_id}/edit/${uuid.v4()}";
     if (images != null && images.isNotEmpty) {
       try {
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
         for (int i = 0; i < images.length; i++) {
           CloudinaryResponse res = await cloudinary.uploadFile(
-            CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+            CloudinaryFile.fromFile(images[i].path,
+                folder: folderPath, publicId: "รูปที่${i + 1}"),
           );
           imageUrls.add(res.secureUrl);
         }
@@ -398,11 +395,7 @@ class CommuServices {
           SnackBar(content: Text('รายงานสำเร็จ!')),
         );
         Navigator.pop(context);
-      } else {
-        print(res.body);
-        throw Exception('รายงานไม่สำเร็จ!');
       }
-      print(res.body);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -454,8 +447,6 @@ class CommuServices {
         },
       );
 
-      // print('Response Body: ${res.body}'); // Print the response body
-
       if (res.statusCode == 200) {
         for (int i = 0; i < jsonDecode(res.body).length; i++) {
           print(res.body);
@@ -467,8 +458,6 @@ class CommuServices {
             ),
           );
         }
-      } else {
-        throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

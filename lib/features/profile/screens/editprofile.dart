@@ -40,8 +40,12 @@ class _EditprofileState extends State<Editprofile> {
 
   void submitForm() async {
     if (editFormKey.currentState!.validate()) {
+      File? imageFile;
+      if (imagesP != null && imagesP!.isNotEmpty) {
+        imageFile = imagesP![0];
+      }
       await profileServices.editUser(
-          context, usernameController.text, imagesP![0]);
+          context, usernameController.text, imageFile);
     }
   }
 
@@ -78,6 +82,8 @@ class _EditprofileState extends State<Editprofile> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false).user;
+    final userType = userProvider.type;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

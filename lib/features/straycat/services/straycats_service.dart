@@ -8,6 +8,7 @@ import 'package:luvcats_app/config/constants.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CatServices {
   //โพสต์แมวจร
@@ -94,12 +95,12 @@ class CatServices {
   }
 
   //ดึงข้อมูลแมวจรจากidที่กำหนด
-  Future<Straycat> fetchIdStraycats(
-      BuildContext context, String straycatsId) async {
+  Future<Straycat> fetchIdStraycat(
+      BuildContext context, String straycatId) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.get(
-        Uri.parse('$url/getStrayCat/stray/$straycatsId'),
+        Uri.parse('$url/getStrayCat/stray/$straycatId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -131,12 +132,12 @@ class CatServices {
 
   //อัพเดตการได้บ้านของแมวจร
   Future<void> updateCatStatus(
-      BuildContext context, String StraycatId, String newStatus) async {
+      BuildContext context, String straycatId, String newStatus) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$url/updateStatus/$StraycatId'),
+        Uri.parse('$url/updateStatus/$straycatId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
@@ -148,7 +149,7 @@ class CatServices {
 
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('อัพเดตสำเร็จ!')),
+          SnackBar(content: Text('อัปเดตสำเร็จ!')),
         );
       }
     } catch (e) {
@@ -174,8 +175,10 @@ class CatServices {
     List<File> images, // รูปภาพใหม่เป็น File
   ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user_id = userProvider.user.id;
     List<String> imageUrls = []; // เริ่มต้นด้วยรายการว่าง
-
+    var uuid = Uuid();
+    String folderPath = "Straycat/${user_id}/edit/${uuid.v4()}";
     // ตรวจสอบว่ามีการเลือกรูปภาพใหม่หรือไม่
     if (images != null && images.isNotEmpty) {
       // อัปโหลดรูปภาพใหม่และรับ URL
@@ -183,7 +186,8 @@ class CatServices {
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
         for (int i = 0; i < images.length; i++) {
           CloudinaryResponse res = await cloudinary.uploadFile(
-            CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+            CloudinaryFile.fromFile(images[i].path,
+                folder: folderPath, publicId: 'รูปที่${i + 1}'),
           );
           imageUrls.add(res.secureUrl);
         }
@@ -192,7 +196,7 @@ class CatServices {
       }
     } else {
       // ถ้าไม่มีการเลือกรูปภาพใหม่ใช้รูปภาพเดิมที่เก็บไว้ในฐานข้อมูล
-      final post = await fetchIdStraycats(context, starycatsId);
+      final post = await fetchIdStraycat(context, starycatsId);
       imageUrls = post.images;
     }
 

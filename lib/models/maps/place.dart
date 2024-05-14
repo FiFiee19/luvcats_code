@@ -7,11 +7,11 @@ class Place {
 
   Place({this.geometry, this.name, this.vicinity});
 
-  factory Place.fromJson(Map<String, dynamic> json) {
+  factory Place.fromJson(Map<String, dynamic> map) {
     return Place(
-      geometry: Geometry.fromJson(json['geometry']),
-      name: json['name'],
-      vicinity: json['vicinity'],
+      geometry: Geometry.fromJson(map['geometry']),
+      name: map['name'],
+      vicinity: map['vicinity'],
     );
   }
 }

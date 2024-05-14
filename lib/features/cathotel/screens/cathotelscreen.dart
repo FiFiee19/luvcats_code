@@ -39,8 +39,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
 
   //เรียกข้อมูลAllCathotelในcathotelServices
   Future<void> fetchAllCathotel() async {
-     allcathotel =
-        await cathotelServices.fetchAllCathotel(context);
+    allcathotel = await cathotelServices.fetchAllCathotel(context);
     if (allcathotel != null && mounted) {
       setState(() {
         cathotellist = allcathotel!.where((cathotel) {
@@ -59,7 +58,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
     Widget bodyContent;
 
     if (cathotellist == null) {
-      bodyContent = const Center(child: CircularProgressIndicator());
+      bodyContent = const LinearProgressIndicator();
     } else if (cathotellist!.isEmpty) {
       bodyContent = const Center(
         child: Text(
@@ -76,7 +75,7 @@ class _CatHotelScreenState extends State<CatHotelScreen> {
             crossAxisCount: 2,
             crossAxisSpacing: 12.0,
             mainAxisSpacing: 12.0,
-            mainAxisExtent: 350,
+            mainAxisExtent: 370,
           ),
           itemBuilder: (context, index) {
             final catData = cathotellist![index];

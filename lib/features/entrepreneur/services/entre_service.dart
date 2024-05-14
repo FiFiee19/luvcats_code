@@ -11,10 +11,11 @@ import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class EntreService {
   //ลงทะเบียนเป็นผู้ประกอบการ
-  void signinEntre({
+  void signupEntre({
     required BuildContext context,
     required String email,
     required String password,
@@ -65,7 +66,7 @@ class EntreService {
           (route) => false,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(res.body.toString())),
+          SnackBar(content: Text('ลงทะเบียนสำเร็จ!')),
         );
       }
 
@@ -80,7 +81,6 @@ class EntreService {
         );
       }
       if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(res.body.toString()),
@@ -120,10 +120,13 @@ class EntreService {
     if (images != null && images.isNotEmpty) {
       // อัปโหลดรูปภาพใหม่และรับ URL
       try {
+        var uuid = Uuid();
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
         for (int i = 0; i < images.length; i++) {
           CloudinaryResponse res = await cloudinary.uploadFile(
-            CloudinaryFile.fromFile(images[i].path, folder: 'a'),
+            CloudinaryFile.fromFile(images[i].path,
+                folder: 'Cathotel/$cathotelId/edit/${uuid.v4()}',
+                publicId: "รูปที่${i + 1}"),
           );
           imageUrls.add(res.secureUrl);
         }
@@ -142,7 +145,7 @@ class EntreService {
       'description': description,
       'images': imageUrls,
     });
-    print(requestBody);
+
     try {
       final res = await http.put(Uri.parse('$url/getCathotel/edit/$cathotelId'),
           headers: {
@@ -151,35 +154,20 @@ class EntreService {
           },
           body: requestBody);
       if (res.statusCode == 200) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text('สำเร็จ!')),
-        // );
-        // Navigator.pop(context);
-      }
-
-      if (res.statusCode == 400) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
+          SnackBar(content: Text('แก้ไขสำเร็จ!')),
         );
-      }
-      if (res.statusCode == 500) {
-        // กรณีอีเมลไม่ถูกต้อง
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(res.body.toString()),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.all(30),
-          ),
-        );
+        Navigator.pop(context);
       }
     } catch (e) {
-      print('Error updating post: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(30),
+        ),
+      );
     }
   }
 
@@ -243,12 +231,11 @@ class EntreService {
       );
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('สำเร็จ!')),
+          SnackBar(content: Text('แก้ไขสำเร็จ!')),
         );
         Navigator.pop(context);
       }
     } catch (e) {
-      print('Error updating post: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.toString()),

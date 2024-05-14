@@ -116,6 +116,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   Widget build(BuildContext context) {
     final total = totalAmount(expenses);
     final percentages = calculatePercentage(total);
+    double totalAmountSum = total.values.fold(0, (sum, amount) => sum + amount);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -126,7 +127,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         backgroundColor: Colors.red,
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const LinearProgressIndicator()
           : RefreshIndicator(
               onRefresh: () async {
                 final userId =
@@ -245,12 +246,16 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                   ),
                   Container(
                     color: const Color.fromRGBO(201, 201, 201, 0.89),
-                    child: const Padding(
+                    child: Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 18),
                       child: Row(
                         children: [
                           Text('ประวัติค่าใช้จ่าย'),
+                          Spacer(),
+                          Text(
+                              'รวมเป็นเงิน: ${totalAmountSum.toStringAsFixed(2)} บาท',
+                              style: const TextStyle(fontSize: 14.0)),
                         ],
                       ),
                     ),

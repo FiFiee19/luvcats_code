@@ -4,18 +4,18 @@ import 'package:luvcats_app/models/maps/place.dart';
 class MarkerService {
   LatLngBounds? bounds(Set<Marker> markers) {
     if (markers.isEmpty)
-      return null; // `markers` will never be null due to sound null safety.
+      return null; 
     return createBounds(markers.map((m) => m.position).toList());
   }
 
   LatLngBounds createBounds(List<LatLng> positions) {
     final southwestLat = positions.map((p) => p.latitude).reduce(
-        (value, element) => value < element ? value : element); // smallest
+        (value, element) => value < element ? value : element); 
     final southwestLon = positions
         .map((p) => p.longitude)
         .reduce((value, element) => value < element ? value : element);
     final northeastLat = positions.map((p) => p.latitude).reduce(
-        (value, element) => value > element ? value : element); // biggest
+        (value, element) => value > element ? value : element); 
     final northeastLon = positions
         .map((p) => p.longitude)
         .reduce((value, element) => value > element ? value : element);

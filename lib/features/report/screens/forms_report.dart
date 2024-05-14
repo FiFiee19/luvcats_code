@@ -61,7 +61,7 @@ class _FormsReportState extends State<FormsReport> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'กรุณากรอกรายละเอียด';
+                return 'กรุณากรอกรายงาน';
               }
               return null;
             },

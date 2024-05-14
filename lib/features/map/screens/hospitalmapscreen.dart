@@ -29,8 +29,7 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
   @override
   void initState() {
     super.initState();
-    final applicationBloc =
-        Provider.of<ApplicationBloc>(context, listen: false);
+    final applicationBloc = Provider.of<MapApp>(context, listen: false);
     applicationBloc.markers!.clear();
     locationSubscription =
         applicationBloc.selectedLocation.stream.listen((place) {
@@ -62,14 +61,14 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final applicationBloc = Provider.of<ApplicationBloc>(context);
+    final mapApp = Provider.of<MapApp>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('ค้นหาโรงพยาบาลสัตว์'),
         centerTitle: true,
       ),
-      body: applicationBloc.currentLocation == null
+      body: mapApp.currentLocation == null
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
@@ -83,57 +82,52 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
                         hintText: 'ค้นหาสถานที่',
                         suffixIcon: Icon(Icons.search),
                       ),
-                      onChanged: (value) => applicationBloc.searchPlaces(value),
-                      onTap: () => applicationBloc.clearSelectedLocation(),
+                      onChanged: (value) => mapApp.searchPlaces(value),
+                      onTap: () => mapApp.clearSelectedLocation(),
                     ),
                   ),
                   Stack(
                     children: [
                       Container(
                         height: 595.0,
-                        child: Expanded(
-                          child: GoogleMap(
-                            mapType: MapType.normal,
-                            myLocationEnabled: true,
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(
-                                  applicationBloc.currentLocation!.latitude,
-                                  applicationBloc.currentLocation!.longitude),
-                              zoom: 14,
-                            ),
-                            onMapCreated: (GoogleMapController controller) {
-                              _mapController.complete(controller);
-                            },
-                            scrollGesturesEnabled: true,
-                            zoomGesturesEnabled: true,
-                            markers: Set<Marker>.of(applicationBloc.markers!),
+                        child: GoogleMap(
+                          mapType: MapType.normal,
+                          myLocationEnabled: true,
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(mapApp.currentLocation!.latitude,
+                                mapApp.currentLocation!.longitude),
+                            zoom: 14,
                           ),
+                          onMapCreated: (GoogleMapController controller) {
+                            _mapController.complete(controller);
+                          },
+                          scrollGesturesEnabled: true,
+                          zoomGesturesEnabled: true,
+                          markers: Set<Marker>.of(mapApp.markers!),
                         ),
                       ),
-                      if (applicationBloc.searchResults != null &&
-                          applicationBloc.searchResults!.length != 0)
+                      if (mapApp.searchResults != null &&
+                          mapApp.searchResults!.length != 0)
                         Container(
                             height: 300.0,
                             width: double.infinity,
                             decoration: BoxDecoration(
                                 color: Colors.black.withOpacity(.6),
                                 backgroundBlendMode: BlendMode.darken)),
-                      if (applicationBloc.searchResults != null)
+                      if (mapApp.searchResults != null)
                         Container(
                           height: 300.0,
                           child: ListView.builder(
-                              itemCount: applicationBloc.searchResults!.length,
+                              itemCount: mapApp.searchResults!.length,
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   title: Text(
-                                    applicationBloc
-                                        .searchResults![index].description!,
+                                    mapApp.searchResults![index].description!,
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   onTap: () {
-                                    applicationBloc.setSelectedLocation(
-                                        applicationBloc
-                                            .searchResults![index].placeId!);
+                                    mapApp.setSelectedLocation(
+                                        mapApp.searchResults![index].placeId!);
                                   },
                                 );
                               }),
@@ -147,7 +141,7 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 10.0),
         child: FloatingActionButton(
-          onPressed: () => Provider.of<ApplicationBloc>(context, listen: false)
+          onPressed: () => Provider.of<MapApp>(context, listen: false)
               .togglePlaceType("veterinary_care", true, 3),
           child: Icon(Icons.filter_list),
           backgroundColor: Colors.red,

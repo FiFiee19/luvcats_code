@@ -12,11 +12,11 @@ import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileEntre extends StatefulWidget {
-  final String CathotelId;
+  final String cathotelId;
 
   const EditProfileEntre({
     Key? key,
-    required this.CathotelId,
+    required this.cathotelId,
   }) : super(key: key);
 
   @override
@@ -63,17 +63,13 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
     if (editFormKey.currentState!.validate()) {
       await entreService.editProfileEntre(
         context,
-        widget.CathotelId,
+        widget.cathotelId,
         double.parse(priceController.text),
         contactController.text,
         provinceController.text,
         descriptionController.text,
         images,
       );
-    }
-    if (editFormKey.currentState!.validate()) {
-      await profileServices.editUser(
-          context, usernameController.text, imagesP![0]);
     }
   }
 
@@ -87,11 +83,6 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
       contactController.text = data.contact;
       provinceController.text = data.province;
       imageUrls = data.images;
-
-      final profile =
-          await profileServices.fetchIdUser(context, userProvider.user.id);
-      usernameController.text = profile.username;
-      imageUrl = profile.imagesP;
     } catch (e) {
       print('Error loading post data: $e');
     }
@@ -137,50 +128,6 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 15),
-                const Center(child: Text('เลือกรูปโปรไฟล์')),
-                const SizedBox(height: 15),
-                GestureDetector(
-                  onTap: () {
-                    selectImagesMulti();
-                  },
-                  child: CircleAvatar(
-                    radius: 80,
-                    backgroundColor: Colors.grey.shade200,
-                    backgroundImage: imagesP != null && imagesP!.isNotEmpty
-                        ? FileImage(imagesP!.first) as ImageProvider
-                        : imageUrl != null
-                            ? NetworkImage(imageUrl!) as ImageProvider
-                            : null,
-                    child:
-                        imagesP == null || imagesP!.isEmpty && imageUrl == null
-                            ? const Icon(Icons.camera_alt,
-                                color: Colors.grey, size: 50)
-                            : null,
-                  ),
-                ),
-                Center(
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.image,
-                    ),
-                    onPressed: () => selectImagesMulti(),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                TextFormField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'ชื่อร้าน',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'กรุณาชื่อร้าน';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 15),
                 const Center(child: Text('เลือกรูปของร้าน')),
                 const SizedBox(height: 15),
                 images.isNotEmpty || imageUrls.isNotEmpty
@@ -289,6 +236,7 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
                   decoration: const InputDecoration(
                     labelText: 'ช่องทางการติดต่อ',
                   ),
+                  maxLines: 5,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'กรุณากรอกช่องทางการติดต่อ';

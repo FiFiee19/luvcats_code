@@ -39,9 +39,7 @@ class ExpenseServices {
           SnackBar(content: Text('บันทึกสำเร็จ!')),
         );
         Navigator.pop(context);
-      } else {
-        throw Exception('เกิดข้อผิดพลาด');
-      }
+      } 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -69,7 +67,6 @@ class ExpenseServices {
 
       if (res.statusCode == 200) {
         List<dynamic> expenseData = jsonDecode(res.body);
-        print(expenseData);
         return expenseData.map((data) {
           return Expense.fromMap(data as Map<String, dynamic>);
         }).toList();
@@ -77,7 +74,7 @@ class ExpenseServices {
         throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
-      throw Exception('Error fetching comments: $e');
+      throw Exception('Error fetching expenses: $e');
     }
   }
 

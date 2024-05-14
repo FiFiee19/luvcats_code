@@ -65,7 +65,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
   }
 
   //ลบCommu
-  void _showDeleteDialog(String cemment) {
+  void _showDeleteComment(String cemment) {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -99,6 +99,40 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
     );
   }
 
+  void _showDeletePost(String commu) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Center(
+          child: Text(
+            'ลบโพสต์',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ยกเลิก'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await profileService.deleteCommu(context, commu);
+
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('ยืนยัน'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     if (mounted) {
@@ -109,7 +143,9 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context, listen: false).user.id;
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user = userProvider.user.id;
+    final userType = userProvider.user.type;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -236,6 +272,13 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                             color: Colors.black,
                           ),
                         ),
+                        Spacer(),
+                        if (userType == 'admin')
+                          IconButton(
+                              onPressed: () {
+                                _showDeletePost(widget.commu.id!);
+                              },
+                              icon: const Icon(Icons.delete_sharp)),
                         const SizedBox(height: 10),
                       ],
                     ),
@@ -272,7 +315,7 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                                       if (user == comment.user_id)
                                         IconButton(
                                           onPressed: () {
-                                            _showDeleteDialog(comment.id!);
+                                            _showDeleteComment(comment.id!);
                                           },
                                           icon: const Icon(Icons.delete_sharp),
                                         )

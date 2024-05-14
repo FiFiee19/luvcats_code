@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
 import 'package:luvcats_app/features/cathotel/services/cathotel_service.dart';
 import 'package:luvcats_app/features/entrepreneur/screens/editprofile_entre.dart';
+import 'package:luvcats_app/features/profile/screens/editprofile.dart';
 import 'package:luvcats_app/models/cathotel.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
 import 'package:provider/provider.dart';
 
 class ProfileEntre extends StatefulWidget {
-  const ProfileEntre({Key? key,
+  const ProfileEntre({
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -30,8 +32,8 @@ class _ProfileEntreState extends State<ProfileEntre> {
 
   Future<void> fetchProfile() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    cathotel =
-        await cathotelServices.fetchCatIdProfile(context, userProvider.user.id);
+    cathotel = await cathotelServices.fetchCathotelProfile(
+        context, userProvider.user.id);
 
     if (mounted) {
       setState(() {});
@@ -42,11 +44,8 @@ class _ProfileEntreState extends State<ProfileEntre> {
   Widget build(BuildContext context) {
     if (cathotel == null) {
       return Scaffold(
-        backgroundColor: Colors.grey[200],
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+          backgroundColor: Colors.grey[200],
+          body: const LinearProgressIndicator());
     }
     final cathotelData = cathotel!;
     return Scaffold(
@@ -76,7 +75,7 @@ class _ProfileEntreState extends State<ProfileEntre> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditProfileEntre(
-                            CathotelId: cathotelData.id,
+                            cathotelId: cathotelData.id,
                           ),
                         ),
                       );
@@ -112,6 +111,17 @@ class _ProfileEntreState extends State<ProfileEntre> {
                           ),
                           softWrap: true,
                         ),
+                      ),
+                      IconButton(
+                        iconSize: 30,
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Editprofile()),
+                          );
+                        },
                       ),
                     ],
                   ),

@@ -30,6 +30,9 @@ class _NotificationUserState extends State<NotificationUser> {
     try {
       var comments = await commuServices.noti_Comment(context, userId);
       if (mounted) {
+        comments.sort((a, b) => DateTime.parse(b.createdAt!)
+            .compareTo(DateTime.parse(a.createdAt!)));
+
         setState(() {
           comment = comments;
         });
@@ -49,11 +52,11 @@ class _NotificationUserState extends State<NotificationUser> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('การแจ้งเดือน'),
+        title: const Text('การแจ้งเตือน'),
       ),
       backgroundColor: Colors.grey[200],
       body: comment == null
-          ? const Center(child: CircularProgressIndicator())
+          ? const LinearProgressIndicator()
           : comment!.isEmpty
               ? const Center(child: Text('ไม่มีคอมเมนต์'))
               : RefreshIndicator(

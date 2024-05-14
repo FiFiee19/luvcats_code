@@ -25,7 +25,7 @@ commuRouter.post('/postCommu',auth,create)//
 commuRouter.put('/likesCommu/:commuId',auth,likes)//
 // commuRouter.get('/getCommu/:user_id/likes',auth,noti_likes)//
 commuRouter.get('/getCommu/:user_id',auth,userId)//
-// commuRouter.get('/getCommu/id/:user_id',auth,user_Id)//
+commuRouter.get('/getCommu/id/:user_id',auth,user_Id)//
 commuRouter.get('/getCommu/commu/:commuId',auth,commuId)//
 commuRouter.post('/addComment/:commuId',auth,addComment)//
 commuRouter.get('/getComment/:commuId',auth,comment)//

@@ -15,12 +15,12 @@ exports.create = async (req, res) => {
             images, } = req.body;
 
 
-        var user_email = await User.findOne({ email });
+        let user_email = await User.findOne({ email });
         if (user_email) {
-            return res.send('User Already Exists!!!').status(400);
+            return res.status(400).send('User Already Exists!!!');
         }
 
-        const salt = await bcrypt.genSalt(8);
+        const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = new User({
@@ -45,19 +45,15 @@ exports.create = async (req, res) => {
 
         const newEntre = new Entre({
             user: newUser._id,
-            user_id: newUser._id, // ใช้ newUser._id แทน newUser และ user_id
-            store_id: cathotel._id, // ใช้ _id ที่ถูกต้องจาก Mongoose
+            user_id: newUser._id, 
+            store_id: cathotel._id, 
             name: req.body.name,
             store_address: req.body.store_address,
             phone: req.body.phone
         });
-
-        await newEntre.save();
-        console.log(req.body)
+        await newEntre.save();        
         res.send('ลงทะเบียนสำเร็จ!!');
-
-    } catch (e) {
-        console.log(e)
+    } catch (e) {        
         res.status(500).send('Server Error')
 
     }
@@ -77,10 +73,9 @@ exports.list = async (req, res) => {
 
 exports.userId = async (req, res) => {
     try {
-        const entre = await Entre.find({ user_id: req.params.user_id }).populate('user');
-        if (!entre) {
-            return res.status(404).send('Cathotel not found');
-        }
+        const user_id = req.params.user_id
+        const entre = await Entre.find({ user_id }).populate('user');
+        
         res.json(entre);
 
     } catch (e) {
@@ -93,9 +88,6 @@ exports.entreId = async (req, res) => {
     try {
         const id = req.params
         const entre = await Entre.find(id);
-        if (!entre) {
-            return res.status(404).send('Cathotel not found');
-        }
         res.json(entre);
     } catch (e) {
         console.log(e)
@@ -106,17 +98,14 @@ exports.entreId = async (req, res) => {
 
 
 exports.editEntre = async (req, res) => {
-    const id = req.params.id;
+    
     try {
+        const id = req.params.id;
         const updatedEntre = await Entre.findByIdAndUpdate(
             id,
             req.body,
-            { new: true, runValidators: true } // Ensures the return of the updated document and runs schema validations
+            { new: true, runValidators: true } 
         );
-
-        if (!updatedEntre) {
-            return res.status(404).json({ message: "Entrepreneur not found" });
-        }
 
         res.status(200).json({ data: updatedEntre, message: "Updated successfully" });
     } catch (e) {

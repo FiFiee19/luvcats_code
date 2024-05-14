@@ -64,16 +64,14 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
         final String user_id = userProvider.user.id;
 
         List<String> imageUrls = [];
-        String uniqueFileName(String userId, int index) {
-          var uuid = Uuid();
-          return "${userId}/${uuid.v4()}/${index + 1}";
-        }
+        var uuid = Uuid();
+        String folderPath = "Straycat/${user_id}/${uuid.v4()}";
 
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
         for (int i = 0; i < images.length; i++) {
           CloudinaryResponse res = await cloudinary.uploadFile(
             CloudinaryFile.fromFile(images[i].path,
-                folder: "Straycat", publicId: uniqueFileName(user_id, i)),
+                folder: folderPath, publicId: "รูปที่${i + 1}"),
           );
           imageUrls.add(res.secureUrl);
         }
@@ -276,8 +274,7 @@ class _FormsStrayCatState extends State<FormsStrayCat> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 CustomButton(
                   text: 'โพสต์',
                   onTap: postcat,

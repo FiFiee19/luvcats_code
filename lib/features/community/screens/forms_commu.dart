@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class FormsCommu extends StatefulWidget {
-  const FormsCommu({Key? key,
+  const FormsCommu({
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -46,17 +47,16 @@ class _FormsCommuState extends State<FormsCommu> {
 
       List<String> imageUrls = [];
 
-      String uniqueFileName(String userId, int index) {
-        var uuid = Uuid();
-        return "${userId}/${uuid.v4()}/${index + 1}";
-      }
+      // สร้าง folder path ที่ไม่ซ้ำสำหรับแต่ละการโพสต์
+      var uuid = Uuid();
+      String folderPath = "Commu/${user_id}/${uuid.v4()}";
 
       if (images.isNotEmpty) {
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
         for (int i = 0; i < images.length; i++) {
           CloudinaryResponse res = await cloudinary.uploadFile(
             CloudinaryFile.fromFile(images[i].path,
-                folder: "Community", publicId: uniqueFileName(user_id, i)),
+                folder: folderPath, publicId: "รูปที่${i + 1}"),
           );
           imageUrls.add(res.secureUrl);
         }
@@ -69,7 +69,7 @@ class _FormsCommuState extends State<FormsCommu> {
         context: context,
         title: titleController.text,
         description: descriptionController.text,
-        images: imageUrls,
+        images: imageUrls
       );
     }
   }

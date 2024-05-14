@@ -10,7 +10,7 @@ import 'package:luvcats_app/models/maps/place.dart';
 import 'package:luvcats_app/models/maps/place_search.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ApplicationBloc with ChangeNotifier {
+class MapApp with ChangeNotifier {
   final geoLocatorService = GeolocatorService();
   final placesService = PlacesService();
   final markerService = MarkerService();
@@ -21,22 +21,14 @@ class ApplicationBloc with ChangeNotifier {
   BehaviorSubject<LatLngBounds?> bounds = BehaviorSubject<LatLngBounds?>();
   Place? selectedLocationStatic;
   String? placeType;
-  List<Place>? placeResults;
   List<Marker>? markers = [];
-
-  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    var distance = Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
-    return distance / 1000; 
-  }
-
-  ApplicationBloc() {
+  MapApp() {
     setCurrentLocation();
   }
 
   setCurrentLocation() async {
     currentLocation = await geoLocatorService.getCurrentLocation();
     if (currentLocation != null) {
-    
       selectedLocationStatic = Place(
         name: null,
         geometry: Geometry(
@@ -46,7 +38,7 @@ class ApplicationBloc with ChangeNotifier {
           ),
         ),
       );
-    } else {}
+    } 
     notifyListeners();
   }
 
@@ -65,13 +57,12 @@ class ApplicationBloc with ChangeNotifier {
   }
 
   clearSelectedLocation() {
-
     selectedLocationStatic = null;
     searchResults = null;
     placeType = null;
     notifyListeners();
   }
- 
+
   togglePlaceType(
       String value, bool selected, double maxDistanceInKilometers) async {
     if (selected) {
@@ -86,7 +77,6 @@ class ApplicationBloc with ChangeNotifier {
           selectedLocationStatic!.geometry!.location!.lng!,
           placeType!);
 
-     
       var filteredPlaces = places.where((place) {
         var distanceInMeters = Geolocator.distanceBetween(
           selectedLocationStatic!.geometry!.location!.lat!,
@@ -94,7 +84,7 @@ class ApplicationBloc with ChangeNotifier {
           place.geometry!.location!.lat!,
           place.geometry!.location!.lng!,
         );
-        
+
         return distanceInMeters / 1000 <= maxDistanceInKilometers;
       }).toList();
 

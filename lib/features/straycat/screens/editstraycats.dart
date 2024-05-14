@@ -81,7 +81,7 @@ class _EditStraycatsState extends State<EditStraycats> {
   Future<void> fetchStraycat() async {
     try {
       final post =
-          await catServices.fetchIdStraycats(context, widget.starycatsId);
+          await catServices.fetchIdStraycat(context, widget.starycatsId);
 
       breedController.text = post.breed;
       genderController.text = post.gender;
@@ -103,6 +103,7 @@ class _EditStraycatsState extends State<EditStraycats> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('แก้ไขโพสต์'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Form(

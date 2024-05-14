@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/config/datetime.dart';
-import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
@@ -13,7 +12,8 @@ import 'package:provider/provider.dart';
 class ShowSearchCommu extends StatefulWidget {
   final String query;
   final List<Commu> commulist;
-  const ShowSearchCommu({super.key, required this.query, required this.commulist});
+  const ShowSearchCommu(
+      {super.key, required this.query, required this.commulist});
 
   @override
   State<ShowSearchCommu> createState() => _ShowSearchCommuState();
@@ -62,20 +62,12 @@ class _ShowSearchCommuState extends State<ShowSearchCommu> {
 
           return InkWell(
             onTap: () {
-              if (userType == 'user')
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailCommentScreen(commu: commuData),
-                  ),
-                );
-              if (userType == 'admin')
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailCommuAdmin(commu: commuData),
-                  ),
-                );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailCommentScreen(commu: commuData),
+                ),
+              );
             },
             child: Container(
               margin:
@@ -185,6 +177,17 @@ class _ShowSearchCommuState extends State<ShowSearchCommu> {
                               '${commuData.comments.length}',
                               style: TextStyle(color: Colors.grey),
                             ),
+                            if (userProvider.user.type == 'admin')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        delete(commuData.id!);
+                                      },
+                                      icon: const Icon(Icons.delete_sharp)),
+                                ],
+                              ),
                           ],
                         ),
                         Padding(
@@ -197,17 +200,6 @@ class _ShowSearchCommuState extends State<ShowSearchCommu> {
                             ),
                           ),
                         ),
-                        if (userProvider.user.type == 'admin')
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    delete(commuData.id!);
-                                  },
-                                  icon: const Icon(Icons.delete_sharp)),
-                            ],
-                          ),
                       ],
                     ),
                   ),

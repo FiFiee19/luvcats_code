@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class FormsEntre extends StatefulWidget {
-  const FormsEntre({Key? key,
+  const FormsEntre({
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -70,19 +71,17 @@ class _FormsEntreState extends State<FormsEntre> {
       //รูปcathotel
       final cloudinary2 = CloudinaryPublic('dtdloxmii', 'q2govzgn');
       List<String> imageUrls = [];
-      String uniqueFileName(String userId, int index) {
-        var uuid = Uuid();
-        return "${userId}/${uuid.v4()}/${index + 1}";
-      }
+      var uuid = Uuid();
+      String folderPath = "Cathotel/${store_id}/${uuid.v4()}";
 
       for (int i = 0; i < images.length; i++) {
         CloudinaryResponse res = await cloudinary2.uploadFile(
           CloudinaryFile.fromFile(images[i].path,
-              folder: "Cathotel", publicId: uniqueFileName(user_id, i)),
+              folder: folderPath, publicId: "รูปที่${i + 1}"),
         );
         imageUrls.add(res.secureUrl);
       }
-      entreService.signinEntre(
+      entreService.signupEntre(
         email: _emailController.text,
         password: _passwordController.text,
         username: _nameController.text,
@@ -102,8 +101,8 @@ class _FormsEntreState extends State<FormsEntre> {
     } else {
       if (!passwordConfirmed()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('รหัสผ่านไม่ตรงกัน'),
+          const SnackBar(
+            content: Text('รหัสผ่านไม่ตรงกัน'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -113,7 +112,7 @@ class _FormsEntreState extends State<FormsEntre> {
 
       if (_imageP == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: const Text('กรุณาเลือกรูปภาพ'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
@@ -124,7 +123,7 @@ class _FormsEntreState extends State<FormsEntre> {
 
       if (images.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: const Text('กรุณาเลือกรูปภาพ'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
@@ -178,7 +177,7 @@ class _FormsEntreState extends State<FormsEntre> {
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
               children: [
-                SizedBox(height: 100),
+                const SizedBox(height: 100),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -187,8 +186,8 @@ class _FormsEntreState extends State<FormsEntre> {
                       style:
                           GoogleFonts.gluten(fontSize: 60.0, color: Colors.red),
                     ),
-                    SizedBox(height: 10),
-                    Icon(
+                    const SizedBox(height: 10),
+                    const Icon(
                       Icons.pets,
                       color: Colors.red,
                       size: 30.0,
@@ -196,10 +195,10 @@ class _FormsEntreState extends State<FormsEntre> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                Center(child: Text('เลือกรูปภาพโปรไฟล์')),
+                const Center(child: Text('เลือกรูปภาพโปรไฟล์')),
                 const SizedBox(height: 10),
                 _imageP == null
-                    ? CircleAvatar(
+                    ? const CircleAvatar(
                         radius: 100,
                         backgroundColor: Colors.grey,
                       )
@@ -217,7 +216,7 @@ class _FormsEntreState extends State<FormsEntre> {
                       onTap: () {
                         _pickImage();
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.image,
                         color: Colors.black,
                       ),
@@ -236,8 +235,8 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'ชื่อ',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
-                            color: Colors.black38,
+                          borderSide: const BorderSide(
+                            color: Colors.black,
                           )),
                     ),
                   ),
@@ -262,8 +261,8 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'อีเมล',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
-                            color: Colors.black38,
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(96, 59, 53, 53),
                           )),
                     ),
                   ),
@@ -286,13 +285,13 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'รหัสผ่าน',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: TextFormField(
@@ -306,14 +305,14 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'ยืนยันรหัสผ่าน',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
                   ),
                 ),
                 const SizedBox(height: 30),
-                Center(child: Text('เลือกรูปภาพร้านค้า')),
+                const Center(child: Text('เลือกรูปภาพร้านค้า')),
                 const SizedBox(height: 10),
                 images.isNotEmpty
                     ? CarouselSlider(
@@ -334,7 +333,6 @@ class _FormsEntreState extends State<FormsEntre> {
                         ),
                       )
                     : GestureDetector(
-                        onTap: selectImages,
                         child: DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(10),
@@ -366,6 +364,17 @@ class _FormsEntreState extends State<FormsEntre> {
                           ),
                         ),
                       ),
+                Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: GestureDetector(
+                      onTap: () {
+                        selectImages();
+                      },
+                      child: const Icon(
+                        Icons.image,
+                        color: Colors.black,
+                      ),
+                    )),
                 const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.all(3.0),
@@ -380,7 +389,7 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'ชื่อ-นามสกุล',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -400,7 +409,7 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'เบอร์โทร',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -421,7 +430,7 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'รายละะเอียด',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -442,7 +451,7 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'ราคา',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -463,7 +472,7 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'ช่องทางการติดต่อ',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -485,7 +494,7 @@ class _FormsEntreState extends State<FormsEntre> {
                       hintText: 'ที่อยู่ของร้าน',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.black38,
                           )),
                     ),
@@ -531,7 +540,7 @@ class _FormsEntreState extends State<FormsEntre> {
                   text: 'ลงทะเบียน',
                   onTap: formsentre,
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
               ],
             ),
           ),

@@ -51,15 +51,16 @@ class _Tab_BarState extends State<Tab_Bar> {
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
-        physics:const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         backgroundColor: Colors.white,
         onTap: onTap,
-        items:const [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'หน้าแรก'),
-          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'ร้านค้า'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.store), label: 'ร้านฝากเลี้ยง'),
           BottomNavigationBarItem(icon: Icon(Icons.pets), label: 'คอมมูนิตี้'),
           BottomNavigationBarItem(icon: Icon(Icons.place), label: 'แผนที่'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'โปรไฟล์'),

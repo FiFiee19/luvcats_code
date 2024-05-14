@@ -82,7 +82,7 @@ class CustomSearchDelegate extends SearchDelegate<User?> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>const ProfileScreen(),
+                          builder: (context) => const ProfileScreen(),
                         ),
                       );
                     } else {

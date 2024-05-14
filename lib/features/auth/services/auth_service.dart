@@ -37,15 +37,15 @@ class AuthService {
         },
       );
 
-      if (res.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('ลงทะเบียนสำเร็จ!')),
-        );
-        await navigator.pushAndRemoveUntil(
+      if (res.statusCode == 200) {
+        navigator.pushAndRemoveUntil(
           CupertinoPageRoute(
             builder: (context) => const SigninScreen(),
           ),
           (route) => false,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ลงทะเบียนสำเร็จ!')),
         );
       }
 
@@ -169,50 +169,6 @@ class AuthService {
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.all(30),
-        ),
-      );
-    }
-  }
-
-  void getUserData(BuildContext context) async {
-    try {
-      var userProvider = Provider.of<UserProvider>(context, listen: false);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('authtoken');
-
-      if (token == null) {
-        prefs.setString('authtoken', '');
-      }
-
-      var tokenRes = await http.post(
-        Uri.parse('${url}/tokenIsValid'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'authtoken': token!,
-        },
-      );
-
-      var response = jsonDecode(tokenRes.body);
-
-      if (response == true) {
-        http.Response userRes = await http.get(
-          Uri.parse('${url}/'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'authtoken': token
-          },
-        );
-
-        userProvider.setUser(userRes.body);
-        print(userRes.body);
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(30),
         ),
       );
     }

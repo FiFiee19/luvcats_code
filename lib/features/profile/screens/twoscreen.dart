@@ -6,7 +6,9 @@ import 'package:luvcats_app/features/straycat/screens/detail_straycat.dart';
 import 'package:luvcats_app/features/straycat/screens/editstraycats.dart';
 import 'package:luvcats_app/features/straycat/services/straycats_service.dart';
 import 'package:luvcats_app/models/poststraycat.dart';
+import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/carouselslider.dart';
+import 'package:provider/provider.dart';
 
 class TwoScreen extends StatefulWidget {
   const TwoScreen({
@@ -24,16 +26,17 @@ class _TwoScreenState extends State<TwoScreen> {
   final ProfileServices profileService = ProfileServices();
   Map<String, bool> statusCats = {};
 
-  int _current = 0;
-
   @override
   void initState() {
     super.initState();
-    fetchStraycatsProfile();
+    Future.microtask(() {
+      final userId = Provider.of<UserProvider>(context, listen: false).user.id;
+      fetchStraycatsProfile(userId);
+    });
   }
 
-  Future<void> fetchStraycatsProfile() async {
-    straycats = await profileService.fetchStrayCatProfile(context);
+  Future<void> fetchStraycatsProfile(String userId) async {
+    straycats = await profileService.fetchStrayCatId(context, userId);
     if (straycats != null) {
       final newstatusCats = <String, bool>{};
       for (var c in straycats!) {
@@ -85,10 +88,17 @@ class _TwoScreenState extends State<TwoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<UserProvider>(context, listen: false).user.id;
+    Future<void> handleRefresh() async {
+      await fetchStraycatsProfile(userId);
+    }
+
+    Widget bodyContent;
+
     if (straycats == null) {
-      return const Center(child: CircularProgressIndicator());
+      bodyContent = const LinearProgressIndicator();
     } else if (straycats!.isEmpty) {
-      return Scaffold(
+      bodyContent = Scaffold(
         backgroundColor: Colors.grey[200],
         body: const Center(
           child: Text(
@@ -98,232 +108,229 @@ class _TwoScreenState extends State<TwoScreen> {
         ),
       );
     } else {
-      return Scaffold(
-        backgroundColor: Colors.grey[200],
-        body: RefreshIndicator(
-          onRefresh: fetchStraycatsProfile,
-          child: ListView.builder(
-            itemCount: straycats!.length,
-            itemBuilder: (context, index) {
-              final catData = straycats![index];
+      bodyContent = RefreshIndicator(
+        onRefresh: handleRefresh,
+        child: ListView.builder(
+          itemCount: straycats!.length,
+          itemBuilder: (context, index) {
+            final catData = straycats![index];
 
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DetailStraycatScreen(straycat: catData),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 4.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white,
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DetailStraycatScreen(straycat: catData),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomCarouselSlider(images: catData.images),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
+                );
+              },
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomCarouselSlider(images: catData.images),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(
+                              catData.user!.imagesP,
                             ),
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              backgroundImage: NetworkImage(
-                                catData.user!.imagesP,
-                              ),
-                              radius: 20,
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Text(
-                              catData.user!.username,
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
+                            radius: 20,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            catData.user!.username,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "สายพันธุ์:  " + catData.breed,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "เพศ:  " + catData.gender,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "จังหวัด:  " + catData.province,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "ข้อมูลเพิ่มเติม: ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 30, bottom: 20, right: 30),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        catData.description,
-                                        softWrap: true,
-                                        overflow: TextOverflow.visible,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey.shade900,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 28),
-                                child: Text(
-                                  formatDateTime(catData.createdAt),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      if (catData.id != null) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => EditStraycats(
-                                              starycatsId: catData.id!,
-                                            ),
-                                          ),
-                                        );
-                                      } else {}
-                                    },
-                                    icon: const Icon(Icons.edit),
+                                  Text(
+                                    "สายพันธุ์:  " + catData.breed,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
+                                    ),
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _showDeleteDialog(catData.id!);
-                                    },
-                                    icon: const Icon(Icons.delete_sharp),
-                                  )
                                 ],
                               ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                              if (!(statusCats[catData.id] ?? false))
-                                Center(
-                                  child: ElevatedButton(
-                                    onPressed: () =>
-                                        catServices.updateCatStatus(
-                                      context,
-                                      '${catData.id}',
-                                      'yes',
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: const Size(40, 40),
-                                        backgroundColor: Colors.red),
-                                    child: const Text(
-                                      'ได้บ้านแล้ว',
-                                      style: TextStyle(color: Colors.white),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "เพศ:  " + catData.gender,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "จังหวัด:  " + catData.province,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "ข้อมูลเพิ่มเติม: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 30, bottom: 20, right: 30),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      catData.description,
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 28),
+                              child: Text(
+                                formatDateTime(catData.createdAt),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade600,
                                 ),
-                              if (statusCats[catData.id] ?? false)
-                                const Center(
-                                  child: Text('ได้บ้านแล้ว',
-                                      style: TextStyle(color: Colors.red)),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    if (catData.id != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditStraycats(
+                                            starycatsId: catData.id!,
+                                          ),
+                                        ),
+                                      );
+                                    } else {}
+                                  },
+                                  icon: const Icon(Icons.edit),
                                 ),
-                            ]),
-                      ),
-                     const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
+                                IconButton(
+                                  onPressed: () {
+                                    _showDeleteDialog(catData.id!);
+                                  },
+                                  icon: const Icon(Icons.delete_sharp),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            if (!(statusCats[catData.id] ?? false))
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: () => catServices.updateCatStatus(
+                                    context,
+                                    '${catData.id}',
+                                    'yes',
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size(40, 40),
+                                      backgroundColor: Colors.red),
+                                  child: const Text(
+                                    'ได้บ้านแล้ว',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            if (statusCats[catData.id] ?? false)
+                              const Center(
+                                child: Text('ได้บ้านแล้ว',
+                                    style: TextStyle(color: Colors.red)),
+                              ),
+                          ]),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       );
     }
+    return Scaffold(backgroundColor: Colors.grey[200], body: bodyContent);
   }
 }

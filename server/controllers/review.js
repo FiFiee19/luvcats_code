@@ -17,14 +17,14 @@ exports.addReview = async (req, res) => {
             cathotelId: cathotel
         })
         await newReview.save();
-        var addReview = await Cathotel.findById(cathotelId);
+        let addReview = await Cathotel.findById(cathotelId);
         addReview = await Cathotel.findByIdAndUpdate(
             cathotelId,
             { $push: { reviews: newReview } },
             { new: true }
         );
 
-        return res.status(200).json(await addReview.populate('user_id'));
+        res.status(200).json(addReview);
 
     } catch (e) {
         console.log(e)
@@ -46,16 +46,17 @@ exports.review = async (req, res) => {
             return res.status(404).json({ msg: 'Review not found' });
         }
 
-        res.json(review.reviews); // ส่งคอมเมนต์กลับไปยัง client
+        res.json(review.reviews); 
     } catch (e) {
         console.log(e);
         res.status(500).send('Server Error');
     }
-};
+}
 
 exports.userId = async (req,res) => {
     try {
-        const cathotel = await Cathotel.find({ user_id: req.params.user_id }).populate({
+        const user_id = req.params.user_id
+        const cathotel = await Cathotel.find({ user_id }).populate({
             path: 'reviews',
             populate: { path: 'user' }
         });
@@ -80,18 +81,14 @@ exports.replyToReview = async (req, res) => {
             return res.status(404).json({ msg: 'Review not found' });
         }
 
-        if (review.reply) {
-            return res.status(400).json({ msg: 'Review already has a reply' });
-        }
-
         review.reply = {
             message,
-            repliedAt: new Date(), // ตัวอย่างการบันทึกเวลาขณะตอบกลับ
+            repliedAt: new Date(), 
         };
 
         await review.save();
 
-        res.json({ msg: 'Reply added to review' });
+        res.json(review);
 
     } catch (e) {
         console.log(e);

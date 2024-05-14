@@ -61,10 +61,10 @@ class _EditCommuState extends State<EditCommu> {
   //เรียกข้อมูลCommuจากcommuServices
   Future<void> fetchCommu() async {
     try {
-      final data = await commuServices.fetchIdCommu(context, widget.commuId);
-      titleController.text = data.title;
-      descriptionController.text = data.description;
-      imageUrls = data.images;
+      final commu = await commuServices.fetchIdCommu(context, widget.commuId);
+      titleController.text = commu.title;
+      descriptionController.text = commu.description;
+      imageUrls = commu.images;
     } catch (e) {
       print('Error loading post data: $e');
     }

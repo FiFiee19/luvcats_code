@@ -16,8 +16,8 @@ class UserProvider extends ChangeNotifier {
 
   User get user => _user;
 
-  void setUser(String user) {
-    var decodedJson = json.decode(user);
+  void setUser(String userData) {
+    var decodedJson = json.decode(userData);
 
     if (decodedJson['user'] != null) {
       _user = User.fromMap(decodedJson['user']);
@@ -29,8 +29,4 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setUserFromModel(User user) {
-    _user = user;
-    notifyListeners();
-  }
 }

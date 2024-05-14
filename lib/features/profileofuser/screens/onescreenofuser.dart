@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/admin/screens/detailcommu_admin.dart';
 import 'package:luvcats_app/features/community/screens/detail_comment.dart';
 import 'package:luvcats_app/features/community/services/commu_service.dart';
 import 'package:luvcats_app/features/profile/services/profile_service.dart';
@@ -79,10 +78,11 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user = userProvider.user.id;
     final userType = userProvider.user.type;
+    Widget bodyContent;
     if (commu == null) {
-      return const Center(child: CircularProgressIndicator());
+      bodyContent = const LinearProgressIndicator();
     } else if (commu!.isEmpty) {
-      return Scaffold(
+      bodyContent = Scaffold(
         backgroundColor: Colors.grey[200],
         body: const Center(
           child: Text(
@@ -92,201 +92,196 @@ class _OneScreenOfUserState extends State<OneScreenOfUser> {
         ),
       );
     } else {
-      return Scaffold(
-        backgroundColor: Colors.grey[200],
-        body: RefreshIndicator(
-          onRefresh: fetchCommuId,
-          child: ListView.builder(
-            itemCount: commu!.length,
-            itemBuilder: (context, index) {
-              final commuData = commu![index];
+      bodyContent = RefreshIndicator(
+        onRefresh: fetchCommuId,
+        child: ListView.builder(
+          itemCount: commu!.length,
+          itemBuilder: (context, index) {
+            final commuData = commu![index];
 
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailCommuAdmin(commu: commuData),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 4.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white,
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailCommentScreen(commu: commuData),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
+                );
+              },
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(
+                              commuData.user!.imagesP,
+                            ),
+                            radius: 20,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            commuData.user!.username,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    if (commuData.images.isNotEmpty)
+                      CustomCarouselSlider(
+                        images: commuData.images,
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              backgroundImage: NetworkImage(
-                                commuData.user!.imagesP,
-                              ),
-                              radius: 20,
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
                             Text(
-                              commuData.user!.username,
+                              commuData.title,
                               style: const TextStyle(
-                                  fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black),
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      if (commuData.images.isNotEmpty)
-                        CustomCarouselSlider(
-                          images: commuData.images,
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                commuData.title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Text(
+                              commuData.description,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.grey.shade500,
                               ),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
-                              Text(
-                                commuData.description,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey.shade500,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
-                              if (userType == 'user')
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    LikeAnimation(
-                                      isAnimating:
-                                          commuData.likes.contains(widget.user),
-                                      smallLike: true,
-                                      child: IconButton(
-                                        icon: commuData.likes
-                                                .contains(widget.user)
-                                            ? const Icon(
-                                                Icons.favorite,
-                                                color: Colors.red,
-                                              )
-                                            : const Icon(
-                                                Icons.favorite_border,
-                                              ),
-                                        onPressed: () async {
-                                          setState(() {
-                                            if (commuData.likes
-                                                .contains(widget.user)) {
-                                              commuData.likes
-                                                  .remove(widget.user);
-                                            } else {
-                                              commuData.likes.add(widget.user);
-                                            }
-                                          });
-                                          await commuServices.likesCommu(
-                                              context, commuData.id!);
-                                        },
+                            ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            if (userType == 'user')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  LikeAnimation(
+                                    isAnimating:
+                                        commuData.likes.contains(widget.user),
+                                    smallLike: true,
+                                    child: IconButton(
+                                      icon:
+                                          commuData.likes.contains(widget.user)
+                                              ? const Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                )
+                                              : const Icon(
+                                                  Icons.favorite_border,
+                                                ),
+                                      onPressed: () async {
+                                        setState(() {
+                                          if (commuData.likes
+                                              .contains(widget.user)) {
+                                            commuData.likes.remove(widget.user);
+                                          } else {
+                                            commuData.likes.add(widget.user);
+                                          }
+                                        });
+                                        await commuServices.likesCommu(
+                                            context, commuData.id!);
+                                      },
+                                    ),
+                                  ),
+                                  Text(
+                                    '${commuData.likes.length}',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.comment,
+                                    ),
+                                    onPressed: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailCommentScreen(
+                                          commu: commuData,
+                                        ),
                                       ),
                                     ),
-                                    Text(
-                                      '${commuData.likes.length}',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    IconButton(
+                                  ),
+                                  Text(
+                                    '${commuData.comments.length}',
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            if (userType == 'admin')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    icon: commuData.likes.contains(user)
+                                        ? const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                          )
+                                        : const Icon(
+                                            Icons.favorite_border,
+                                          ),
+                                    onPressed: () async {},
+                                  ),
+                                  Text(
+                                    '${commuData.likes.length}',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  IconButton(
                                       icon: const Icon(
                                         Icons.comment,
                                       ),
-                                      onPressed: () =>
-                                          Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailCommentScreen(
-                                            commu: commuData,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      '${commuData.comments.length}',
-                                      style:
-                                          const TextStyle(color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                              if (userType == 'admin')
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                      icon: commuData.likes.contains(user)
-                                          ? const Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
-                                            )
-                                          : const Icon(
-                                              Icons.favorite_border,
-                                            ),
-                                      onPressed: () async {},
-                                    ),
-                                    Text(
-                                      '${commuData.likes.length}',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    IconButton(
-                                        icon: const Icon(
-                                          Icons.comment,
-                                        ),
-                                        onPressed: () {}),
-                                    Text(
-                                      '${commuData.comments.length}',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                              if (userType == 'admin')
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          _showDeleteDialog(commuData.id!);
-                                        },
-                                        icon: const Icon(Icons.delete_sharp)),
-                                  ],
-                                ),
-                            ]),
-                      ),
-                    ],
-                  ),
+                                      onPressed: () {}),
+                                  Text(
+                                    '${commuData.comments.length}',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            if (userType == 'admin')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        _showDeleteDialog(commuData.id!);
+                                      },
+                                      icon: const Icon(Icons.delete_sharp)),
+                                ],
+                              ),
+                          ]),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       );
     }
+    return Scaffold(backgroundColor: Colors.grey[200], body: bodyContent);
   }
 }

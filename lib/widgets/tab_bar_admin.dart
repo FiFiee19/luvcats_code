@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:luvcats_app/features/admin/screens/commu_admin.dart';
 import 'package:luvcats_app/features/admin/screens/notification_admin.dart';
-import 'package:luvcats_app/features/admin/screens/staycats_admin.dart';
+import 'package:luvcats_app/features/community/screens/commuscreen.dart';
+import 'package:luvcats_app/features/straycat/screens/straycatscreen.dart';
 
 class TabBarAdmin extends StatefulWidget {
   const TabBarAdmin({Key? key}) : super(key: key);
@@ -40,9 +40,9 @@ class _TabBarAdminState extends State<TabBarAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        children: <Widget> [
-          StrayCatAdmin(),
-          CommuAdmin(),
+        children: <Widget>[
+          StrayCatScreen(),
+          CommuScreen(),
           NotificationAdmin(),
         ],
         controller: pageController,

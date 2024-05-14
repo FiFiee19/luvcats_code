@@ -29,18 +29,16 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
   @override
   void initState() {
     super.initState();
-    final applicationBloc =
-        Provider.of<ApplicationBloc>(context, listen: false);
-    applicationBloc.markers!.clear();
+    final mapApp = Provider.of<MapApp>(context, listen: false);
+    mapApp.markers!.clear();
 
-    locationSubscription =
-        applicationBloc.selectedLocation.stream.listen((place) {
+    locationSubscription = mapApp.selectedLocation.stream.listen((place) {
       if (place != null) {
         _goToPlace(place);
       }
     });
 
-    boundsSubscription = applicationBloc.bounds.listen((bounds) async {
+    boundsSubscription = mapApp.bounds.listen((bounds) async {
       if (bounds != null) {
         final GoogleMapController controller = await _mapController.future;
         controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
@@ -63,7 +61,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final applicationBloc = Provider.of<ApplicationBloc>(context);
+    final applicationBloc = Provider.of<MapApp>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +69,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
         centerTitle: true,
       ),
       body: applicationBloc.currentLocation == null
-          ? Center(child: CircularProgressIndicator())
+          ? LinearProgressIndicator()
           : SingleChildScrollView(
               child: Column(
                 children: [
@@ -92,23 +90,21 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
                     children: [
                       Container(
                         height: 595.0,
-                        child: Expanded(
-                          child: GoogleMap(
-                            mapType: MapType.normal,
-                            myLocationEnabled: true,
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(
-                                  applicationBloc.currentLocation!.latitude,
-                                  applicationBloc.currentLocation!.longitude),
-                              zoom: 14,
-                            ),
-                            onMapCreated: (GoogleMapController controller) {
-                              _mapController.complete(controller);
-                            },
-                            scrollGesturesEnabled: true,
-                            zoomGesturesEnabled: true,
-                            markers: Set<Marker>.of(applicationBloc.markers!),
+                        child: GoogleMap(
+                          mapType: MapType.normal,
+                          myLocationEnabled: true,
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                                applicationBloc.currentLocation!.latitude,
+                                applicationBloc.currentLocation!.longitude),
+                            zoom: 14,
                           ),
+                          onMapCreated: (GoogleMapController controller) {
+                            _mapController.complete(controller);
+                          },
+                          scrollGesturesEnabled: true,
+                          zoomGesturesEnabled: true,
+                          markers: Set<Marker>.of(applicationBloc.markers!),
                         ),
                       ),
                       if (applicationBloc.searchResults != null &&
@@ -148,7 +144,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 10.0),
         child: FloatingActionButton(
-          onPressed: () => Provider.of<ApplicationBloc>(context, listen: false)
+          onPressed: () => Provider.of<MapApp>(context, listen: false)
               .togglePlaceType("pet_store", true, 3),
           child: Icon(Icons.filter_list),
           backgroundColor: Colors.red,

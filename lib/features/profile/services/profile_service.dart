@@ -10,6 +10,7 @@ import 'package:luvcats_app/models/poststraycat.dart';
 import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class ProfileServices {
   //ดึงข้อมูลcommuจากuser_idของผู้ใช้งาน
@@ -82,42 +83,6 @@ class ProfileServices {
       );
     }
     return commuList;
-  }
-
-  //ดึงข้อมูลStrayCatจากuser_idของผู้ใช้งาน
-  Future<List<Straycat>> fetchStrayCatProfile(BuildContext context) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final userId = userProvider.user.id;
-    List<Straycat> straycatList = [];
-    try {
-      http.Response res =
-          await http.get(Uri.parse('$url/getStrayCat/$userId'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'authtoken': userProvider.user.token,
-      });
-
-      if (res.statusCode == 200) {
-        for (int i = 0; i < jsonDecode(res.body).length; i++) {
-          straycatList.add(
-            Straycat.fromJson(
-              jsonEncode(
-                jsonDecode(res.body)[i],
-              ),
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(30),
-        ),
-      );
-    }
-    return straycatList;
   }
 
   //ดึงข้อมูลStrayCatจากuser_idที่กำหนด
@@ -291,22 +256,27 @@ class ProfileServices {
 
   //แก้ไขข้อมูลส่วนตัวของuser
   Future<User?> editUser(
-      BuildContext context, String username, File? image) async {
+    BuildContext context,
+    String username,
+    File? image,
+  ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userId = userProvider.user.id;
-
+    final userType = userProvider.user.type;
     String? imageUrl = userProvider.user.imagesP;
 
     try {
       if (image != null) {
+        var uuid = Uuid();
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
-        CloudinaryResponse response = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(image.path, folder: 'a'),
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(image.path,
+              folder: "ImageP/$userType/edit/$username", publicId: uuid.v4()),
         );
-        imageUrl = response.secureUrl;
+        imageUrl = res.secureUrl;
       }
 
-      final response = await http.put(
+      final res = await http.put(
         Uri.parse('$url/editU/$userId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -318,24 +288,17 @@ class ProfileServices {
         }),
       );
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        if (responseData is Map<String, dynamic>) {
-          // final updatedUser = User.fromMap(responseData);
-          // userProvider.updateUser();
+      if (res.statusCode == 200) {
+        try {
+          final responseData = json.decode(res.body);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('แก้ไขสำเร็จ!')),
           );
           Navigator.pop(context);
-          // return updatedUser;
-        } else {
-          throw Exception('Invalid response format');
+          return User.fromJson(responseData);
+        } catch (e) {
+          print('Failed to parse response: $e');
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to update the profile: ${response.body}')),
-        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -354,7 +317,7 @@ class ProfileServices {
   Future<List<User>?> searchName(BuildContext context, String username) async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final response = await http.get(
+      final res = await http.get(
         Uri.parse('$url/searchU/$username'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -362,8 +325,8 @@ class ProfileServices {
         },
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> dataList = jsonDecode(response.body);
+      if (res.statusCode == 200) {
+        final List<dynamic> dataList = jsonDecode(res.body);
         final List<User> users =
             dataList.map((data) => User.fromMap(data)).toList();
         return users;

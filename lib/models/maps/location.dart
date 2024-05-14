@@ -4,10 +4,10 @@ class Location{
 
   Location({this.lat, this.lng});
 
-  factory Location.fromJson(Map<dynamic,dynamic> parsedJson){
+  factory Location.fromJson(Map<dynamic,dynamic> map){
     return Location(
-        lat: parsedJson['lat'],
-        lng: parsedJson['lng']
+        lat: map['lat'],
+        lng: map['lng']
     );
   }
 

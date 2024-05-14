@@ -98,7 +98,7 @@ class _DetailExpenseState extends State<DetailExpense> {
         title: Text('รายละเอียดค่าใช้จ่าย: ${widget.category}'),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const LinearProgressIndicator()
           : RefreshIndicator(
               onRefresh: () => fetchExpense(widget.userId),
               child: Column(

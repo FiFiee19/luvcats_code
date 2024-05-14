@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/features/dashborad/screens/dashboard_straycat.dart';
+import 'package:luvcats_app/features/dashboard/screens/dashboard_straycat.dart';
 import 'package:luvcats_app/features/expense/screens/expensescreen.dart';
 import 'package:luvcats_app/features/notifications/screens/notification.dart';
 import 'package:luvcats_app/features/profile/screens/editpassword.dart';

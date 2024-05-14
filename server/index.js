@@ -32,11 +32,4 @@ connectDB()
 //runserver
 app.listen(PORT, () => {
   console.log(`connected at port:  http://localhost:${PORT}`);
-
-  ngrok.connect(PORT).then(url => {
-    console.log(`Ngrok tunnel at: ${url}`);
-  }).catch(error => {
-    console.log(`${error}`);
-  });
-  
-  })
+})

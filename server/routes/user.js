@@ -7,7 +7,7 @@ const {
   editUser,
   userId,
   searchUser,
-  searchEntre,
+  
 
 } = require('../controllers/user')
 

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/auth/services/auth_service.dart';
-import 'package:luvcats_app/models/user.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -21,30 +20,27 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _cpasswordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final AuthService authService = AuthService();
-  final _signupFormKey = GlobalKey<FormState>();
-  File? file;
-  String? urlImageProfile;
-  bool isImageSelected = false;
-  var user = User;
-  List<File>? _image;
+  final GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
+  List<File>? imageP;
 
   //เลือกรูปภาพ
-  void _pickImage() async {
+  void selectImages() async {
     var res = await pickImagesFiles(false);
     setState(() {
-      _image = res;
+      imageP = res;
     });
   }
 
   //สมัครสมาชิก
   void signupUser() async {
-    if (_signupFormKey.currentState!.validate() &&
+    if (signupFormKey.currentState!.validate() &&
         passwordConfirmed() &&
-        _image != null) {
+        imageP != null &&
+        imageP!.isNotEmpty) {
       //บันทึกภาพลงCloudinary
       final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
       CloudinaryResponse resimg = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(_image![0].path,
+        CloudinaryFile.fromFile(imageP![0].path,
             folder: "ImageP/user", publicId: _nameController.text),
       );
       print(resimg.secureUrl);
@@ -68,7 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
         );
       }
 
-      if (_image == null) {
+      if (imageP == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('กรุณาเลือกรูปภาพ'),
@@ -103,7 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Form(
-        key: _signupFormKey,
+        key: signupFormKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
@@ -137,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              _image == null
+              imageP == null
                   ? const CircleAvatar(
                       radius: 100,
                       backgroundColor: Colors.grey,
@@ -145,7 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   : CircleAvatar(
                       radius: 100,
                       backgroundImage: Image.file(
-                        _image![0],
+                        imageP![0],
                         fit: BoxFit.cover,
                       ).image,
                       backgroundColor: Colors.white,
@@ -154,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   padding: const EdgeInsets.only(left: 150),
                   child: GestureDetector(
                     onTap: () {
-                      _pickImage();
+                      selectImages();
                     },
                     child: const Icon(
                       Icons.image,
@@ -181,7 +177,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-             const SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: TextFormField(
@@ -213,13 +209,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: TextFormField(
                   controller: _passwordController,
                   validator: (val) {
-                    if (val!.isEmpty) {
+                    if (val == null || val.isEmpty) {
                       return 'กรุณากรอกรหัสผ่าน';
-                    } else if (RegExp(r'^[A-Za-z\d]{8,}$').hasMatch(val)) {
-                      return null;
-                    } else {
+                    } else if (!RegExp(r'^[A-Za-z\d]+$').hasMatch(val)) {
+                      return 'รหัสผ่านต้องเป็นตัวอักษรหรือตัวเลขเท่านั้น';
+                    } else if (val.length < 8) {
                       return 'รหัสผ่านควรมีอักขระ 8 ตัวขึ้นไป';
                     }
+                    return null;
                   },
                   decoration: InputDecoration(
                     hintText: 'รหัสผ่าน',

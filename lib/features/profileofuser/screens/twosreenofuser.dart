@@ -83,12 +83,13 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userType = userProvider.user.type;
+    Widget bodyContent;
     if (straycats == null) {
-      return const Center(child:  CircularProgressIndicator());
+      bodyContent = const LinearProgressIndicator();
     } else if (straycats!.isEmpty) {
-      return Scaffold(
+      bodyContent = Scaffold(
         backgroundColor: Colors.grey[200],
-        body:const Center(
+        body: const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -96,187 +97,186 @@ class _TwoSreenOfUserState extends State<TwoSreenOfUser> {
         ),
       );
     } else {
-      return Scaffold(
-        backgroundColor: Colors.grey[200],
-        body: RefreshIndicator(
-          onRefresh: fetchStraycatsId,
-          child: ListView.builder(
-            itemCount: straycats!.length,
-            itemBuilder: (context, index) {
-              final catData = straycats![index];
+      bodyContent = RefreshIndicator(
+        onRefresh: fetchStraycatsId,
+        child: ListView.builder(
+          itemCount: straycats!.length,
+          itemBuilder: (context, index) {
+            final catData = straycats![index];
 
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DetailStraycatScreen(straycat: catData),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin:const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white,
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DetailStraycatScreen(straycat: catData),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomCarouselSlider(images: catData.images),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
+                );
+              },
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomCarouselSlider(images: catData.images),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(
+                              catData.user!.imagesP,
                             ),
-                            CircleAvatar(
-                              backgroundColor: Colors.grey,
-                              backgroundImage: NetworkImage(
-                                catData.user!.imagesP,
-                              ),
-                              radius: 20,
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Text(
-                              catData.user!.username,
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
+                            radius: 20,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            catData.user!.username,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "สายพันธุ์:  " + catData.breed,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "เพศ:  " + catData.gender,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "จังหวัด:  " + catData.province,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, bottom: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "ข้อมูลเพิ่มเติม: ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 30, bottom: 20, right: 30),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        catData.description,
-                                        softWrap: true,
-                                        overflow: TextOverflow.visible,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey.shade900,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 28),
+                                  Text(
+                                    "สายพันธุ์:  " + catData.breed,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "เพศ:  " + catData.gender,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "จังหวัด:  " + catData.province,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "ข้อมูลเพิ่มเติม: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 30, bottom: 20, right: 30),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
                                     child: Text(
-                                      formatDateTime(catData.createdAt),
+                                      catData.description,
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade600,
+                                        color: Colors.grey.shade900,
                                       ),
                                     ),
                                   ),
-                                  const Spacer(),
-                                  if (userType == 'admin')
-                                    IconButton(
-                                        onPressed: () {
-                                          _showDeleteDialog(catData.id!);
-                                        },
-                                        icon: const Icon(Icons.delete_sharp)),
                                 ],
                               ),
-                            ]),
-                      ),
-                    ],
-                  ),
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 28),
+                                  child: Text(
+                                    formatDateTime(catData.createdAt),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                if (userType == 'admin')
+                                  IconButton(
+                                      onPressed: () {
+                                        _showDeleteDialog(catData.id!);
+                                      },
+                                      icon: const Icon(Icons.delete_sharp)),
+                              ],
+                            ),
+                          ]),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       );
     }
+    return Scaffold(backgroundColor: Colors.grey[200], body: bodyContent);
   }
 }

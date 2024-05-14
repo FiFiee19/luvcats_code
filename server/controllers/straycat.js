@@ -7,7 +7,7 @@ exports.create = async (req, res) => {
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        let straycat = new Straycat({  
+        const straycat = new Straycat({  
             user: user,
             user_id: req.user,
             description,
@@ -17,10 +17,9 @@ exports.create = async (req, res) => {
             images
         });
 
-        straycat = await straycat.save();
+        await straycat.save();
         res.json(straycat);
 
-        // res.send(straycat);
     } catch (e) {
         console.log(e);
         res.status(500).send('Server Error');
@@ -33,7 +32,6 @@ exports.list = async (req, res) => {
         const straycatlist = await Straycat.find({}).populate('user')
         res.json(straycatlist);
  
-        
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -41,17 +39,17 @@ exports.list = async (req, res) => {
 
 }
 
-exports.userId = async (req,res) => {
-    try {
-        const findUserId = await Straycat.find({ user_id: req.user }).populate('user')
-        res.json(findUserId);
+// exports.userId = async (req,res) => {
+//     try {
+//         const findUserId = await Straycat.find({ user_id: req.user }).populate('user')
+//         res.json(findUserId);
 
-    } catch (e) {
-        console.log(e)
-        res.status(500).send('Server Error')
+//     } catch (e) {
+//         console.log(e)
+//         res.status(500).send('Server Error')
 
-    }
-}
+//     }
+// }
 
 exports.user_Id = async (req,res) => {
     try {
@@ -66,11 +64,11 @@ exports.user_Id = async (req,res) => {
     }
 }
 
-exports.straycatsId = async (req,res) => {
+exports.straycatId = async (req,res) => {
     try {
-        const { straycatsId } = req.params;
-        const findstraycatsId = await Straycat.findById( straycatsId ).populate('user')
-        res.json(findstraycatsId);
+        const { straycatId } = req.params;
+        const findstraycatId = await Straycat.findById( straycatId ).populate('user')
+        res.json(findstraycatId);
 
     } catch (e) {
         console.log(e)
@@ -79,11 +77,12 @@ exports.straycatsId = async (req,res) => {
     }
 }
 
-exports.deleteStraycats = async (req, res) => {
-    const straycatId = req.params.id;
+exports.deleteStraycat = async (req, res) => {
+    
     try {
+        const  straycatId  = req.params.id;
         await Straycat.findByIdAndDelete(straycatId);
-        return res.status(200).json({message:"Deleted successfully"})
+        res.status(200).json({message:"Deleted successfully"})
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -92,14 +91,15 @@ exports.deleteStraycats = async (req, res) => {
 }
 
 exports.editStraycats = async (req, res) => {
-    const straycatId = req.params.id;
+    
     try { 
+        const straycatId = req.params.id;
         const newPost = await Straycat.findByIdAndUpdate(
             straycatId, 
             req.body, 
-            { new: true } // ตัวเลือกนี้จะทำให้ method คืนค่าเอกสารหลังจากอัปเดต
+            { new: true } 
         );
-        return res.status(200).json({data:newPost , message:"Updated successfully "});
+        res.status(200).json({data:newPost , message:"Updated successfully "});
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -115,9 +115,8 @@ exports.updateStatus = async (req, res) => {
         const straycat = await Straycat.findByIdAndUpdate(straycatId, { status: status }, { new: true });
         
         if (!straycat) {
-          return res.status(404).send('Stray cat not found');
-        }
-    
+          res.status(404).send('Stray cat not found');
+        }    
         res.status(200).json(straycat);
     } catch (e) {
         console.log(e)
@@ -125,32 +124,3 @@ exports.updateStatus = async (req, res) => {
     }
 
 }
-
-exports.searchName =  async (req, res) => {
-    try {
-      const straycat = await Straycat.find({
-        username: { $regex: req.params.username, $options: "i" },
-      }).populate('user');
-  
-      res.json(straycat);
-    } catch (e) {
-      res.status(500).json({ error: e.message });
-    }
-  }
-
-//   exports.filterProvince =  async (req, res) => {
-//     const match = {}
-//     if (req.query.province) {
-//         match.province = req
-//     }
-//     try {
-
-//       const straycat = await Straycat.find({
-//         username: { $regex: req.params.username, $options: "i" },
-//       }).populate('user');
-  
-//       res.json(straycat);
-//     } catch (e) {
-//       res.status(500).json({ error: e.message });
-//     }
-//   }
