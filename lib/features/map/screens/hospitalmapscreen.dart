@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:luvcats_app/features/map/screens/application_bloc.dart';
+import 'package:luvcats_app/features/map/screens/mapapp.dart';
 import 'package:luvcats_app/models/maps/place.dart';
 import 'package:provider/provider.dart';
 
@@ -29,16 +29,16 @@ class _HospitalMapScreenState extends State<HospitalMapScreen> {
   @override
   void initState() {
     super.initState();
-    final applicationBloc = Provider.of<MapApp>(context, listen: false);
-    applicationBloc.markers!.clear();
+    final mapApp = Provider.of<MapApp>(context, listen: false);
+    mapApp.markers!.clear();
     locationSubscription =
-        applicationBloc.selectedLocation.stream.listen((place) {
+        mapApp.selectedLocation.stream.listen((place) {
       if (place != null) {
         _goToPlace(place);
       }
     });
 
-    boundsSubscription = applicationBloc.bounds.listen((bounds) async {
+    boundsSubscription = mapApp.bounds.listen((bounds) async {
       if (bounds != null) {
         final GoogleMapController controller = await _mapController.future;
         controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));

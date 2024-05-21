@@ -14,7 +14,7 @@ exports.list = async (req, res) => {
 
 exports.userId = async (req,res) => {
     try {
-        const user_id = req.params.user_id;
+        const {user_id} = req.params;
         const cathotel = await Cathotel.find({ user_id }).populate('user');
         res.json(cathotel);
 
@@ -44,7 +44,7 @@ exports.userId = async (req,res) => {
 exports.editCathotel = async (req, res) => {
     
     try { 
-        const id = req.params.id;
+        const {id} = req.params;
         const newCathotel = await Cathotel.findByIdAndUpdate(
             id, 
             req.body, 

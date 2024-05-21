@@ -12,7 +12,7 @@ const expenseRouter = require("./routes/expense");
 const PORT = process.env.PORT || 5000;
 const app = express();
 const connectDB = require('./config/db');
-const ngrok = require('ngrok');
+
 
 //เรียกใช้
 app.use(express.json());

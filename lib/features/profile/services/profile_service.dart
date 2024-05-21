@@ -137,13 +137,9 @@ class ProfileServices {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        if (data is Map<String, dynamic>) {
-          return User.fromMap(data);
-        } else {
-          throw Exception('Data format is not correct: Expected a Map');
-        }
+        return User.fromMap(data);
       } else {
-        throw Exception('Failed to load data: Status ${res.statusCode}');
+        throw Exception('Failed to load data');
       }
     } catch (e) {
       throw Exception('Error fetching data: $e');
@@ -327,9 +323,11 @@ class ProfileServices {
 
       if (res.statusCode == 200) {
         final List<dynamic> dataList = jsonDecode(res.body);
-        final List<User> users =
-            dataList.map((data) => User.fromMap(data)).toList();
-        return users;
+        return dataList.map((data) {
+          return User.fromMap(data as Map<String, dynamic>);
+        }).toList();
+      } else {
+        throw Exception('เกิดข้อผิดพลาด');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

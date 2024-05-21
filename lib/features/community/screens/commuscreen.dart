@@ -77,6 +77,32 @@ class _CommuScreenState extends State<CommuScreen> {
     );
   }
 
+  Widget floatingActionButton() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userType = userProvider.user.type;
+
+    if (userType == 'user') {
+      return FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.red,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FormsCommu(),
+            ),
+          );
+        },
+        shape: const CircleBorder(),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false).user;
@@ -259,26 +285,26 @@ class _CommuScreenState extends State<CommuScreen> {
                                   "${commuData.comments.length}",
                                   style: const TextStyle(color: Colors.grey),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          _showDeleteDialog(commuData.id!);
-                                        },
-                                        icon: const Icon(Icons.delete_sharp)),
-                                  ],
-                                ),
                               ],
                             ),
                           Padding(
                             padding: const EdgeInsets.only(left: 5, bottom: 10),
-                            child: Text(
-                              formatDateTime(commuData.createdAt),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey.shade600,
-                              ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  formatDateTime(commuData.createdAt),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const Spacer(),
+                                IconButton(
+                                    onPressed: () {
+                                      _showDeleteDialog(commuData.id!);
+                                    },
+                                    icon: const Icon(Icons.delete_sharp)),
+                              ],
                             ),
                           ),
                         ],
@@ -306,25 +332,7 @@ class _CommuScreenState extends State<CommuScreen> {
       ]),
       backgroundColor: Colors.grey[200],
       body: bodyContent,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.red,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FormsCommu(),
-              ),
-            );
-          },
-          shape: const CircleBorder(),
-        ),
-      ),
+      floatingActionButton: floatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }

@@ -2,6 +2,7 @@ const Commu = require('../models/postcommu')
 const User = require('../models/user');
 const Comment = require('../models/comment');
 const Report = require('../models/report');
+
 exports.list = async (req, res) => {
     try {
         const commu = await Commu.find({}).populate('user')
@@ -59,34 +60,6 @@ exports.likes = async (req, res) => {
     }
 };
 
-
-
-// exports.noti_likes = async (req, res) => {
-//     try {
-
-//         const commus = await Commu.find({ user_id: req.user })
-//             .populate('likes', 'username imagesP')
-//             .exec();
-
-//         if (!commus.length) {
-//             return res.status(404).send({ message: 'No Commu found for this user.' });
-//         }
-
-//         // ปรับปรุงการแสดงข้อมูล
-//         const allLikes = commus.map(commu => ({
-//             title: commu.title,
-//             likes: commu.likes.map(like => ({
-//                 userId: like._id, // แสดง userId ของผู้ใช้ที่กดถูกใจ
-//                 username: like.username, // ชื่อผู้ใช้
-//                 imagesP: like.imagesP // ภาพโปรไฟล์ของผู้ใช้
-//             }))
-//         }));
-
-//         res.status(200).send(allLikes);
-//     } catch (error) {
-//         res.status(500).send({ message: error.message });
-//     }
-// };
 
 
 exports.userId = async (req, res) => {
@@ -239,7 +212,7 @@ exports.editPost = async (req, res) => {
         const { commuId } = req.params;
 
         const commu = await Commu.findById(commuId)
-        const newPost = await Commu.findOneAndUpdate(commu, req.body, { new: true });
+        const newPost = await Commu.findByIdAndUpdate(commu, req.body, { new: true });
 
         res.status(200).json({ data: newPost, message: "แก้ไขสำเร็จ!" });
     } catch (e) {

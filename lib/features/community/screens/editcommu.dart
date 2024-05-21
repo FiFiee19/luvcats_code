@@ -48,7 +48,7 @@ class _EditCommuState extends State<EditCommu> {
   //แก้ไขข้อมูล
   void submitForm() async {
     if (commuFormKey.currentState!.validate()) {
-      await commuServices.editPost(
+      await commuServices.editPostCommu(
         context,
         widget.commuId,
         titleController.text,

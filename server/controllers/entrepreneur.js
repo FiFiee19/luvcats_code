@@ -73,7 +73,7 @@ exports.list = async (req, res) => {
 
 exports.userId = async (req, res) => {
     try {
-        const user_id = req.params.user_id
+        const { user_id } = req.params
         const entre = await Entre.find({ user_id }).populate('user');
         
         res.json(entre);
@@ -100,11 +100,11 @@ exports.entreId = async (req, res) => {
 exports.editEntre = async (req, res) => {
     
     try {
-        const id = req.params.id;
+        const { id } = req.params;
         const updatedEntre = await Entre.findByIdAndUpdate(
             id,
             req.body,
-            { new: true, runValidators: true } 
+            { new: true } 
         );
 
         res.status(200).json({ data: updatedEntre, message: "Updated successfully" });

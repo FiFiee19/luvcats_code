@@ -55,7 +55,7 @@ exports.review = async (req, res) => {
 
 exports.userId = async (req,res) => {
     try {
-        const user_id = req.params.user_id
+        const {user_id} = req.params
         const cathotel = await Cathotel.find({ user_id }).populate({
             path: 'reviews',
             populate: { path: 'user' }

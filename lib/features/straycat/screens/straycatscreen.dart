@@ -90,6 +90,33 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
     );
   }
 
+  Widget floatingActionButton() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userType = userProvider.user.type;
+
+    // แสดงปุ่มเพิ่มโพสต์เฉพาะ user เท่านั้น
+    if (userType == 'user') {
+      return FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.red,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FormsStrayCat(),
+            ),
+          );
+        },
+        shape: const CircleBorder(),
+      );
+    } else {
+      return SizedBox.shrink(); // ไม่แสดงปุ่มสำหรับ userType อื่น
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false).user;
@@ -178,52 +205,17 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
     );
 
     if (straycatlist == null) {
-      bodyContent = const Center(child: CircularProgressIndicator());
+      bodyContent = const LinearProgressIndicator();
     } else if (straycatlist!.isEmpty) {
-      return Scaffold(
+      bodyContent = Scaffold(
         backgroundColor: Colors.grey[200],
-        appBar: AppBar(
-          actions: [
-            const SearchProfile(),
-            filterPost,
-            IconButton(
-              icon: const Icon(Icons.restart_alt_rounded),
-              onPressed: () {
-                setState(() {
-                  selectedProvince = null;
-                  selectedGender = null;
-                  fetchAllCats();
-                });
-              },
-            ),
-          ],
-        ),
+        
         body: const Center(
           child: Text(
             'ไม่มีโพสต์',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 20.0),
-          child: FloatingActionButton(
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            backgroundColor: Colors.red,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const FormsStrayCat(),
-                ),
-              );
-            },
-            shape: const CircleBorder(),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       );
     } else {
       bodyContent = RefreshIndicator(
@@ -408,7 +400,7 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(actions: [
+      appBar: AppBar(actions: <Widget>[
         const SearchProfile(),
         filterPost,
         IconButton(
@@ -423,35 +415,8 @@ class _StrayCatScreenState extends State<StrayCatScreen> {
         ),
       ]),
       backgroundColor: Colors.grey[200],
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: bodyContent,
-          ),
-        ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.red,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FormsStrayCat(),
-              ),
-            );
-          },
-          shape: const CircleBorder(),
-        ),
-      ),
+      body: bodyContent,
+      floatingActionButton: floatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }

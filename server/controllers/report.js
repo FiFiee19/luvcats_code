@@ -73,7 +73,7 @@ exports.deleteReport = async (req, res) => {
 
         await Report.findByIdAndDelete(reportId);
         
-        const updatedCommu = await Commu.findByIdAndUpdate(
+        await Commu.findByIdAndUpdate(
             commuId,
             { $pull: { reports: reportId } },
             { new: true }

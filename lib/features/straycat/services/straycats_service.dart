@@ -109,19 +109,19 @@ class CatServices {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
+        return Straycat.fromMap(data);
+        // if (data is List) {
+        //   final firstPost = data.first;
+        //   if (firstPost is Map<String, dynamic>) {
+        //     return Straycat.fromMap(firstPost);
+        //   } else {
+        //     throw Exception('Data format is not correct');
+        //   }
+        // } else if (data is Map<String, dynamic>) {
 
-        if (data is List) {
-          final firstPost = data.first;
-          if (firstPost is Map<String, dynamic>) {
-            return Straycat.fromMap(firstPost);
-          } else {
-            throw Exception('Data format is not correct');
-          }
-        } else if (data is Map<String, dynamic>) {
-          return Straycat.fromMap(data);
-        } else {
-          throw Exception('Data format is not correct');
-        }
+        // } else {
+        //   throw Exception('Data format is not correct');
+        // }
       } else {
         throw Exception('Failed to load data');
       }

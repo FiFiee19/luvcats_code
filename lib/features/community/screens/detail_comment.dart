@@ -186,6 +186,12 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                         color: Colors.black),
                   ),
                   const Spacer(),
+                  if (userType == 'admin')
+                    IconButton(
+                        onPressed: () {
+                          _showDeletePost(widget.commu.id!);
+                        },
+                        icon: const Icon(Icons.delete_sharp)),
                 ],
               ),
             ),
@@ -273,12 +279,6 @@ class _DetailCommentScreenState extends State<DetailCommentScreen> {
                           ),
                         ),
                         Spacer(),
-                        if (userType == 'admin')
-                          IconButton(
-                              onPressed: () {
-                                _showDeletePost(widget.commu.id!);
-                              },
-                              icon: const Icon(Icons.delete_sharp)),
                         const SizedBox(height: 10),
                       ],
                     ),

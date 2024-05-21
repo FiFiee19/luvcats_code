@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:luvcats_app/features/map/screens/application_bloc.dart';
+import 'package:luvcats_app/features/map/screens/mapapp.dart';
 import 'package:luvcats_app/models/maps/place.dart';
 import 'package:provider/provider.dart';
 

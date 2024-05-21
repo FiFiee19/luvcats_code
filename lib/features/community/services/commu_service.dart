@@ -130,19 +130,7 @@ class CommuServices {
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-
-        if (data is List) {
-          final firstPost = data.first;
-          if (firstPost is Map<String, dynamic>) {
-            return Commu.fromMap(firstPost);
-          } else {
-            throw Exception('Data format is not correct');
-          }
-        } else if (data is Map<String, dynamic>) {
-          return Commu.fromMap(data);
-        } else {
-          throw Exception('Data format is not correct');
-        }
+        return Commu.fromMap(data);
       } else {
         throw Exception('Failed to load data');
       }
@@ -201,7 +189,6 @@ class CommuServices {
 
       if (res.statusCode == 200) {
         List<dynamic> commentsData = jsonDecode(res.body);
-        print(commentsData);
         return commentsData.map((data) {
           return Comment.fromMap(data as Map<String, dynamic>);
         }).toList();
@@ -247,7 +234,8 @@ class CommuServices {
     required String commu_id,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    Comment comment =
+        Comment(user_id: user_id, message: message, commu_id: commu_id);
     try {
       final res = await http.post(
         Uri.parse('$url/addComment/$commu_id'),
@@ -255,8 +243,7 @@ class CommuServices {
           'Content-Type': 'application/json; charset=UTF-8',
           'authtoken': userProvider.user.token,
         },
-        body: jsonEncode(
-            {'user_id': user_id, 'message': message, 'commu_id': commu_id}),
+        body: comment.toJson(),
       );
 
       if (res.statusCode == 200) {
@@ -306,12 +293,12 @@ class CommuServices {
   }
 
   //แก้ไขโพสต์
-  Future<void> editPost(
+  Future<void> editPostCommu(
     BuildContext context,
     String commuId,
     String title,
     String description,
-    List<File> images, 
+    List<File> images,
   ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user_id = userProvider.user.id;

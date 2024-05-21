@@ -66,8 +66,8 @@ exports.user_Id = async (req,res) => {
 
 exports.straycatId = async (req,res) => {
     try {
-        const { straycatId } = req.params;
-        const findstraycatId = await Straycat.findById( straycatId ).populate('user')
+        const { id } = req.params;
+        const findstraycatId = await Straycat.findById( id ).populate('user')
         res.json(findstraycatId);
 
     } catch (e) {
@@ -80,8 +80,8 @@ exports.straycatId = async (req,res) => {
 exports.deleteStraycat = async (req, res) => {
     
     try {
-        const  straycatId  = req.params.id;
-        await Straycat.findByIdAndDelete(straycatId);
+        const { id } = req.params;
+        await Straycat.findByIdAndDelete(id);
         res.status(200).json({message:"Deleted successfully"})
     } catch (e) {
         console.log(e)
@@ -93,9 +93,9 @@ exports.deleteStraycat = async (req, res) => {
 exports.editStraycats = async (req, res) => {
     
     try { 
-        const straycatId = req.params.id;
+        const {id} = req.params;
         const newPost = await Straycat.findByIdAndUpdate(
-            straycatId, 
+            id, 
             req.body, 
             { new: true } 
         );
@@ -109,10 +109,10 @@ exports.editStraycats = async (req, res) => {
 
 exports.updateStatus = async (req, res) => {
     try {
-        const straycatId = req.params.id;
+        const {id} = req.params;
         const status = req.body.status; // สถานะที่จะอัปเดต ('yes' หรือ 'no')
     
-        const straycat = await Straycat.findByIdAndUpdate(straycatId, { status: status }, { new: true });
+        const straycat = await Straycat.findByIdAndUpdate(id, { status: status }, { new: true });
         
         if (!straycat) {
           res.status(404).send('Stray cat not found');

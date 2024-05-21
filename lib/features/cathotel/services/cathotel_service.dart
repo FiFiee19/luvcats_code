@@ -30,7 +30,7 @@ class CathotelServices {
             ),
           );
         }
-      } 
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -48,7 +48,6 @@ class CathotelServices {
   Future<Cathotel?> fetchCathotelProfile(
       BuildContext context, String user_id) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    Cathotel? profile;
 
     try {
       final http.Response res = await http.get(
@@ -60,22 +59,26 @@ class CathotelServices {
       );
 
       if (res.statusCode == 200) {
-        final List<dynamic> body = jsonDecode(res.body);
-        if (body.isNotEmpty) {
-          profile = Cathotel.fromMap(body.first);
+        final data = jsonDecode(res.body);
+
+        if (data is List) {
+          final firstPost = data.first;
+          if (firstPost is Map<String, dynamic>) {
+            return Cathotel.fromMap(firstPost);
+          } else {
+            throw Exception('Data format is not correct');
+          }
+        } else if (data is Map<String, dynamic>) {
+          return Cathotel.fromMap(data);
+        } else {
+          throw Exception('Data format is not correct');
         }
-      } 
+      } else {
+        throw Exception('Failed to load data');
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.all(30),
-        ),
-      );
+      throw Exception('Error fetching data: $e');
     }
-    return profile;
   }
 
   //ดึงข้อมูลรีวิวร้านฝากเลี้ยงตามidของร้านที่กำหนด
@@ -193,8 +196,7 @@ class CathotelServices {
           'authtoken': userProvider.user.token,
         },
         body: jsonEncode({
-          'message':
-              message, 
+          'message': message,
         }),
       );
 
@@ -202,7 +204,7 @@ class CathotelServices {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('ตอบกลับรีวิวสำเร็จ!')),
         );
-      } 
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
