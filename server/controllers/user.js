@@ -4,8 +4,8 @@ const bcrypt = require("bcrypt");
 exports.editPassword = async (req, res) => {
 
     try {
-        const { password } = req.body; // รับค่ารหัสผ่านใหม่จาก body ของ request
-        const user_id = req.user; // สมมติว่า req.user เก็บค่า ID ของผู้ใช้ที่ต้องการแก้ไข
+        const { password } = req.body; 
+        const user_id = req.user; 
 
         if (!password) {
             return res.status(400).send('Password is required');
@@ -33,16 +33,14 @@ exports.editPassword = async (req, res) => {
 exports.editUser = async (req, res) => {
     try {
         const { username, imagesP } = req.body;
-        const user_id = req.user; // สมมติว่า req.user เก็บค่า ID ของผู้ใช้ที่ต้องการแก้ไข
-
-        // ค้นหาและอัปเดตผู้ใช้
+        const user_id = req.user; 
+        
         const updatedUser = await User.findByIdAndUpdate(user_id, {
             $set: {
                 username: username,
                 imagesP: imagesP
             }
-        }, { new: true }).select('-password'); // ไม่คืนค่ารหัสผ่าน
-
+        }, { new: true }).select('-password'); 
         if (!updatedUser) {
             return res.status(404).send('User not found');
         }
@@ -76,8 +74,8 @@ exports.searchUser = async (req, res) => {
         const user = await User.find(
             {
                 $and: [
-                    { username: { $regex: req.params.username, $options: 'i' } }, // ใช้ $options: 'i' เพื่อค้นหาแบบ case-insensitive
-                    { type: 'user' } // เพิ่มเงื่อนไขนี้เพื่อจำกัดเฉพาะ user
+                    { username: { $regex: req.params.username, $options: 'i' } }, 
+                    { type: 'user' } 
                 ]
             }
         )
@@ -90,23 +88,5 @@ exports.searchUser = async (req, res) => {
     }
 }
 
-exports.searchEntre = async (req, res) => {
-    try {
-        const user = await User.find(
-            {
-                $and: [
-                    { username: { $regex: req.params.username, $options: 'i' } }, // ใช้ $options: 'i' เพื่อค้นหาแบบ case-insensitive
-                    { type: 'entrepreneur' } // เพิ่มเงื่อนไขนี้เพื่อจำกัดเฉพาะ user
-                ]
-            }
-        )
-        res.json(user);
-
-    } catch (e) {
-        console.log(e)
-        res.status(500).send('Server Error')
-
-    }
-}
 
 

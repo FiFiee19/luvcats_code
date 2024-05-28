@@ -74,7 +74,7 @@ exports.userId = async (req,res) => {
 exports.replyToReview = async (req, res) => {
     try {
         const { reviewId } = req.params;
-        const { message } = req.body; // ตัวอย่างของ message ของการตอบกลับ
+        const { message } = req.body;
 
         const review = await Review.findById(reviewId);
         if (!review) {

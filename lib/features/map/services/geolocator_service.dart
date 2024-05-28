@@ -5,7 +5,6 @@ class GeolocatorService {
     bool serviceEnabled;
     LocationPermission permission;
 
-    
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return Future.error('บริการตำแหน่งที่ตั้งถูกปิดใช้งาน');
@@ -20,12 +19,10 @@ class GeolocatorService {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      
       return Future.error(
           'สิทธิ์การเข้าถึงตำแหน่งถูกปฏิเสธอย่างถาวรและไม่สามารถขอสิทธิ์ได้อีก');
     }
 
-    
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
   }

@@ -5,7 +5,6 @@ exports.list = async (req, res) => {
         const cats = await Cathotel.find({}).populate('user')
         res.json(cats);
  
-        
     } catch (e) {
         console.log(e)
         res.status(500).send('Server Error')
@@ -24,22 +23,6 @@ exports.userId = async (req,res) => {
     }
 }
 
-// exports.cathotelId = async (req, res) => {
-//     const cathotelId = req.params.id;
-//     try {
-//         const catHotel = await Cathotel.find( cathotelId ).populate('user');
-        
-//         if (!catHotel) {
-//             return res.status(404).json({ msg: 'Cat hotel not found' });
-//         }
-
-//         res.json(catHotel);
-//     } catch (e) {
-//         console.error(e);
-//         res.status(500).send('Server Error');
-//     }
-// }
-
 
 exports.editCathotel = async (req, res) => {
     
@@ -55,5 +38,4 @@ exports.editCathotel = async (req, res) => {
         console.log(e)
         res.status(500).send('Server Error')
     }
-
 }

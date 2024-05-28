@@ -30,31 +30,12 @@ exports.create = async (req,res) => {
 
     }
 }
-// exports.list = async (req, res) => {
-//     try {
-        
-//         const { commuId } = req.params;   
-//         const commu = await Commu.findById(commuId)
-//             .populate({
-//                 path: 'reports',
-//                 populate: { path: 'user' }
-//             });  
-//         if (!commu) {
-//             return res.status(404).json({ msg: 'Post not found' });
-//         }
-
-//         res.json(commu.reports); // ส่งคอมเมนต์กลับไปยัง client
-//     } catch (e) {
-//         console.log(e);
-//         res.status(500).send('Server Error');
-//     }
-// };
 
 
 exports.list = async (req, res) => {
     try {
         const report = await Report.find({}).populate('user').populate('commu_id');
-        console.log(report); // Log the report data
+        console.log(report); 
         res.json(report);
     } catch (e) {
         console.log(e);

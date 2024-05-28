@@ -9,7 +9,6 @@ import 'package:luvcats_app/config/province.dart';
 import 'package:luvcats_app/config/utils.dart';
 import 'package:luvcats_app/features/entrepreneur/services/entre_service.dart';
 import 'package:luvcats_app/models/cathotel.dart';
-import 'package:luvcats_app/models/entrepreneur.dart';
 import 'package:luvcats_app/providers/user_provider.dart';
 import 'package:luvcats_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +39,6 @@ class _FormsEntreState extends State<FormsEntre> {
   final EntreService entreService = EntreService();
   List<File> images = [];
   final _formsEntreFormKey = GlobalKey<FormState>();
-  List<Entrepreneur>? entre;
   Cathotel? cathotel;
   List<File>? _imageP;
   String selectedProvince = 'กรุงเทพมหานคร';
@@ -57,6 +55,7 @@ class _FormsEntreState extends State<FormsEntre> {
     if (_formsEntreFormKey.currentState!.validate() &&
         passwordConfirmed() &&
         _imageP != null &&
+        _imageP!.isNotEmpty &&
         images.isNotEmpty) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
@@ -110,10 +109,10 @@ class _FormsEntreState extends State<FormsEntre> {
         );
       }
 
-      if (_imageP == null) {
+      if (_imageP == null || _imageP!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: const Text('กรุณาเลือกรูปภาพ'),
+            content: Text('กรุณาเลือกรูปภาพโปรไฟล์'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -124,7 +123,7 @@ class _FormsEntreState extends State<FormsEntre> {
       if (images.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: const Text('กรุณาเลือกรูปภาพ'),
+            content: Text('กรุณาเลือกรูปภาพร้านค้า'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.all(30),
@@ -197,7 +196,7 @@ class _FormsEntreState extends State<FormsEntre> {
                 const SizedBox(height: 40),
                 const Center(child: Text('เลือกรูปภาพโปรไฟล์')),
                 const SizedBox(height: 10),
-                _imageP == null
+                _imageP == null || _imageP!.isEmpty
                     ? const CircleAvatar(
                         radius: 100,
                         backgroundColor: Colors.grey,

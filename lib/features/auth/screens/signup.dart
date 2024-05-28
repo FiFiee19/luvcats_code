@@ -37,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
         passwordConfirmed() &&
         imageP != null &&
         imageP!.isNotEmpty) {
-      //บันทึกภาพลงCloudinary
+      //บันทึกภาพลง Cloudinary
       final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
       CloudinaryResponse resimg = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(imageP![0].path,
@@ -64,7 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
         );
       }
 
-      if (imageP == null) {
+      if (imageP == null || imageP!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('กรุณาเลือกรูปภาพ'),
@@ -133,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              imageP == null
+              imageP == null || imageP!.isEmpty
                   ? const CircleAvatar(
                       radius: 100,
                       backgroundColor: Colors.grey,

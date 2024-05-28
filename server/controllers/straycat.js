@@ -39,17 +39,6 @@ exports.list = async (req, res) => {
 
 }
 
-// exports.userId = async (req,res) => {
-//     try {
-//         const findUserId = await Straycat.find({ user_id: req.user }).populate('user')
-//         res.json(findUserId);
-
-//     } catch (e) {
-//         console.log(e)
-//         res.status(500).send('Server Error')
-
-//     }
-// }
 
 exports.user_Id = async (req,res) => {
     try {

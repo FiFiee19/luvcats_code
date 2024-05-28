@@ -299,11 +299,12 @@ class _CommuScreenState extends State<CommuScreen> {
                                   ),
                                 ),
                                 const Spacer(),
-                                IconButton(
-                                    onPressed: () {
-                                      _showDeleteDialog(commuData.id!);
-                                    },
-                                    icon: const Icon(Icons.delete_sharp)),
+                                if (userType == 'admin')
+                                  IconButton(
+                                      onPressed: () {
+                                        _showDeleteDialog(commuData.id!);
+                                      },
+                                      icon: const Icon(Icons.delete_sharp)),
                               ],
                             ),
                           ),

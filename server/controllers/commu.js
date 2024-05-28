@@ -89,7 +89,6 @@ exports.user_Id = async (req, res) => {
 }
 
 
-
 exports.commuId = async (req, res) => {
     try {
         const { commuId } = req.params;

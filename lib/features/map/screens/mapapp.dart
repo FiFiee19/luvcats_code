@@ -22,6 +22,7 @@ class MapApp with ChangeNotifier {
   Place? selectedLocationStatic;
   String? placeType;
   List<Marker>? markers = [];
+  
   MapApp() {
     setCurrentLocation();
   }

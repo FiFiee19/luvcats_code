@@ -84,18 +84,6 @@ exports.userId = async (req, res) => {
 
     }
 }
-exports.entreId = async (req, res) => {
-    try {
-        const id = req.params
-        const entre = await Entre.find(id);
-        res.json(entre);
-    } catch (e) {
-        console.log(e)
-        res.status(500).send('Server Error')
-
-    }
-}
-
 
 exports.editEntre = async (req, res) => {
     
