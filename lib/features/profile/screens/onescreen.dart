@@ -241,7 +241,7 @@ class _OneScreenState extends State<OneScreen> {
                                   ),
                                 ),
                               );
-                            } else {}
+                            } 
                           },
                           icon: const Icon(Icons.edit),
                         ),

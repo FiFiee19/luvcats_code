@@ -110,18 +110,7 @@ class CatServices {
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         return Straycat.fromMap(data);
-        // if (data is List) {
-        //   final firstPost = data.first;
-        //   if (firstPost is Map<String, dynamic>) {
-        //     return Straycat.fromMap(firstPost);
-        //   } else {
-        //     throw Exception('Data format is not correct');
-        //   }
-        // } else if (data is Map<String, dynamic>) {
-
-        // } else {
-        //   throw Exception('Data format is not correct');
-        // }
+        
       } else {
         throw Exception('Failed to load data');
       }
@@ -172,16 +161,16 @@ class CatServices {
     String gender,
     String province,
     String description,
-    List<File> images, // รูปภาพใหม่เป็น File
+    List<File> images, 
   ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user_id = userProvider.user.id;
-    List<String> imageUrls = []; // เริ่มต้นด้วยรายการว่าง
+    List<String> imageUrls = []; 
     var uuid = Uuid();
     String folderPath = "Straycat/${user_id}/edit/${uuid.v4()}";
-    // ตรวจสอบว่ามีการเลือกรูปภาพใหม่หรือไม่
+    
     if (images != null && images.isNotEmpty) {
-      // อัปโหลดรูปภาพใหม่และรับ URL
+      
       try {
         final cloudinary = CloudinaryPublic('dtdloxmii', 'q2govzgn');
         for (int i = 0; i < images.length; i++) {
@@ -200,7 +189,6 @@ class CatServices {
       imageUrls = post.images;
     }
 
-    // ส่งข้อมูลโพสต์ร่วมกับ URL รูปภาพ
     try {
       final res = await http.put(
         Uri.parse('$url/getStrayCat/edit/$starycatsId'),
@@ -213,7 +201,7 @@ class CatServices {
           'gender': gender,
           'province': province,
           'description': description,
-          'images': imageUrls, // ส่ง URL ของรูปภาพใหม่ไปด้วย
+          'images': imageUrls, 
         }),
       );
 

@@ -106,7 +106,6 @@ class _EditProfileEntreState extends State<EditProfileEntre> {
   void selectImagesMulti() async {
     var res = await pickImagesFiles(false);
     if (res != null) {
-      // เช่นเดียวกัน
       setState(() {
         imagesP = res;
       });

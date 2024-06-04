@@ -12,7 +12,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    // UI สำหรับผู้ใช้ที่ล็อกอิน
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,

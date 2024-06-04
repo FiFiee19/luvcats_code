@@ -47,7 +47,7 @@ class _FormsCommuState extends State<FormsCommu> {
 
       List<String> imageUrls = [];
 
-      // สร้าง folder path ที่ไม่ซ้ำสำหรับแต่ละการโพสต์
+      
       var uuid = Uuid();
       String folderPath = "Commu/${user_id}/${uuid.v4()}";
 

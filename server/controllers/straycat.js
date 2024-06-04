@@ -55,8 +55,8 @@ exports.user_Id = async (req,res) => {
 
 exports.straycatId = async (req,res) => {
     try {
-        const { id } = req.params;
-        const findstraycatId = await Straycat.findById( id ).populate('user')
+        const { straycatId } = req.params;
+        const findstraycatId = await Straycat.findById(straycatId).populate('user')
         res.json(findstraycatId);
 
     } catch (e) {

@@ -195,7 +195,7 @@ exports.deletePost = async (req, res) => {
         await Report.deleteMany({ commu_id: commuId });
         await Comment.deleteMany({ commu_id: commuId });
 
-        // ตอบกลับว่าลบสำเร็จ
+        
         res.status(200).json({ message: "ลบโพสต์สำเร็จ!" });
     } catch (e) {
         console.log(e);
